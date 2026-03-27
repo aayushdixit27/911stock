@@ -43,11 +43,13 @@ Position reduced by: {signal['position_reduced_pct']}%
 Explain what this means for someone who owns {signal['ticker']}."""
 
     response = call_llm(
-        model="gemini/gemini-2.0-flash-exp",
+        model="openai/google-gemini/gemini-3-flash-preview",
         messages=[
             {"role": "system", "content": SYSTEM_PROMPT},
             {"role": "user", "content": user_message},
         ],
+        api_base="https://gateway.truefoundry.ai",
+        api_key=os.environ["TRUEFOUNDRY_API_KEY"],
     )
 
     explanation = response.choices[0].message.content.strip()

@@ -56,5 +56,6 @@ class Handler(BaseHTTPRequestHandler):
 
 if __name__ == "__main__":
     server = HTTPServer(("localhost", PORT), Handler)
+    server.allow_reuse_address = True
     print(f"[overclaw] listening on http://localhost:{PORT}")
     server.serve_forever()
