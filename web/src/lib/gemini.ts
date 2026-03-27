@@ -1,7 +1,22 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import OpenAI from "openai";
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
-const model = genAI.getGenerativeModel({ model: "gemini-3-flash-preview" });
+const TRUEFOUNDRY_BASE_URL = "https://gateway.truefoundry.ai";
+const GATEWAY_MODEL = "google-gemini/gemini-3-flash-preview";
+
+function getOpenAI() {
+  const apiKey = process.env.TRUEFOUNDRY_API_KEY;
+  if (!apiKey) {
+    throw new Error("TRUEFOUNDRY_API_KEY is not set");
+  }
+  return new OpenAI({
+    apiKey,
+    baseURL: TRUEFOUNDRY_BASE_URL,
+    defaultHeaders: {
+      "X-TFY-METADATA": "{}",
+      "X-TFY-LOGGING-CONFIG": JSON.stringify({ enabled: true }),
+    },
+  });
+}
 
 export async function analyzeSignal(
   signal: {
@@ -45,6 +60,16 @@ Rules:
 - Include the historical pattern if available
 - End with one clear sentence about why this matters to the holder`;
 
-  const result = await model.generateContent(prompt);
-  return result.response.text();
+  const openai = getOpenAI();
+  const response = await openai.chat.completions.create({
+    model: GATEWAY_MODEL,
+    messages: [{ role: "user", content: prompt }],
+    max_tokens: 2500,
+  });
+
+  const text = response.choices[0]?.message?.content?.trim();
+  if (!text) {
+    throw new Error("Empty response from TrueFoundry gateway");
+  }
+  return text;
 }
