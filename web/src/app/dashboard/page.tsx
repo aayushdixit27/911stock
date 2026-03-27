@@ -37,7 +37,6 @@ export default function Dashboard() {
   const [awaitingApproval, setAwaitingApproval] = useState(false);
   const pollRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Poll for CIBA approval once phone call step is active
   function startCIBAPolling() {
     setAwaitingApproval(true);
     setSteps((prev) =>
@@ -54,11 +53,10 @@ export default function Dashboard() {
           setSteps((prev) =>
             prev.map((s) =>
               s.key === "awaiting_ciba"
-                ? { ...s, status: "done", detail: "Approved via Auth0 Guardian ✓" }
+                ? { ...s, status: "done", detail: "Approved via Auth0 Guardian" }
                 : s
             )
           );
-          // Short delay for visual confirmation before redirect
           setTimeout(() => router.push("/resolution"), 1200);
         } else if (data.status === "denied") {
           clearInterval(pollRef.current!);
@@ -97,6 +95,9 @@ export default function Dashboard() {
             }
             return { ...s, status: "done", detail };
           }
+          if (event.step === "calling" && s.key === "calling") {
+            return { ...s, status: "active" };
+          }
           return s;
         })
       );
@@ -111,7 +112,6 @@ export default function Dashboard() {
           prev.map((s) => (s.key === "calling" ? { ...s, status: "active" } : s))
         );
 
-        // After 10s, assume call connected — start polling for CIBA approval
         setTimeout(() => {
           setCallActive(false);
           setSteps((prev) =>
@@ -129,52 +129,228 @@ export default function Dashboard() {
       es.close();
       if (pollRef.current) clearInterval(pollRef.current);
     };
-  }, []);  // eslint-disable-line react-hooks/exhaustive-deps
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center px-6 py-16 gap-8 max-w-lg mx-auto">
-      {/* Header */}
-      <div className="w-full flex items-center gap-2">
-        <span className="text-red-500 text-xl">🚨</span>
-        <h1 className="text-xl font-bold">911Stock — Agent Active</h1>
-        <div className="ml-auto w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-      </div>
-
-      {/* Pipeline steps */}
-      <div className="w-full border border-zinc-800 rounded-lg divide-y divide-zinc-800">
-        {steps.map((step) => (
-          <div key={step.key} className="px-4">
-            <StatusStep label={step.label} status={step.status} detail={step.detail} />
-          </div>
-        ))}
-      </div>
-
-      {/* Explanation card */}
-      {explanation && (
-        <div className="w-full border border-zinc-700 rounded-lg p-4 bg-zinc-900">
-          <p className="text-xs text-zinc-500 uppercase tracking-widest mb-2">Agent analysis</p>
-          <p className="text-sm text-zinc-100 leading-relaxed">{explanation}</p>
+    <main style={{ minHeight: "100vh", background: "var(--white)" }}>
+      {/* ── NAV ── */}
+      <nav
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 500,
+          padding: "18px 7vw",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          background: "rgba(255,255,255,0.92)",
+          backdropFilter: "blur(16px)",
+          borderBottom: "1px solid var(--ink-10)",
+        }}
+      >
+        <span
+          style={{
+            fontFamily: "var(--font-body)",
+            fontWeight: 700,
+            fontSize: 14,
+            letterSpacing: "0.25em",
+            textTransform: "uppercase" as const,
+            color: "var(--orange)",
+          }}
+        >
+          911stock
+        </span>
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <div
+            style={{
+              width: 8,
+              height: 8,
+              borderRadius: "50%",
+              background: "var(--orange)",
+              animation: "joint-pulse 1.5s ease-in-out infinite",
+            }}
+          />
+          <span
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: 12,
+              letterSpacing: "0.25em",
+              textTransform: "lowercase" as const,
+              color: "var(--orange)",
+            }}
+          >
+            agent active
+          </span>
         </div>
-      )}
+      </nav>
 
-      {/* Phone ringing */}
-      {callActive && <PhoneRinging />}
-
-      {/* Waiting for Guardian approval */}
-      {awaitingApproval && (
-        <div className="w-full border border-yellow-700 rounded-lg p-4 bg-yellow-950/20 flex items-start gap-3">
-          <div className="w-2 h-2 rounded-full bg-yellow-400 animate-pulse mt-1.5 flex-shrink-0" />
-          <div>
-            <p className="text-yellow-400 text-sm font-medium">
-              Waiting for your approval
-            </p>
-            <p className="text-zinc-400 text-xs mt-1">
-              Auth0 Guardian sent a push notification to your phone.
-              Open the Guardian app and tap <strong>Approve</strong>.
-            </p>
-          </div>
+      {/* ── CONTENT ── */}
+      <div style={{ maxWidth: 640, margin: "0 auto", padding: "90px 7vw 80px" }}>
+        <div className="mark-eyebrow" style={{ marginBottom: 40 }}>
+          pipeline
         </div>
-      )}
+
+        {/* Pipeline steps */}
+        <div
+          className="mark-card"
+          style={{ padding: "8px 28px", marginBottom: 40 }}
+        >
+          <div
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              height: 2,
+              background: "linear-gradient(to right, var(--orange), var(--ember))",
+            }}
+          />
+          {steps.map((step, i) => (
+            <div key={step.key}>
+              <StatusStep label={step.label} status={step.status} detail={step.detail} />
+              {i < steps.length - 1 && (
+                <div style={{ height: 1, background: "var(--ink-10)" }} />
+              )}
+            </div>
+          ))}
+        </div>
+
+        {/* ── AGENT ANALYSIS — ink takeover ── */}
+        {explanation && (
+          <div
+            style={{
+              margin: "0 -7vw 40px",
+              padding: "56px 7vw",
+              background: "var(--ink)",
+              position: "relative",
+              overflow: "hidden",
+            }}
+          >
+            <div
+              style={{
+                position: "absolute",
+                width: 400,
+                height: 400,
+                borderRadius: "50%",
+                top: "40%",
+                right: "-5%",
+                transform: "translate(0, -50%)",
+                background: "radial-gradient(circle, rgba(255,69,0,0.15) 0%, transparent 65%)",
+                pointerEvents: "none",
+              }}
+            />
+            <div
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: 12,
+                letterSpacing: "0.4em",
+                textTransform: "lowercase" as const,
+                color: "var(--terra-lt)",
+                display: "flex",
+                alignItems: "center",
+                gap: 14,
+                marginBottom: 28,
+                position: "relative",
+              }}
+            >
+              <span style={{ display: "inline-block", width: 24, height: 1.5, background: "var(--terra-lt)" }} />
+              agent analysis
+            </div>
+            <p
+              style={{
+                fontFamily: "var(--font-display)",
+                fontWeight: 400,
+                fontStyle: "italic",
+                fontSize: "clamp(22px, 3.5vw, 34px)",
+                lineHeight: 1.4,
+                letterSpacing: "-0.02em",
+                color: "var(--white)",
+                position: "relative",
+                maxWidth: 540,
+              }}
+            >
+              {explanation}
+            </p>
+            <div
+              style={{
+                marginTop: 28,
+                display: "flex",
+                gap: 24,
+                alignItems: "center",
+                position: "relative",
+              }}
+            >
+              <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: "0.25em", color: "rgba(255,255,255,0.25)" }}>
+                ghost db: 3 pattern matches
+              </span>
+              <span style={{ width: 4, height: 4, borderRadius: "50%", background: "var(--terra)", display: "inline-block" }} />
+              <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: "0.25em", color: "rgba(255,255,255,0.25)" }}>
+                significance: high
+              </span>
+            </div>
+          </div>
+        )}
+
+        {/* Phone ringing */}
+        {callActive && <PhoneRinging />}
+
+        {/* Auth0 Guardian — waiting for approval */}
+        {awaitingApproval && (
+          <div style={{ marginBottom: 40 }}>
+            <div className="mark-eyebrow" style={{ marginBottom: 24 }}>
+              auth0 guardian — awaiting approval
+            </div>
+            <div className="mark-card" style={{ padding: "28px 28px" }}>
+              <div
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  height: 3,
+                  background: "linear-gradient(to right, var(--terra), var(--terra-lt))",
+                }}
+              />
+              <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
+                <div
+                  style={{
+                    width: 8,
+                    height: 8,
+                    borderRadius: "50%",
+                    background: "var(--terra)",
+                    animation: "joint-pulse 1.5s ease-in-out infinite",
+                  }}
+                />
+                <span
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontWeight: 400,
+                    fontSize: 15,
+                    color: "var(--ink)",
+                  }}
+                >
+                  Waiting for your approval
+                </span>
+              </div>
+              <p
+                style={{
+                  fontFamily: "var(--font-body)",
+                  fontWeight: 400,
+                  fontSize: 14,
+                  color: "var(--ink-60)",
+                  lineHeight: 1.8,
+                  paddingLeft: 20,
+                }}
+              >
+                Auth0 Guardian sent a push notification to your phone.
+                Open the Guardian app and tap Approve.
+              </p>
+            </div>
+          </div>
+        )}
+      </div>
     </main>
   );
 }

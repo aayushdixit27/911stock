@@ -1,8 +1,5 @@
 import type { Metadata } from "next";
-import { Geist_Mono } from "next/font/google";
 import "./globals.css";
-
-const mono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "911Stock — Your portfolio, watched.",
@@ -12,7 +9,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={`${mono.className} bg-black text-white min-h-screen`}>
+      <body>
         {children}
       </body>
     </html>

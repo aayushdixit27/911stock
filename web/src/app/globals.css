@@ -1,26 +1,151 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600;700;900&family=JetBrains+Mono:wght@300;400;500;700&display=swap');
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
+/* Register MARK tokens with Tailwind v4 */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-white:      #ffffff;
+  --color-paper:      #fafaf8;
+  --color-off:        #f2f0ec;
+  --color-ink:        #0d0d0b;
+  --color-orange:     #ff4500;
+  --color-ember:      #ff2000;
+  --color-terra:      #d4613a;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+:root {
+  /* MARK Color System */
+  --white:      #ffffff;
+  --paper:      #fafaf8;
+  --off:        #f2f0ec;
+  --ink:        #0d0d0b;
+  --ink-60:     rgba(13,13,11,0.60);
+  --ink-30:     rgba(13,13,11,0.30);
+  --ink-10:     rgba(13,13,11,0.10);
+  --ink-05:     rgba(13,13,11,0.05);
+
+  --orange:     #ff4500;
+  --orange-lt:  #ff6a2f;
+  --orange-dk:  #cc2200;
+  --ember:      #ff2000;
+  --terra:      #d4613a;
+  --terra-lt:   #e8856a;
+  --terra-10:   rgba(212,97,58,0.10);
+  --terra-20:   rgba(212,97,58,0.20);
+
+  /* MARK Typography — adapted for dashboard legibility */
+  --font-display: 'DM Serif Display', serif;
+  --font-body: 'Inter', -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
 }
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--white) !important;
+  color: var(--ink) !important;
+  font-family: var(--font-body) !important;
+  font-weight: 400;
+  font-size: 15px;
+  letter-spacing: -0.01em;
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* MARK — Eyebrow label */
+.mark-eyebrow {
+  font-family: var(--font-mono) !important;
+  font-size: 12px;
+  letter-spacing: 0.4em;
+  text-transform: lowercase;
+  color: var(--terra);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.mark-eyebrow::before {
+  content: '';
+  display: inline-block;
+  width: 24px;
+  height: 1.5px;
+  background: var(--terra);
+}
+
+/* MARK — Display text */
+.mark-display {
+  font-family: var(--font-display) !important;
+  font-weight: 400;
+  font-style: italic;
+  letter-spacing: -0.03em;
+  line-height: 0.85;
+  color: var(--ink);
+}
+
+/* MARK — Heavy text */
+.mark-heavy {
+  font-family: var(--font-body) !important;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 0.9;
+  text-transform: uppercase;
+}
+
+/* MARK — Label text */
+.mark-label {
+  font-family: var(--font-mono) !important;
+  font-size: 12px;
+  letter-spacing: 0.3em;
+  text-transform: lowercase;
+  color: var(--terra);
+}
+
+/* MARK — Fire field (the ONE mark) */
+.mark-fire {
+  background: linear-gradient(145deg, var(--orange), var(--ember)) !important;
+  position: relative;
+  overflow: hidden;
+}
+.mark-fire::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 40% 40%, rgba(255,255,255,0.15) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+/* MARK — Card */
+.mark-card {
+  background: var(--white);
+  border: 1px solid var(--ink-10);
+  border-radius: 3px;
+  position: relative;
+}
+.mark-card:hover {
+  background: var(--paper);
+}
+
+/* MARK — Section transitions */
+.mark-section-white { background: var(--white); }
+.mark-section-paper { background: var(--paper); }
+
+/* MARK — Scroll reveal animation */
+@keyframes mark-arrive {
+  from { opacity: 0; transform: scale(0.85); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes mark-up {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* MARK — Joint pulse (terracotta accent) */
+@keyframes joint-pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+/* Fire button pulse ring */
+@keyframes fire-pulse {
+  0% { transform: scale(1); opacity: 0.4; }
+  100% { transform: scale(1.6); opacity: 0; }
 }
