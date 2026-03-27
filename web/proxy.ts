@@ -1,8 +1,10 @@
 import type { NextRequest } from "next/server";
-import { auth0 } from "@/lib/auth0";
+import { NextResponse } from "next/server";
 
+// Proxy stub — Auth0 middleware can't run in Vercel Edge Runtime.
+// Auth is handled server-side via auth0.getSession() in page.tsx.
 export async function proxy(request: NextRequest) {
-  return auth0.middleware(request);
+  return NextResponse.next();
 }
 
 export const config = {
