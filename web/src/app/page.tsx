@@ -82,10 +82,24 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [signalDetected, setSignalDetected] = useState(false);
 
-  const handleSignalDetected = useCallback(() => {
+  const handleSignalDetected = useCallback(async () => {
     setSignalDetected(true);
     setSelectedSignal(SEED_SIGNALS[0]);
-  }, []);
+    // Auto-trigger the pipeline — no button click needed
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/trigger", { method: "POST" });
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || "Agent pipeline failed");
+      }
+      router.push("/dashboard");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong");
+      setLoading(false);
+    }
+  }, [router]);
 
   function addTicker() {
     const t = input.trim().toUpperCase();
@@ -374,10 +388,10 @@ export default function Home() {
             {loading ? (
               <span style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 12 }}>
                 <span className="mark-spinner" />
-                connecting to agent...
+                signal detected — calling you now...
               </span>
             ) : signalDetected && selectedSignal
-              ? `call ai — discuss ${selectedSignal.ticker} signal`
+              ? `signal detected — ${selectedSignal.ticker}`
               : "play timeline to detect signals"}
           </button>
           {error && (
