@@ -627,6 +627,7 @@ GHOST_CONNECTION_STRING=postgresql://... # Ghost DB connection string
 AUTH0_DOMAIN=xxx.auth0.com            # Auth0 tenant
 AUTH0_CLIENT_ID=...                   # Auth0 app client ID
 AUTH0_CLIENT_SECRET=...               # Auth0 app client secret
+OVERMIND_API_KEY=...                  # Overmind agent supervision
 ```
 
 ---
