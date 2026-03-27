@@ -11,9 +11,16 @@ type NewsEvent = {
   sentiment: string;
 };
 
+type PriceData = {
+  price: number;
+  change: number;
+  changePct: number;
+};
+
 type TimelineDay = {
   date: string;
   label: string;
+  prices?: Record<string, PriceData>;
   events: NewsEvent[];
 };
 
@@ -25,7 +32,13 @@ const sigColor: Record<string, string> = {
   low: "var(--ink-30)",
 };
 
-export function NewsTimeline({ onSignalDetected }: { onSignalDetected?: () => void }) {
+export function NewsTimeline({
+  onSignalDetected,
+  onPriceUpdate,
+}: {
+  onSignalDetected?: () => void;
+  onPriceUpdate?: (prices: Record<string, PriceData>) => void;
+}) {
   const [currentDay, setCurrentDay] = useState(0);
   const [playing, setPlaying] = useState(false);
   const [revealedEvents, setRevealedEvents] = useState(0);
@@ -65,12 +78,16 @@ export function NewsTimeline({ onSignalDetected }: { onSignalDetected?: () => vo
     };
   }, [playing, advance]);
 
-  // Reset revealed events when day changes
+  // Reset revealed events and update prices when day changes
   useEffect(() => {
     if (playing) {
       setRevealedEvents(0);
     }
-  }, [currentDay, playing]);
+    const d = timeline[currentDay];
+    if (d.prices && onPriceUpdate) {
+      onPriceUpdate(d.prices);
+    }
+  }, [currentDay, playing, onPriceUpdate]);
 
   // Detect when we hit Mar 19 high-significance events
   useEffect(() => {
@@ -103,6 +120,10 @@ export function NewsTimeline({ onSignalDetected }: { onSignalDetected?: () => vo
     setPlaying(false);
     setCurrentDay(idx);
     setRevealedEvents(timeline[idx].events.length);
+    const d = timeline[idx];
+    if (d.prices && onPriceUpdate) {
+      onPriceUpdate(d.prices);
+    }
   }
 
   return (

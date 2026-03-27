@@ -21,10 +21,10 @@ type Signal = {
   context: Record<string, string>;
 };
 
-const PRICES: Record<string, { price: string; change: string; up: boolean }> = {
-  SMCI: { price: "$42.50", change: "3.2%", up: false },
-  TSLA: { price: "$285.20", change: "0.8%", up: true },
-  NVDA: { price: "$142.80", change: "0.1%", up: false },
+const DEFAULT_PRICES: Record<string, { price: number; change: number; changePct: number }> = {
+  SMCI: { price: 42.50, change: 1.72, changePct: 4.2 },
+  TSLA: { price: 285.20, change: 2.28, changePct: 0.8 },
+  NVDA: { price: 142.80, change: -0.14, changePct: -0.1 },
 };
 
 const SEED_SIGNALS: Signal[] = [
@@ -81,6 +81,11 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [signalDetected, setSignalDetected] = useState(false);
+  const [livePrices, setLivePrices] = useState(DEFAULT_PRICES);
+
+  const handlePriceUpdate = useCallback((prices: Record<string, { price: number; change: number; changePct: number }>) => {
+    setLivePrices((prev) => ({ ...prev, ...prices }));
+  }, []);
 
   const handleSignalDetected = useCallback(async () => {
     setSignalDetected(true);
@@ -206,7 +211,7 @@ export default function Home() {
             {/* Ticker rows */}
             <div style={{ marginBottom: 24 }}>
               {watchlist.map((w, i) => {
-                const p = PRICES[w.ticker];
+                const p = livePrices[w.ticker];
                 return (
                   <div key={w.ticker}>
                     <div
@@ -236,11 +241,15 @@ export default function Home() {
                           style={{
                             fontFamily: "var(--font-mono)",
                             fontSize: 13,
-                            color: p.up ? "var(--ink-60)" : "var(--orange)",
-                            minWidth: 80,
+                            color: p.changePct >= 0 ? "var(--ink-60)" : "var(--orange)",
+                            minWidth: 120,
+                            transition: "color 0.3s",
                           }}
                         >
-                          {p.price} {p.up ? "+" : "−"}{p.change}
+                          ${p.price.toFixed(2)}{" "}
+                          <span style={{ color: p.changePct >= 0 ? "var(--ink-30)" : "var(--orange)" }}>
+                            {p.changePct >= 0 ? "+" : ""}{p.changePct.toFixed(1)}%
+                          </span>
                         </span>
                       )}
 
@@ -357,7 +366,7 @@ export default function Home() {
             <div className="mark-eyebrow" style={{ marginBottom: 28 }}>
               news timeline
             </div>
-            <NewsTimeline onSignalDetected={handleSignalDetected} />
+            <NewsTimeline onSignalDetected={handleSignalDetected} onPriceUpdate={handlePriceUpdate} />
           </div>
         </div>
 

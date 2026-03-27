@@ -3,6 +3,11 @@
     {
       "date": "2026-03-18",
       "label": "Mar 18",
+      "prices": {
+        "SMCI": { "price": 42.50, "change": 1.72, "changePct": 4.2 },
+        "TSLA": { "price": 285.20, "change": 2.28, "changePct": 0.8 },
+        "NVDA": { "price": 142.80, "change": -0.14, "changePct": -0.1 }
+      },
       "events": [
         {
           "source": "MarketWatch",
@@ -23,6 +28,11 @@
     {
       "date": "2026-03-19",
       "label": "Mar 19",
+      "prices": {
+        "SMCI": { "price": 39.10, "change": -3.40, "changePct": -8.0 },
+        "TSLA": { "price": 282.50, "change": -2.70, "changePct": -0.9 },
+        "NVDA": { "price": 140.20, "change": -2.60, "changePct": -1.8 }
+      },
       "events": [
         {
           "source": "DOJ Press Release",
@@ -50,6 +60,11 @@
     {
       "date": "2026-03-20",
       "label": "Mar 20",
+      "prices": {
+        "SMCI": { "price": 28.48, "change": -10.62, "changePct": -27.2 },
+        "TSLA": { "price": 280.10, "change": -2.40, "changePct": -0.9 },
+        "NVDA": { "price": 138.50, "change": -1.70, "changePct": -1.2 }
+      },
       "events": [
         {
           "source": "Bloomberg",
@@ -77,6 +92,11 @@
     {
       "date": "2026-03-25",
       "label": "Mar 25",
+      "prices": {
+        "SMCI": { "price": 26.80, "change": -1.68, "changePct": -5.9 },
+        "TSLA": { "price": 278.40, "change": -1.70, "changePct": -0.6 },
+        "NVDA": { "price": 139.90, "change": 1.40, "changePct": 1.0 }
+      },
       "events": [
         {
           "source": "Reuters",
@@ -97,6 +117,11 @@
     {
       "date": "2026-03-26",
       "label": "Mar 26",
+      "prices": {
+        "SMCI": { "price": 25.38, "change": -1.42, "changePct": -5.3 },
+        "TSLA": { "price": 279.80, "change": 1.40, "changePct": 0.5 },
+        "NVDA": { "price": 141.20, "change": 1.30, "changePct": 0.9 }
+      },
       "events": [
         {
           "source": "Bloomberg",
@@ -124,6 +149,11 @@
     {
       "date": "2026-03-27",
       "label": "Mar 27",
+      "prices": {
+        "SMCI": { "price": 24.10, "change": -1.28, "changePct": -5.0 },
+        "TSLA": { "price": 281.60, "change": 1.80, "changePct": 0.6 },
+        "NVDA": { "price": 142.50, "change": 1.30, "changePct": 0.9 }
+      },
       "events": [
         {
           "source": "Reuters",
