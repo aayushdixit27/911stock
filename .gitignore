@@ -1,0 +1,8 @@
+.DS_Store
+.obsidian/
+*.m4a
+.env
+node_modules/
+__pycache__/
+*.pyc
+.claude/

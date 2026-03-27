@@ -1,0 +1,1436 @@
+00:00:00,100 --> 00:00:01,859 [Speaker 0]
+Buying for me is where I get that question 
+
+00:00:01,860 --> 00:00:06,399 [Speaker 1]
+Yes. Yes. Fair enough. I, I don't think we need to expand there. We need to stay fo-- we don't wanna boil the ocean- 
+
+00:00:06,400 --> 00:00:06,450 [Speaker 0]
+Yeah 
+
+00:00:06,450 --> 00:00:27,860 [Speaker 1]
+... as somebody said, right? Yeah. Yeah. That's okay. Understood. Understood. Okay. So if it was able to give it to you in margins, so you-- where-- what are your thoughts on setting the margins? Like, do we wanna do that through, uh, the web or, you know, do, do you want to, uh, maybe have a call with the agent where you tell it the margins you like or? 
+
+00:00:30,020 --> 00:00:33,140 [Speaker 0]
+You know, just for simplicity's sake, if I can input it myself- 
+
+00:00:33,140 --> 00:00:33,650 [Speaker 1]
+Probably better 
+
+00:00:33,650 --> 00:00:33,930 [Speaker 0]
+... it's like- 
+
+00:00:33,930 --> 00:00:34,340 [Speaker 2]
+[chattering] 
+
+00:00:34,340 --> 00:00:35,010 [Speaker 1]
+Yeah. 
+
+00:00:35,010 --> 00:00:35,060 [Speaker 0]
+Yeah. 
+
+00:00:35,060 --> 00:00:38,140 [Speaker 1]
+Simple HTML. Don't, don't need to, yeah. Got it. Got it. Okay. Understood. 
+
+00:00:38,140 --> 00:00:43,800 [Speaker 0]
+Other, like, if you wanna get really in the weeds of it, it can connect to your own federal people to, like, copy that. But that's, like, pretty much- 
+
+00:00:43,800 --> 00:00:44,480 [Speaker 1]
+Yeah. 
+
+00:00:44,480 --> 00:00:44,540 [Speaker 2]
+[chattering] 
+
+00:00:44,540 --> 00:00:45,400 [Speaker 0]
+So, like, I might try to- 
+
+00:00:45,400 --> 00:00:46,240 [Speaker 1]
+Maybe outside 
+
+00:00:46,240 --> 00:00:57,610 [Speaker 0]
+... create it from the thing that connects to Link.com. So it'll get that data in real time. It, it'll read and write in real time. Uh, we just have to make sure, like, you know, that connector is available. 
+
+00:00:57,610 --> 00:00:57,830 [Speaker 1]
+Sure. 
+
+00:00:57,830 --> 00:01:01,400 [Speaker 0]
+Uh, what-- So you guys were looking at, uh, what connector again? 
+
+00:01:01,400 --> 00:01:01,800 [Speaker 1]
+Um. 
+
+00:01:03,280 --> 00:01:03,480 [Speaker 2]
+[chattering] 
+
+00:01:03,480 --> 00:01:05,880 [Speaker 0]
+So yeah, so if we look at AG connectors. 
+
+00:01:07,360 --> 00:01:08,080 [Speaker 0]
+So news- 
+
+00:01:08,080 --> 00:01:08,899 [Speaker 1]
+What's news? 
+
+00:01:08,900 --> 00:01:11,070 [Speaker 0]
+In, like, real time on the web is what you're looking at. 
+
+00:01:11,070 --> 00:01:12,580 [Speaker 2]
+[chattering] 
+
+00:01:12,580 --> 00:01:15,580 [Speaker 0]
+That one... 
+
+00:01:19,720 --> 00:01:24,530 [Speaker 0]
+It's hard to say just because we're getting it from the news rather than a, a particular source like your Salesforce or your- 
+
+00:01:26,140 --> 00:01:26,480 [Speaker 1]
+Okay. 
+
+00:01:26,480 --> 00:01:28,620 [Speaker 0]
+That would be a little tricky. Um, 
+
+00:01:30,240 --> 00:01:31,480 [Speaker 0]
+what I would recommend is, so 
+
+00:01:32,620 --> 00:01:37,760 [Speaker 0]
+a couple of my, uh, my team members, Pedro and Patrick, are on, like, monitoring Discord. 
+
+00:01:37,760 --> 00:01:38,160 [Speaker 1]
+Yes. 
+
+00:01:38,160 --> 00:01:40,920 [Speaker 0]
+I would probably, like, just reach out, like, let them know you talked with me, and that- 
+
+00:01:40,920 --> 00:01:41,340 [Speaker 1]
+Yeah 
+
+00:01:41,340 --> 00:01:42,510 [Speaker 0]
+... just ask them, like, hey. 
+
+00:01:42,510 --> 00:01:42,640 [Speaker 2]
+[chattering] 
+
+00:01:42,640 --> 00:01:48,040 [Speaker 1]
+Okay, cool. 
+
+00:01:48,040 --> 00:01:55,060 [Speaker 0]
+Yeah. It's pre-pretty internal for sure. But if you guys find a way to build these, hit up Harry and Richard. 
+
+00:01:55,060 --> 00:01:55,840 [Speaker 2]
+[chattering] 
+
+00:01:55,840 --> 00:02:02,660 [Speaker 1]
+Absolutely. So we're-- I had some thoughts on this, which was, uh, we want a Wizard of Oz as much as we can. 
+
+00:02:02,660 --> 00:02:03,060 [Speaker 0]
+Mm-hmm. 
+
+00:02:03,060 --> 00:02:09,420 [Speaker 1]
+You know? So I'm thinking we, we could hard build the signal detection, right? Um, and, um, 
+
+00:02:11,560 --> 00:02:28,360 [Speaker 1]
+then we could do the plain English plus phone calls, and then the other stuff we could do. So if we do it, the full pipeline will take forever, and maybe it's outside of the scope of the hackathon. But, uh, yeah. So in terms of Wizard of Oz-ing it, like, which part do you think 
+
+00:02:30,080 --> 00:02:34,049 [Speaker 1]
+needs to be there, and which part do you think maybe should stay? Should, should- 
+
+00:02:34,049 --> 00:02:35,280 [Speaker 0]
+Within the Airbyte piece- 
+
+00:02:35,280 --> 00:02:35,290 [Speaker 1]
+Yeah 
+
+00:02:35,290 --> 00:02:36,220 [Speaker 0]
+... or just in general? 
+
+00:02:37,800 --> 00:02:39,450 [Speaker 1]
+Well, both if you don't mind, but yeah. 
+
+00:02:39,450 --> 00:02:44,980 [Speaker 0]
+Yeah. So the Airbyte piece, there, there needs to be a way to, like, have that connector. 
+
+00:02:44,980 --> 00:02:45,180 [Speaker 1]
+Right. 
+
+00:02:45,180 --> 00:02:46,700 [Speaker 0]
+That's kind of like a mandatory piece for that. 
+
+00:02:46,700 --> 00:02:47,620 [Speaker 1]
+Legit. Yeah. Yeah. Uh-huh. 
+
+00:02:47,620 --> 00:02:48,190 [Speaker 0]
+In general- 
+
+00:02:49,320 --> 00:02:49,540 [Speaker 1]
+Mm-hmm 
+
+00:02:49,540 --> 00:02:54,940 [Speaker 0]
+... you know, I don't know how much of visuals that are gonna be needed for the presentations later. 
+
+00:02:54,940 --> 00:02:54,960 [Speaker 1]
+Sure. 
+
+00:02:54,960 --> 00:02:56,240 [Speaker 0]
+I'm sure that they would help, but- 
+
+00:02:56,240 --> 00:02:56,680 [Speaker 1]
+Sure 
+
+00:02:56,680 --> 00:02:57,680 [Speaker 0]
+... um. 
+
+00:02:57,680 --> 00:03:02,520 [Speaker 1]
+But, you know, I, I remember a winning project had, like, the most killer visuals, but great functionality. 
+
+00:03:02,520 --> 00:03:02,840 [Speaker 0]
+Yeah. 
+
+00:03:02,840 --> 00:03:03,960 [Speaker 1]
+So yeah. 
+
+00:03:03,960 --> 00:03:06,580 [Speaker 0]
+Do you want me to like... We, we can walk over to, like, my team- 
+
+00:03:06,580 --> 00:03:06,590 [Speaker 1]
+Yeah 
+
+00:03:06,590 --> 00:03:08,160 [Speaker 0]
+... and then we can get some, like, insights on- 
+
+00:03:08,160 --> 00:03:08,400 [Speaker 1]
+Sure, sure 
+
+00:03:08,400 --> 00:03:09,660 [Speaker 0]
+... getting that live data from the web. 
+
+00:03:09,660 --> 00:03:11,450 [Speaker 1]
+Yeah. Let's do that. Let's do that. 
+
+00:03:11,450 --> 00:03:11,460 [Speaker 0]
+Yeah. 
+
+00:03:11,460 --> 00:03:13,720 [Speaker 1]
+Hey, we're gonna walk over to the Airbyte team. 
+
+00:03:13,720 --> 00:03:14,070 [Speaker 2]
+Yeah. 
+
+00:03:14,070 --> 00:03:14,080 [Speaker 1]
+Yeah. 
+
+00:03:14,080 --> 00:03:15,660 [Speaker 2]
+I'll go there. 
+
+00:03:15,660 --> 00:03:16,640 [Speaker 1]
+He'll follow. 
+
+00:03:16,640 --> 00:03:16,750 [Speaker 0]
+Uh, do you want to wait? 
+
+00:03:16,750 --> 00:03:17,220 [Speaker 1]
+No, no, he'll follow. 
+
+00:03:18,620 --> 00:03:23,800 [Speaker 0]
+Okay. Yeah, I haven't had that, you know, that use case of, like, getting the data directly just from the web in Airbyte. 
+
+00:03:23,800 --> 00:03:24,640 [Speaker 1]
+I see. Yeah. 
+
+00:03:26,040 --> 00:03:27,440 [Speaker 1]
+Could use some good ideas here. 
+
+00:03:27,440 --> 00:03:29,100 [Speaker 0]
+Yeah. No, that's great. 
+
+00:03:29,100 --> 00:03:32,280 [Speaker 2]
+[keyboard clicking] 
+
+00:03:32,280 --> 00:03:33,180 [Speaker 0]
+Yeah. 
+
+00:03:37,920 --> 00:03:38,760 [Speaker 1]
+Hi, guys. How are you? 
+
+00:03:38,760 --> 00:03:44,420 [Speaker 0]
+So how would you recommend going about getting data in real time from web searches? 
+
+00:03:46,680 --> 00:03:52,100 [Speaker 3]
+Uh, for-- within Airbyte, we don't really do the web search, uh, piece. 
+
+00:03:52,100 --> 00:03:52,500 [Speaker 1]
+Okay. 
+
+00:03:52,500 --> 00:03:53,560 [Speaker 3]
+I think there's- 
+
+00:03:53,560 --> 00:03:54,300 [Speaker 2]
+[chattering] 
+
+00:03:54,300 --> 00:03:55,320 [Speaker 0]
+What about, like, news sources? 
+
+00:03:55,320 --> 00:03:55,820 [Speaker 3]
+Sorry? 
+
+00:03:55,820 --> 00:03:58,920 [Speaker 0]
+News sources. News, like trading source sites. 
+
+00:03:58,920 --> 00:04:08,900 [Speaker 3]
+Yeah. I don't think we have that kind of source right now. Um, our sources are generally, like, marketing tools, sales tools, um, like, you know, Stripe, HubSpot, Salesforce- 
+
+00:04:08,900 --> 00:04:09,180 [Speaker 1]
+I see 
+
+00:04:09,180 --> 00:04:13,800 [Speaker 3]
+... support tools. So Zendesk tickets, things like that. Um- 
+
+00:04:13,800 --> 00:04:14,520 [Speaker 1]
+Sure. 
+
+00:04:14,520 --> 00:04:17,459 [Speaker 3]
+Not really... We don't really have connectors for- 
+
+00:04:17,459 --> 00:04:18,790 [Speaker 0]
+For just, like, scraping business- 
+
+00:04:18,790 --> 00:04:20,399 [Speaker 3]
+Just generic web search. 
+
+00:04:21,640 --> 00:04:21,850 [Speaker 1]
+Yeah. From Airbyte's side. 
+
+00:04:21,850 --> 00:04:24,780 [Speaker 0]
+Yeah. That's what I thought. But in case there was a workaround, I thought I'd ask. 
+
+00:04:24,780 --> 00:04:25,040 [Speaker 3]
+No. 
+
+00:04:26,420 --> 00:04:26,770 [Speaker 0]
+Yeah. Sorry. 
+
+00:04:26,770 --> 00:04:26,830 [Speaker 1]
+Fair enough. 
+
+00:04:26,830 --> 00:04:28,000 [Speaker 0]
+Those are the answers I was looking for. 
+
+00:04:28,000 --> 00:04:28,660 [Speaker 1]
+Got it. Got it. 
+
+00:04:30,000 --> 00:04:30,310 [Speaker 0]
+But- 
+
+00:04:30,310 --> 00:04:30,680 [Speaker 1]
+Okay. 
+
+00:04:30,680 --> 00:04:32,969 [Speaker 0]
+Really good to see what you guys are building. 
+
+00:04:32,969 --> 00:04:33,480 [Speaker 1]
+Yeah. Yeah. 
+
+00:04:35,420 --> 00:04:37,219 [Speaker 1]
+Can I mention to you what it is we're building? 
+
+00:04:37,220 --> 00:04:37,740 [Speaker 3]
+Yeah. 
+
+00:04:37,740 --> 00:04:43,760 [Speaker 1]
+Okay. Excellent. So the idea is it watches your stocks twenty-four/seven- 
+
+00:04:43,760 --> 00:04:43,890 [Speaker 3]
+Mm-hmm 
+
+00:04:43,890 --> 00:04:45,479 [Speaker 1]
+... and it calls you when something matters. 
+
+00:04:45,480 --> 00:04:45,919 [Speaker 3]
+Mm-hmm. 
+
+00:04:45,920 --> 00:04:50,320 [Speaker 1]
+So, and explain in plain English. So for example, you know, um, 
+
+00:04:52,260 --> 00:05:13,940 [Speaker 1]
+you-- so I own Nvidia and Tesla, and then I trigger the agent, the phone rings. I say, "Hey, I'm..." The phone rather says, "Hey, I'm watching Nvidia for you. The CFO just sold twelve million in stock. That's unusual because she hasn't sold anything in twenty-two months, and this wasn't part of her plan. Da, da, da. You have Nvidia in your watchlist. Do you want me to tell you more?" And so, um, we're thinking about how maybe 
+
+00:05:15,200 --> 00:05:22,240 [Speaker 1]
+the judge could even make a call and say, you know, "I have these stocks. Could you tell me a little bit? I'd like to know." And it's like, then it would say, "What would you like to know?" 
+
+00:05:22,240 --> 00:05:22,420 [Speaker 3]
+Okay. 
+
+00:05:22,420 --> 00:05:23,920 [Speaker 1]
+So yeah. Do you have- 
+
+00:05:23,920 --> 00:05:24,380 [Speaker 3]
+Cool. 
+
+00:05:24,380 --> 00:05:24,860 [Speaker 1]
+Yeah. 
+
+00:05:24,860 --> 00:05:27,599 [Speaker 3]
+Nice. Nice. Yeah, that's cool. I, I think for... 
+
+00:05:29,100 --> 00:05:29,360 [Speaker 3]
+Hmm. 
+
+00:05:29,360 --> 00:05:31,220 [Speaker 0]
+I just wanted to make sure these are all the- 
+
+00:05:31,220 --> 00:05:35,060 [Speaker 3]
+Yeah. I don't think right now we have, like, connectors that would help in the 
+
+00:05:36,280 --> 00:05:38,780 [Speaker 3]
+financial, like, stock market type stuff. 
+
+00:05:40,080 --> 00:05:40,090 [Speaker 3]
+Um.
+
+00:05:40,568 --> 00:05:41,308 [Speaker 1]
+Unfortunately. 
+
+00:05:42,448 --> 00:05:47,108 [Speaker 4]
+Here on CP, like, yeah, you can kind of talk about what-- how we would go about it. 
+
+00:05:47,108 --> 00:05:53,908 [Speaker 1]
+Could we simulate this? Because one-- You know, I work in product, right? So one of the things we think about is, if you don't mind, just- 
+
+00:05:53,908 --> 00:05:54,728 [Speaker 4]
+Yeah. 
+
+00:05:54,728 --> 00:05:56,308 [Speaker 1]
+Um, one... 
+
+00:05:58,668 --> 00:05:59,538 [Speaker 4]
+Like, how can- 
+
+00:05:59,538 --> 00:05:59,538 [Speaker 1]
+Like, so, so... 
+
+00:05:59,538 --> 00:05:59,608 [Speaker 4]
+Actually, so there's this, it's this, uh, app here. 
+
+00:05:59,608 --> 00:06:01,678 [Speaker 1]
+How can we wizard of Oz as much as possible? 
+
+00:06:01,678 --> 00:06:02,918 [Speaker 4]
+So if you create an account here, um, after you go through that process, you'll get- 
+
+00:06:02,918 --> 00:06:08,548 [Speaker 1]
+You know, like, like how can we, uh, only build what's strictly necessary to keep it in the scope of the hackathon? 
+
+00:06:08,548 --> 00:06:09,168 [Speaker 4]
+Mm-hmm. 
+
+00:06:09,168 --> 00:06:12,088 [Speaker 1]
+So what we were thinking is we could, 
+
+00:06:13,488 --> 00:06:18,588 [Speaker 1]
+um, we could wizard of Oz the hero moment. So we could hard build the signal detection. 
+
+00:06:18,588 --> 00:06:19,008 [Speaker 4]
+Mm-hmm. 
+
+00:06:19,008 --> 00:06:21,678 [Speaker 1]
+And we play those phone calls and then was, yeah, 
+
+00:06:22,688 --> 00:06:24,268 [Speaker 1]
+Cloud Zero, uh, error sprinting. So 
+
+00:06:26,508 --> 00:06:29,188 [Speaker 1]
+the full pipeline is maybe outside of the scope of the hackathon. 
+
+00:06:29,188 --> 00:06:31,458 [Speaker 4]
+Mm-hmm. Or if you want to go, you know, have a talk with your- 
+
+00:06:31,458 --> 00:06:33,648 [Speaker 1]
+Get us some third-party like... 
+
+00:06:33,648 --> 00:06:35,408 [Speaker 4]
+You can. Um... 
+
+00:06:35,408 --> 00:06:36,718 [Speaker 1]
+Is that also like a fully managed- 
+
+00:06:39,328 --> 00:06:40,408 [Speaker 4]
+This would all be in the code. 
+
+00:06:40,408 --> 00:06:53,388 [Speaker 1]
+Yeah. If you were using our-- So the, the agent connector stuff is pretty new. If you're using like our data replication platform, we do have like a pretty good story for building your own. Unfortunately, we're not quite there for the agent connectors. Um... 
+
+00:06:53,388 --> 00:06:54,607 [Speaker 4]
+So maybe this limits that. 
+
+00:06:54,608 --> 00:06:56,728 [Speaker 1]
+Right. Right. Right. Keep the scope here of- 
+
+00:06:56,728 --> 00:06:57,208 [Speaker 4]
+Yeah. 
+
+00:06:57,208 --> 00:06:58,468 [Speaker 1]
+Yeah. Okay. At least- 
+
+00:06:58,468 --> 00:06:59,268 [Speaker 4]
+I would say so. 
+
+00:06:59,268 --> 00:06:59,708 [Speaker 1]
+Yeah. Okay. 
+
+00:06:59,708 --> 00:07:05,768 [Speaker 4]
+Um, but yeah. So, so which, which pieces are you thinking of, uh, implementing specifically? Uh, 
+
+00:07:06,868 --> 00:07:07,428 [Speaker 4]
+let's see. 
+
+00:07:07,428 --> 00:07:08,448 [Speaker 1]
+The phone call. 
+
+00:07:08,448 --> 00:07:08,828 [Speaker 4]
+Yeah. 
+
+00:07:08,828 --> 00:07:10,508 [Speaker 1]
+That and, and the data sourcing. 
+
+00:07:11,628 --> 00:07:14,268 [Speaker 4]
+Where are you gonna source that data then? What are you thinking? 
+
+00:07:14,268 --> 00:07:15,028 [Speaker 1]
+We need to use like API 
+
+00:07:16,108 --> 00:07:17,968 [Speaker 1]
+or something else. 
+
+00:07:17,968 --> 00:07:18,188 [Speaker 4]
+Yeah. 
+
+00:07:18,188 --> 00:07:18,318 [Speaker 1]
+Like Tableau. 
+
+00:07:18,318 --> 00:07:19,148 [Speaker 4]
+Yeah, like Tableau. 
+
+00:07:19,148 --> 00:07:25,448 [Speaker 1]
+Yeah. Tableau probably. But then we, we want to like work all the sources into, like... 
+
+00:07:25,448 --> 00:07:25,638 [Speaker 4]
+Mm-hmm. 
+
+00:07:25,638 --> 00:07:27,778 [Speaker 1]
+Is that even possible? 
+
+00:07:27,778 --> 00:07:27,968 [Speaker 4]
+Um... 
+
+00:07:27,968 --> 00:07:32,188 [Speaker 1]
+Are there other things that we should have looked at? 
+
+00:07:32,248 --> 00:07:36,088 [Speaker 4]
+Yeah. I, I think with the, the set of connectors we have right now for the agent product. 
+
+00:07:36,088 --> 00:07:36,688 [Speaker 1]
+Yeah. Um, 
+
+00:07:37,908 --> 00:07:38,728 [Speaker 1]
+I... 
+
+00:07:38,728 --> 00:07:41,248 [Speaker 4]
+I don't think so. Um... 
+
+00:07:42,788 --> 00:07:45,908 [Speaker 1]
+Kind of the most useful right now. Go to market. 
+
+00:07:45,908 --> 00:07:47,108 [Speaker 4]
+Yeah. I think, you know. 
+
+00:07:47,108 --> 00:07:48,068 [Speaker 1]
+And then understand. 
+
+00:07:48,068 --> 00:07:50,048 [Speaker 4]
+Yeah. Just [laughs] stay where you're at. 
+
+00:07:50,048 --> 00:07:50,808 [Speaker 1]
+Appreciate it. Thank you. 
+
+00:07:50,808 --> 00:07:51,528 [Speaker 4]
+It's a cool product. 
+
+00:07:51,528 --> 00:07:52,048 [Speaker 1]
+Thank you. Thank you. 
+
+00:07:54,248 --> 00:07:56,448 [Speaker 4]
+Look at the patient history. 
+
+00:07:56,448 --> 00:07:58,688 [Speaker 1]
+Okay. Let's go. Okay. 
+
+00:07:58,688 --> 00:07:59,828 [Speaker 4]
+What do they do? Oh, yeah, yeah. 
+
+00:07:59,828 --> 00:08:02,468 [Speaker 1]
+Oh, yeah, yeah. Let's, let's ask them what they think. 
+
+00:08:04,768 --> 00:08:05,068 [Speaker 1]
+Yeah. 
+
+00:08:05,068 --> 00:08:07,008 [Speaker 4]
+I think it's the one version. 
+
+00:08:07,008 --> 00:08:07,108 [Speaker 1]
+Yeah. 
+
+00:08:08,468 --> 00:08:20,548 [Speaker 1]
+Hi, how are you? Good. Thank you. Hi, how's it going? My name's Yoshi. Good to meet you. I'm Sam. Nice to meet you. Nice to meet you, man. How's it going? Excellent. Great. Great. Thank you. So, um, can I tell you a little bit about what we're doing? Yeah. For sure. Excellent. So, um... 
+
+00:08:24,688 --> 00:08:49,768 [Speaker 1]
+Well, essentially, we have a agent that watches your stocks twenty-four seven. Okay, cool. And it calls you when something matters. Okay. So we're calling it nine one one, uh, stock. Okay. Yeah. So the same way you make a nine one one call- Yeah. -if something's happening. So for example- Yeah. -I-I'm watching Nvidia for you. Yeah. CFO just sold twelve million, da, da, da, da. Yeah. Do you want me to tell you more? Yeah. Yeah. Yeah. And then, um, one bit that we thought was maybe we could, um, 
+
+00:08:52,148 --> 00:09:00,248 [Speaker 1]
+have the judge call the agent. Mm-hmm. So the other way as well. Mm-hmm. So, um, so, um, yeah. 
+
+00:09:02,508 --> 00:09:11,088 [Speaker 1]
+That gives kind of... So yeah, what, what are your thoughts? We-- I think-- And then we can use Overmind to, like- Mm-hmm. -to, to make the agents, like, more, 
+
+00:09:12,308 --> 00:09:12,988 [Speaker 1]
+more correct. 
+
+00:09:12,988 --> 00:09:14,168 [Speaker 5]
+Yeah, yeah. Absolutely, yeah. 
+
+00:09:14,168 --> 00:09:14,218 [Speaker 1]
+Right. 
+
+00:09:14,218 --> 00:09:17,488 [Speaker 5]
+'Cause, but when you, um, you use, you can use Bland as the- 
+
+00:09:17,488 --> 00:09:18,477 [Speaker 1]
+Yeah, the voice. 
+
+00:09:18,477 --> 00:09:21,588 [Speaker 5]
+-voice. Yeah. But then you'll need to do s-some transcription. 
+
+00:09:21,588 --> 00:09:21,948 [Speaker 1]
+Yes. 
+
+00:09:21,948 --> 00:09:24,648 [Speaker 5]
+Uh, 'cause ours is only, uh, language models. 
+
+00:09:24,648 --> 00:09:26,588 [Speaker 1]
+OpenAI Whisper. Is that fine? 
+
+00:09:26,588 --> 00:09:28,248 [Speaker 5]
+Uh, yeah. Yeah, yeah, yeah. 
+
+00:09:28,248 --> 00:09:28,638 [Speaker 1]
+Something like that. 
+
+00:09:28,638 --> 00:09:29,548 [Speaker 5]
+Yeah, yeah. Something like that. It's absolutely fine, yeah. 
+
+00:09:29,548 --> 00:09:29,768 [Speaker 1]
+Okay. 
+
+00:09:29,768 --> 00:09:30,348 [Speaker 5]
+Exactly. 
+
+00:09:30,348 --> 00:09:33,668 [Speaker 1]
+So we're gonna get from Overmind real-time agent supervision, right? 
+
+00:09:33,668 --> 00:09:39,528 [Speaker 5]
+Um, yeah. Wait, let's make sure these are the right docs. Um, where did you get these? Oh, this is in the- 
+
+00:09:39,528 --> 00:09:40,928 [Speaker 1]
+This is, uh, research that I gathered. 
+
+00:09:40,928 --> 00:09:44,868 [Speaker 5]
+Okay. Yeah. Cool, cool, cool. Fine. Yeah. So go to, um, go to our website, uh, 
+
+00:09:46,908 --> 00:09:48,108 [Speaker 5]
+overmindlab.ai. 
+
+00:09:53,508 --> 00:09:55,048 [Speaker 5]
+Um... 
+
+00:09:55,048 --> 00:09:56,887 [Speaker 1]
+I love your, uh, visuals, by the way. 
+
+00:09:56,887 --> 00:09:57,748 [Speaker 5]
+Yeah, yeah, yeah. 
+
+00:09:57,748 --> 00:10:01,128 [Speaker 1]
+I work in product and sales, so I have an eye for these things. The best slide. 
+
+00:10:01,128 --> 00:10:02,788 [Speaker 5]
+Yeah, yeah, yeah. Uh, click on the hackathon box. 
+
+00:10:04,428 --> 00:10:06,458 [Speaker 5]
+Cool. So this is, this is what people are using today. 
+
+00:10:06,458 --> 00:10:07,508 [Speaker 1]
+Okay. Sounds good. 
+
+00:10:07,508 --> 00:10:12,558 [Speaker 5]
+Yeah. And so go through, go, go through all of that and check out where you can get some use cases. But if you scroll down a little bit. 
+
+00:10:13,588 --> 00:10:13,908 [Speaker 1]
+Okay. Uh, go ahead. 
+
+00:10:13,908 --> 00:10:32,748 [Speaker 5]
+Yeah. So, so this is, this is what gets optimized today. So system prompt, tool descriptions, model selection, agent logic, um, and policy compliance. So basically, you can set, um... What it will do is it will analyze your agent, work out what it does, and then you can set some policies that you want it to abide by, and then it will also train against them as well, so it improves over time. 
+
+00:10:35,888 --> 00:10:40,028 [Speaker 5]
+Um, and then you'll get like full visibility and stuff as well. So you can see like all of the logs, all of the traces. 
+
+00:10:40,028 --> 00:10:44,587 [Speaker 1]
+Cool, cool. I see. Okay. Cool. Yeah. Overmind sounds, sounds great. Yeah. 
+
+00:10:44,588 --> 00:10:56,208 [Speaker 5]
+Yeah, yeah. So then, yeah, longer-term vision for our-- So we've got-- This is what everyone's using today. The longer-term vision is that we're building a pipeline to help people fine-tune SLMs on production data, so that they basically- 
+
+00:10:56,208 --> 00:10:56,268 [Speaker 1]
+Automatically. 
+
+00:10:56,268 --> 00:11:06,778 [Speaker 5]
+Ideally, yeah. Yeah, yeah. Automate that whole, like, reinforcement learning pipeline, so that people get open, open weights models that are tuned specifically to their company and, and their use case. Um, so that's, that's the vision. 
+
+00:11:06,778 --> 00:11:06,788 [Speaker 1]
+Oh, wow. 
+
+00:11:06,788 --> 00:11:07,648 [Speaker 5]
+That's what we're working on. 
+
+00:11:07,648 --> 00:11:08,108 [Speaker 1]
+Very nice. 
+
+00:11:08,108 --> 00:11:08,527 [Speaker 5]
+Um... 
+
+00:11:08,528 --> 00:11:08,848 [Speaker 1]
+Very nice. 
+
+00:11:08,848 --> 00:11:12,658 [Speaker 5]
+Yeah. Would love you guys to have a go. Um, obviously the docs are all there, but if you get stuck- 
+
+00:11:12,658 --> 00:11:12,658 [Speaker 1]
+Cool. 
+
+00:11:12,658 --> 00:11:14,188 [Speaker 5]
+-run straight over and we'll come and help. 
+
+00:11:14,188 --> 00:11:16,148 [Speaker 1]
+A-a-any thoughts on our project specifically? 
+
+00:11:16,148 --> 00:11:17,068 [Speaker 5]
+I think it sounds amazing. Yeah. 
+
+00:11:17,068 --> 00:11:17,288 [Speaker 1]
+Okay. 
+
+00:11:17,288 --> 00:11:21,508 [Speaker 5]
+I think it's cool. I think it's really cool. I think, um, yeah, you just have to think about how you'll demo, 
+
+00:11:22,948 --> 00:11:23,078 [Speaker 5]
+um. 
+
+00:11:23,078 --> 00:11:24,028 [Speaker 1]
+Mm-hmm. 
+
+00:11:24,028 --> 00:11:24,438 [Speaker 5]
+Yeah. 
+
+00:11:24,438 --> 00:11:24,758 [Speaker 1]
+And you're- 
+
+00:11:24,758 --> 00:11:27,087 [Speaker 5]
+'Cause you will have to fake an alert really, I guess. 
+
+00:11:27,088 --> 00:11:32,328 [Speaker 1]
+Right. So we, we wanna... One of the product parts is, like, we wanna wizard of Oz as much as possible. 
+
+00:11:32,328 --> 00:11:32,808 [Speaker 5]
+Yeah. 
+
+00:11:32,808 --> 00:11:36,948 [Speaker 1]
+You know? So, uh, for example, full pipeline outside of the scope of the hackathon. 
+
+00:11:36,948 --> 00:11:37,788 [Speaker 5]
+Yeah, yeah. For sure. 
+
+00:11:37,788 --> 00:11:40,087 [Speaker 1]
+But we wanna wizard of Oz just the hero moment. 
+
+00:11:40,088 --> 00:11:40,528 [Speaker 5]
+Yeah, yeah. 
+
+00:11:40,528 --> 00:11:42,148 [Speaker 1]
+So we wanna hard build a signal that's not- 
+
+00:11:42,148 --> 00:11:42,948 [Speaker 5]
+Yeah, yeah. That's fine. 
+
+00:11:42,948 --> 00:11:43,407 [Speaker 1]
+That- 
+
+00:11:43,408 --> 00:11:46,588 [Speaker 5]
+Yeah. So it's like, oh, you know, yeah, like Jensen just sold loads of stock. 
+
+00:11:46,588 --> 00:11:46,928 [Speaker 1]
+Yeah. 
+
+00:11:46,928 --> 00:11:47,798 [Speaker 5]
+Yeah, yeah. Cool. 
+
+00:11:47,798 --> 00:11:47,808 [Speaker 1]
+Yeah. 
+
+00:11:47,808 --> 00:11:50,368 [Speaker 5]
+And then it... And then if you can demo the phone call. 
+
+00:11:50,368 --> 00:11:50,598 [Speaker 1]
+Yes. 
+
+00:11:50,598 --> 00:11:55,668 [Speaker 5]
+And then will it... Are you gonna show like a full remediation or like adjustment to the stock portfolio? 
+
+00:11:55,668 --> 00:11:57,268 [Speaker 1]
+How would we best do that, in your opinion? 
+
+00:11:59,248 --> 00:12:04,512 [Speaker 5]
+Well, you-I think we need to use, like, Auth0. 
+
+00:12:04,512 --> 00:12:05,902 [Speaker 1]
+Auth0. Okay, yeah. 
+
+00:12:05,902 --> 00:12:05,932 [Speaker 5]
+Yeah. 
+
+00:12:05,932 --> 00:12:07,612 [Speaker 1]
+Makes sense. Makes sense. 
+
+00:12:07,612 --> 00:12:07,692 [Speaker 5]
+Yeah. 
+
+00:12:07,692 --> 00:12:09,272 [Speaker 1]
+Okay. Yeah. 
+
+00:12:09,272 --> 00:12:19,952 [Speaker 5]
+And then I guess, yeah, 'cause-- Well, you don't... 'Cause how will you actually show, like, their wallet and stuff for, like, the actual, like, trading account? Are you just gonna buy crypto? 
+
+00:12:19,952 --> 00:12:22,052 [Speaker 1]
+We're gonna HTML something, move fast. 
+
+00:12:22,052 --> 00:12:22,092 [Speaker 5]
+[laughs] 
+
+00:12:22,092 --> 00:12:22,472 [Speaker 1]
+Yeah. 
+
+00:12:22,472 --> 00:12:23,542 [Speaker 5]
+Yeah. Yeah, yeah. 
+
+00:12:23,542 --> 00:12:23,552 [Speaker 1]
+Yeah. 
+
+00:12:23,552 --> 00:12:25,412 [Speaker 5]
+Yeah, yeah. 'Cause, 'cause you have to show- 
+
+00:12:25,412 --> 00:12:25,492 [Speaker 1]
+Yeah. 
+
+00:12:25,492 --> 00:12:36,292 [Speaker 5]
+'Cause that's how you... The-- probably the best way to demo it, right? If you can show the actual, like, them getting out of the NVIDIA position when something happens. But you'll need to show... 'Cause that's, that's ultimately what your agent's trying to do, right? 
+
+00:12:36,292 --> 00:12:36,792 [Speaker 1]
+Yeah. 
+
+00:12:36,792 --> 00:12:39,952 [Speaker 5]
+Like, sell the stock. So you need to show how you would do that. 
+
+00:12:41,092 --> 00:12:56,492 [Speaker 5]
+Um, and so you have this process where it's like phone call, obviously show the, the, the back end or the actual, like, tech, and then you, you can... and then you can go to a page where it's like, "And now it's, now it's closed out the position and we've, like, saved the portfolio." That's how I would do it. 
+
+00:12:56,492 --> 00:12:57,352 [Speaker 1]
+I see. Understood. 
+
+00:12:57,352 --> 00:12:57,622 [Speaker 5]
+Yeah, yeah. 
+
+00:12:57,622 --> 00:12:58,542 [Speaker 1]
+Understood. Okay. 
+
+00:12:58,542 --> 00:12:59,602 [Speaker 5]
+Yeah. It's cool, though, guys. It was- 
+
+00:12:59,602 --> 00:13:01,172 [Speaker 1]
+Yeah. No, appreciate it. Thank you for your input. 
+
+00:13:01,172 --> 00:13:01,772 [Speaker 5]
+Yeah. Let us know who- 
+
+00:13:01,772 --> 00:13:02,052 [Speaker 1]
+Much appreciated. Yeah. 
+
+00:13:02,052 --> 00:13:06,251 [Speaker 5]
+And obviously Overmind can help with all of, like, um, that agent's doing the work- 
+
+00:13:06,252 --> 00:13:06,832 [Speaker 1]
+Sure, sure 
+
+00:13:06,832 --> 00:13:08,852 [Speaker 5]
+...right? Once you do phone call transcription. 
+
+00:13:09,932 --> 00:13:12,012 [Speaker 5]
+Yeah. Awesome. Take some stickers. 
+
+00:13:12,012 --> 00:13:13,652 [Speaker 1]
+Oh, absolutely. Yes. 
+
+00:13:13,652 --> 00:13:14,372 [Speaker 5]
+Thank you, sir. 
+
+00:13:14,372 --> 00:13:14,662 [Speaker 1]
+Thank you. 
+
+00:13:14,662 --> 00:13:15,452 [Speaker 5]
+Different sizes. 
+
+00:13:15,452 --> 00:13:19,272 [Speaker 1]
+Like I said, you guys is a, a more customer facing, uh- 
+
+00:13:19,272 --> 00:13:19,542 [Speaker 5]
+Yeah, yeah 
+
+00:13:19,542 --> 00:13:21,172 [Speaker 1]
+...you know, uh [background chatter] 
+
+00:13:22,812 --> 00:13:25,202 [Speaker 5]
+Is that a 
+
+00:13:27,012 --> 00:13:38,342 [Speaker 5]
+good size for you? 
+
+00:13:38,342 --> 00:13:43,432 [Speaker 1]
+Yeah, I guess so. Yeah. Cheers. 
+
+00:13:43,432 --> 00:13:44,522 [Speaker 5]
+Yeah, no worries, guys. Good to meet you. 
+
+00:13:44,522 --> 00:13:45,872 [Speaker 1]
+Absolutely. Likewise. 
+
+00:13:45,872 --> 00:13:46,872 [Speaker 5]
+We'll be judging later on. 
+
+00:13:49,592 --> 00:13:52,932 [Speaker 1]
+Solid. That's it. Um, let's talk to... Huh? I'm sorry? 
+
+00:13:52,932 --> 00:13:53,772 [Speaker 5]
+Sam Braun. 
+
+00:13:53,772 --> 00:13:59,032 [Speaker 1]
+Sam Braun. Excellent. Good to meet you, Sam. Yeah. Um, let's talk to Auth0, yeah? 
+
+00:13:59,032 --> 00:14:00,452 [Speaker 5]
+Don't you, don't you need a Mac to- 
+
+00:14:04,932 --> 00:14:09,932 [Speaker 1]
+We should ask. 
+
+00:14:13,992 --> 00:14:14,712 [Speaker 1]
+Let's ask this guy. 
+
+00:14:16,072 --> 00:14:20,912 [Speaker 1]
+Excuse me. Do you by any chance know where Auth0 is? The Auth0 people. 
+
+00:14:20,912 --> 00:14:21,532 [Speaker 5]
+No, it's, uh- 
+
+00:14:21,532 --> 00:14:22,811 [Speaker 4]
+I'll be a sec. One sec. 
+
+00:14:22,812 --> 00:14:39,092 [Speaker 1]
+Okay. Thank you. Appreciate it. [background chatter] 
+
+00:14:44,692 --> 00:14:59,892 [Speaker 1]
+Uh, I like that guy, Sam. He seems like he's a smart guy. 
+
+00:14:59,892 --> 00:15:00,312 [Speaker 5]
+Yeah. 
+
+00:15:00,312 --> 00:15:00,492 [Speaker 1]
+Yeah. 
+
+00:15:02,352 --> 00:15:04,132 [Speaker 1]
+And his partner too, the CEO. Yeah. 
+
+00:15:04,132 --> 00:15:05,892 [Speaker 5]
+I think the visual is so cool. 
+
+00:15:05,892 --> 00:15:06,781 [Speaker 1]
+Yeah. Seriously, right? 
+
+00:15:06,781 --> 00:15:08,132 [Speaker 5]
+I just like the, the, the, the- 
+
+00:15:08,132 --> 00:15:09,642 [Speaker 1]
+I noticed in their PowerPoint, they had- 
+
+00:15:09,642 --> 00:15:09,642 [Speaker 5]
+Yeah 
+
+00:15:09,642 --> 00:15:11,672 [Speaker 1]
+...everything, like, so on point on the PowerPoint. 
+
+00:15:11,672 --> 00:15:13,132 [Speaker 5]
+Mm-hmm. Mm-hmm. 
+
+00:15:13,132 --> 00:15:14,112 [Speaker 1]
+I wonder how they built this, 
+
+00:15:15,792 --> 00:15:18,632 [Speaker 1]
+the website. Probably, like, just Webflow, but... 
+
+00:15:18,632 --> 00:15:20,432 [Speaker 5]
+But, like, these are just pixels. 
+
+00:15:20,432 --> 00:15:21,352 [Speaker 1]
+Yeah. It's- 
+
+00:15:21,352 --> 00:15:23,472 [Speaker 5]
+Use, uh, Illustrator. 
+
+00:15:23,472 --> 00:15:23,732 [Speaker 1]
+[laughs] 
+
+00:15:23,732 --> 00:15:24,152 [Speaker 5]
+I can do that. 
+
+00:15:25,192 --> 00:15:28,992 [Speaker 1]
+It's pretty awesome, honestly. And it's the eye of Sauron. 
+
+00:15:28,992 --> 00:15:29,692 [Speaker 5]
+[laughs] 
+
+00:15:29,692 --> 00:15:29,872 [Speaker 1]
+Yeah. 
+
+00:15:33,372 --> 00:15:36,292 [Speaker 1]
+There is no life in the void, only death. 
+
+00:15:36,292 --> 00:15:37,452 [Speaker 5]
+Can I look into the cloud? 
+
+00:15:37,452 --> 00:15:37,972 [Speaker 1]
+Huh? 
+
+00:15:37,972 --> 00:15:39,032 [Speaker 5]
+Can you go to your cloud? 
+
+00:15:39,032 --> 00:15:40,032 [Speaker 1]
+Yeah, yeah. 
+
+00:15:40,032 --> 00:15:40,052 [Speaker 5]
+Cloud. 
+
+00:15:40,052 --> 00:15:41,632 [Speaker 1]
+Yeah. So let's wizard of Oz. 
+
+00:15:41,632 --> 00:15:43,002 [Speaker 5]
+Oh, yeah. I, I think- 
+
+00:15:43,002 --> 00:15:43,002 [Speaker 1]
+Yeah 
+
+00:15:43,002 --> 00:15:43,812 [Speaker 5]
+...we can- 
+
+00:15:43,812 --> 00:15:44,662 [Speaker 1]
+Do you wanna do the full pipe? 
+
+00:15:44,662 --> 00:15:46,092 [Speaker 5]
+Like, si-simulate the time. 
+
+00:15:46,092 --> 00:15:46,362 [Speaker 1]
+Okay, okay. 
+
+00:15:46,362 --> 00:15:48,012 [Speaker 5]
+Like, maybe a week ago. 
+
+00:15:48,012 --> 00:15:48,792 [Speaker 1]
+Okay. 
+
+00:15:48,792 --> 00:15:49,591 [Speaker 5]
+When the- 
+
+00:15:49,592 --> 00:15:49,852 [Speaker 1]
+Okay. Yeah, yeah 
+
+00:15:49,852 --> 00:15:51,232 [Speaker 5]
+...the news of the S-SMCI come out. 
+
+00:15:51,232 --> 00:15:52,152 [Speaker 1]
+Perfect. Perfect. 
+
+00:15:52,152 --> 00:15:52,522 [Speaker 6]
+Hi. 
+
+00:15:52,522 --> 00:15:58,512 [Speaker 1]
+Hi. How you doing? Hey. Great presentation by the way. Loved it. So, um, we're thinking about using Auth0. Uh- [microphone static] 
+
+00:15:58,512 --> 00:16:00,672 [Speaker 6]
+So we need like a stock watcher. 
+
+00:16:00,672 --> 00:16:00,871 [Speaker 1]
+Uh-huh. 
+
+00:16:00,872 --> 00:16:05,662 [Speaker 6]
+So you have a stock portfolio, and then when, when some news come out, like SMCI news- 
+
+00:16:06,732 --> 00:16:06,742 [Speaker 1]
+Mm-hmm 
+
+00:16:06,742 --> 00:16:09,412 [Speaker 6]
+...and then the agent will call you saying, "Oh, this- 
+
+00:16:09,412 --> 00:16:09,852 [Speaker 1]
+Okay, cool 
+
+00:16:09,852 --> 00:16:11,212 [Speaker 6]
+...the tick is, like, crazy." 
+
+00:16:11,212 --> 00:16:12,232 [Speaker 1]
+That's right. That's right. 
+
+00:16:12,232 --> 00:16:18,952 [Speaker 6]
+So I, I want to know if, like, Auth0 can connect to, like, some stock trading platform. 
+
+00:16:18,952 --> 00:16:19,512 [Speaker 1]
+Sure. 
+
+00:16:19,512 --> 00:16:20,772 [Speaker 6]
+So your agents can do it. 
+
+00:16:20,772 --> 00:16:25,032 [Speaker 2]
+So you can, um... These are open APIs? 
+
+00:16:25,032 --> 00:16:26,072 [Speaker 1]
+Um- 
+
+00:16:26,072 --> 00:16:32,732 [Speaker 2]
+I mean, you can do it normally without it, right? And then is it, is it, like, OAuth enabled? 
+
+00:16:32,732 --> 00:16:35,622 [Speaker 1]
+Um, we wanna... We're looking into using OAuth, yeah, for that kind of thing. 
+
+00:16:35,622 --> 00:16:38,992 [Speaker 2]
+If it's, if it's not, what you could do is you have your own API. 
+
+00:16:38,992 --> 00:16:39,632 [Speaker 1]
+Okay. 
+
+00:16:39,632 --> 00:16:50,472 [Speaker 2]
+And then you can use OAuth, and both involved, you have access to, to your API, and then you can freely just call whatever you want without any restrictions, and that's, that's cool. 
+
+00:16:50,472 --> 00:16:53,632 [Speaker 1]
+Okay. Okay. I see. What do you think? 
+
+00:16:53,632 --> 00:16:54,372 [Speaker 5]
+Great. 
+
+00:16:54,372 --> 00:16:58,092 [Speaker 1]
+Okay. 'Cause so essentially the idea is, um, 
+
+00:16:59,352 --> 00:17:07,052 [Speaker 1]
+we want to, you know, you... It watches your stocks, and it calls you when something matters. So, um- 
+
+00:17:07,052 --> 00:17:08,812 [Speaker 6]
+Yeah. Oh, to authorize it to, like, sell that. 
+
+00:17:08,812 --> 00:17:09,092 [Speaker 1]
+Right. 
+
+00:17:09,092 --> 00:17:10,712 [Speaker 2]
+Just that people should use OAuth for- 
+
+00:17:10,712 --> 00:17:10,992 [Speaker 1]
+Yeah 
+
+00:17:10,992 --> 00:17:11,891 [Speaker 2]
+...more than just- 
+
+00:17:11,892 --> 00:17:16,072 [Speaker 1]
+Yeah, yeah. That-- Obv-- So that, that's the idea. Like, you know how when you call nine one one, there's an emergency, right? 
+
+00:17:16,072 --> 00:17:16,212 [Speaker 2]
+Yeah. 
+
+00:17:16,212 --> 00:17:18,492 [Speaker 1]
+So if there's a stock emergency, it calls you and says- 
+
+00:17:18,492 --> 00:17:19,132 [Speaker 2]
+It's proactive 
+
+00:17:19,132 --> 00:17:34,702 [Speaker 1]
+...nine one one stock. That's what we're thinking about calling it. And, um, so idea is, idea is like, you know, we go up on stage and, uh, it gives us a call and says, "Hey, I'm watching NVIDIA for you. CFO just sold twelve million. Um, not a good sign. Want me to tell you more?" And, uh- 
+
+00:17:34,702 --> 00:17:35,072 [Speaker 2]
+Oh, I love it. 
+
+00:17:35,072 --> 00:17:43,352 [Speaker 1]
+Yeah. Yeah. So thank you. Appreciate that. And in your opinion, how are... what are some ways we could expand on this? Like, what comes to mind for you, if you don't mind me asking? 
+
+00:17:43,352 --> 00:17:44,322 [Speaker 6]
+Uh-huh. Um, 
+
+00:17:50,492 --> 00:17:51,232 [Speaker 6]
+you could do-
+
+00:17:52,160 --> 00:17:54,750 [Speaker 7]
+Other off-brand basic maybe- 
+
+00:17:54,750 --> 00:17:59,940 [Speaker 1]
+Hmm. 
+
+00:17:59,940 --> 00:18:01,680 [Speaker 7]
+No, I guess that doesn't make sense because if... 
+
+00:18:02,980 --> 00:18:05,020 [Speaker 7]
+Should everyone be able to see the same alerts? 
+
+00:18:06,060 --> 00:18:08,580 [Speaker 7]
+Like, you know, sometimes you have, like, no things or- 
+
+00:18:08,580 --> 00:18:08,690 [Speaker 1]
+Right. 
+
+00:18:08,690 --> 00:18:10,860 [Speaker 7]
+-you have kind of restrictions in your role. 
+
+00:18:10,860 --> 00:18:11,020 [Speaker 1]
+Yes. 
+
+00:18:11,020 --> 00:18:14,459 [Speaker 7]
+But then I guess you already know those things, and you're not necessarily- 
+
+00:18:14,460 --> 00:18:15,100 [Speaker 1]
+Yeah. 
+
+00:18:15,100 --> 00:18:16,200 [Speaker 7]
+So it maybe doesn't make sense. 
+
+00:18:16,200 --> 00:18:20,650 [Speaker 1]
+Yeah. Well, it would all be public data, right? So I don't know if- 
+
+00:18:20,650 --> 00:18:22,240 [Speaker 7]
+It should be like insider data. 
+
+00:18:23,380 --> 00:18:27,660 [Speaker 1]
+Hah-- Yeah. I mean, one, there would be legal hurdle there probably, right? But, but I mean... 
+
+00:18:28,720 --> 00:18:32,240 [Speaker 7]
+But it's for people who, like, have stuff but, but don't follow the news. 
+
+00:18:32,240 --> 00:18:36,700 [Speaker 1]
+Yeah. Yeah. That's exactly right. Yeah. That's our ICP. Yeah. C-customer profile. Yeah. Uh-huh. 
+
+00:18:36,700 --> 00:18:42,760 [Speaker 7]
+So it's faster than just like scroll on X later that day, just like immediately AI volume. 
+
+00:18:42,760 --> 00:18:46,070 [Speaker 1]
+We have so much to do, we can't just be scrolling. And, you know, these things are black holes, right? 
+
+00:18:46,070 --> 00:18:46,100 [Speaker 7]
+Yeah. 
+
+00:18:46,100 --> 00:18:50,900 [Speaker 1]
+These news sites. So, um, if like an A-AI can handle that mental heavy lifting for me- 
+
+00:18:50,900 --> 00:18:51,180 [Speaker 7]
+Yeah. 
+
+00:18:51,180 --> 00:18:52,740 [Speaker 1]
+-that sounds like some value we could bring. 
+
+00:18:52,740 --> 00:18:53,060 [Speaker 7]
+Mm-hmm. 
+
+00:18:55,760 --> 00:18:56,399 [Speaker 1]
+So... 
+
+00:18:56,399 --> 00:19:02,220 [Speaker 7]
+Are you gonna pull up external sources? Like, if something happens, then, then kind of pull some- 
+
+00:19:02,220 --> 00:19:06,260 [Speaker 1]
+Yeah, but, but for the demo, I think we can, like, simulate some, some news. 
+
+00:19:06,260 --> 00:19:06,720 [Speaker 7]
+Absolutely. 
+
+00:19:06,720 --> 00:19:24,800 [Speaker 1]
+From like maybe months ago, weeks ago. Absolutely. So a big part of this is we wanna Wizard of Oz as much as we can. So, uh, i-idea is like we can hard build the signal detection, that's fine. But, but the plain English and the phone calls and like the air bite stuff, the [door slamming] stuff et cetera, that stuff is pretty non-negotiable, right? So we gotta build that. 
+
+00:19:24,800 --> 00:19:25,140 [Speaker 7]
+Yeah. 
+
+00:19:25,140 --> 00:19:31,400 [Speaker 1]
+But, um, yeah, that, that would be my second question, I think, to you. Um, I guess to you, which would be like, 
+
+00:19:33,160 --> 00:19:36,280 [Speaker 1]
+what do you think we should Wizard of Oz, and what do you think we have to build? 
+
+00:19:48,320 --> 00:19:51,240 [Speaker 7]
+You have some, there some choices that you have in your mind- 
+
+00:19:51,240 --> 00:19:51,850 [Speaker 1]
+Yeah. Um. 
+
+00:19:51,850 --> 00:19:53,900 [Speaker 7]
+-that you think we can, uh, like... 
+
+00:19:54,980 --> 00:20:05,330 [Speaker 1]
+Um, we wanna Wizard of Oz the Auth0, uh, go stairs bike infrastructure. So, uh, we just... I'm just thinking, 
+
+00:20:06,620 --> 00:20:12,160 [Speaker 1]
+looking for clarity on, like, which part of the Auth0. But I just was wondering if you had any thoughts. Um, yeah. 
+
+00:20:12,160 --> 00:20:14,540 [Speaker 7]
+Which is the, the most kind of important- 
+
+00:20:14,540 --> 00:20:14,770 [Speaker 1]
+Yeah. 
+
+00:20:14,770 --> 00:20:15,330 [Speaker 7]
+-part of- 
+
+00:20:15,330 --> 00:20:15,480 [Speaker 1]
+Yeah. 
+
+00:20:15,480 --> 00:20:17,220 [Speaker 7]
+The token vault. The, the- 
+
+00:20:17,220 --> 00:20:17,880 [Speaker 1]
+Okay. 
+
+00:20:17,880 --> 00:20:18,560 [Speaker 7]
+The tool calling. 
+
+00:20:18,560 --> 00:20:19,340 [Speaker 1]
+Okay. Okay. 
+
+00:20:19,340 --> 00:20:20,280 [Speaker 7]
+That's the- 
+
+00:20:20,280 --> 00:20:20,550 [Speaker 1]
+I see. 
+
+00:20:20,550 --> 00:20:22,740 [Speaker 7]
+-we wanted to get the, the most excited about. 
+
+00:20:22,740 --> 00:20:24,820 [Speaker 1]
+I see. I see. Makes sense. Yeah. 
+
+00:20:24,820 --> 00:20:26,260 [Speaker 7]
+Ciba is great because- 
+
+00:20:26,260 --> 00:20:26,540 [Speaker 1]
+Ciba. 
+
+00:20:26,540 --> 00:20:29,750 [Speaker 7]
+-Ciba's generally a little more advanced, so if you guys are- 
+
+00:20:29,750 --> 00:20:29,750 [Speaker 1]
+Mm. 
+
+00:20:29,750 --> 00:20:32,700 [Speaker 7]
+-are even highlighting that one, then that's awesome. 
+
+00:20:32,700 --> 00:20:34,440 [Speaker 1]
+Okay. Okay. 
+
+00:20:34,440 --> 00:20:37,879 [Speaker 7]
+Because a lot of people u-often don't, uh, don't get that far. 
+
+00:20:37,880 --> 00:20:41,480 [Speaker 1]
+Solid. Solid. Okay. This is useful. All right. Thank you so much. Brad, right? 
+
+00:20:41,480 --> 00:20:41,800 [Speaker 7]
+Yeah. 
+
+00:20:41,800 --> 00:20:42,520 [Speaker 1]
+Good to meet you. Yoshi. 
+
+00:20:43,740 --> 00:20:50,680 [Speaker 7]
+I'm Big. Nice to meet you. Yeah, just grab me if you... Also, if you wanna get your talk, your attendance extended- 
+
+00:20:50,680 --> 00:20:50,810 [Speaker 1]
+Oh, appreciate. 
+
+00:20:50,810 --> 00:20:51,700 [Speaker 7]
+-I can do that. 
+
+00:20:51,700 --> 00:20:52,900 [Speaker 1]
+Appreciate it. Thank you. 
+
+00:20:52,900 --> 00:20:54,320 [Speaker 7]
+If you guys wanna connect later on LinkedIn. 
+
+00:20:54,320 --> 00:20:56,360 [Speaker 1]
+Awesome. Yeah, absolutely. Like, thanks. 
+
+00:20:58,460 --> 00:20:58,820 [Speaker 1]
+Okay. 
+
+00:21:01,460 --> 00:21:04,640 [Speaker 1]
+So yeah, let's just Wizard of Oz the hero moment, right? 
+
+00:21:04,640 --> 00:21:05,740 [Speaker 7]
+Let's find a place. 
+
+00:21:05,740 --> 00:21:07,960 [Speaker 1]
+Yay. Anybody else we should talk to? 
+
+00:21:12,240 --> 00:21:12,480 [Speaker 1]
+Okay. 
+
+00:21:14,360 --> 00:21:15,180 [Speaker 1]
+Okay, let's go. 
+
+00:21:16,800 --> 00:21:31,400 [Speaker 1]
+[keyboard clicking] 
+
+00:21:33,920 --> 00:21:39,280 [Speaker 1]
+We can find a... Oh, there's space on outside. Usually, people aren't sitting there. Um. 
+
+00:21:41,880 --> 00:21:43,060 [Speaker 7]
+Outside or...? 
+
+00:21:43,060 --> 00:21:43,660 [Speaker 1]
+Yeah. Um, 
+
+00:21:45,420 --> 00:21:47,289 [Speaker 1]
+yes. Yes. I'll show you. 
+
+00:21:47,289 --> 00:21:47,310 [Speaker 7]
+Outside? 
+
+00:21:47,310 --> 00:21:55,560 [Speaker 1]
+Yes. Yes. No, no, no. Um, not there. Um, oh, first let's check. Sometimes this room is available. Sometimes, like, nobody's there. So let's... 
+
+00:21:57,320 --> 00:21:59,940 [Speaker 1]
+Hello. Is this room available or are you guys? 
+
+00:21:59,940 --> 00:22:00,040 [Speaker 8]
+No. We're good. 
+
+00:22:00,040 --> 00:22:00,780 [Speaker 1]
+Okay. No problems. 
+
+00:22:02,480 --> 00:22:10,640 [Speaker 1]
+[knocking] Okay, cool. Nice. [knocking] Okay. 
+
+00:22:13,120 --> 00:22:13,460 [Speaker 1]
+All right. 
+
+00:22:15,680 --> 00:22:16,640 [Speaker 1]
+Solid. Okay. 
+
+00:22:17,740 --> 00:22:27,680 [Speaker 1]
+So, okay. What review mode? So we, we want Wizard of Oz and hero moment. Um, oh, by the way, I recorded that whole conversation, so-
