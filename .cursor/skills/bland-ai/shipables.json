@@ -1,0 +1,42 @@
+{
+  "version": "2.0.0",
+  "keywords": [
+    "voice",
+    "ai",
+    "phone",
+    "calls",
+    "bland",
+    "mcp",
+    "personas",
+    "sms",
+    "knowledge-base",
+    "telephony",
+    "voice-agents"
+  ],
+  "categories": ["apis", "ai-ml", "messaging"],
+  "author": {
+    "name": "Bland AI",
+    "github": "CINTELLILABS"
+  },
+  "repository": "https://github.com/CINTELLILABS/bland-skills",
+  "homepage": "https://bland.ai",
+  "mcp": {
+    "servers": [
+      {
+        "name": "bland",
+        "package": "bland-skills",
+        "registry": "npm",
+        "transport": "stdio",
+        "env": ["BLAND_API_KEY"]
+      }
+    ]
+  },
+  "config": [
+    {
+      "name": "BLAND_API_KEY",
+      "description": "Your Bland AI API key (get one at app.bland.ai)",
+      "required": true,
+      "secret": true
+    }
+  ]
+}

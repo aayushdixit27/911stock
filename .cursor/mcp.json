@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "bland": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "bland-skills"
+      ],
+      "env": {
+        "0": "BLAND_API_KEY"
+      }
+    }
+  }
+}
