@@ -140,32 +140,26 @@ A hackathon happening **March 27, 2026** at **AWS Builder Loft** (525 Market St,
 
 ---
 
-## THE BUILD: Personal Stock Guardian
+## THE BUILD: 911Stock
 
-> "It watches your stocks 24/7 and calls you when something matters — explained in plain English."
+> "911 for your stocks. It watches your portfolio 24/7 and calls you when something matters."
+
+**Repo:** https://github.com/aayushdixit27/911stock
+**Full build plan:** See `plan.md` for chunk-by-chunk task breakdown with Person A/B split.
+**Stack:** Next.js (App Router) + TypeScript + Tailwind CSS
 
 ### What It Does
-An autonomous agent that monitors SEC filings, news, and sentiment for YOUR specific portfolio. When it detects something significant (insider sales, earnings surprises, unusual activity), it writes a plain-English analysis, publishes it to your personal feed, and calls your phone to explain what it means for YOU.
+An autonomous agent that monitors SEC filings and insider transactions for YOUR specific portfolio. When it detects something significant, it writes a plain-English analysis, stores the signal in its own Ghost database, and calls your phone to explain what it means for YOU. You can also call it back and ask questions.
 
 ### The Hero Moment
-You walk on stage, say "I own Tesla and NVIDIA," show your watchlist. Trigger the agent. Phone rings. The AI says:
+You walk on stage, say "I own SMCI, Tesla, and NVIDIA," show your watchlist. Press the trigger button. Dashboard comes alive. Phone rings. The AI says:
 
-> "Hey, I'm watching NVIDIA for you. The CFO just sold $12 million in stock — that's unusual because she hasn't sold anything in 22 months and this wasn't part of her scheduled plan. Historically when NVIDIA insiders do this, the stock drops an average of 9% over the next 30 days. You have NVDA in your watchlist. Want me to tell you more?"
+> "Hey, this is 911Stock. I'm watching SMCI for you. The CEO just sold $2.1 million in stock — his first sale in 14 months, outside his scheduled plan. The last 3 times SMCI insiders did unscheduled sales, the stock dropped an average of 12% over the next 30 days. Want me to reduce your position by 50%?"
 
-Every judge either trades stocks or knows someone who does. They immediately get it.
+You say "Yes." Resolution screen shows position closed + savings estimate. Then you hand the judge your phone: "Call 911Stock. Ask it anything."
 
 ### The One Sentence That IS The Product
 The plain-English explanation generator is the product. Everything else is infrastructure to deliver it.
-
-```
-Input:  CFO sold 847,232 shares at $142.50, no 10b5-1 plan,
-        last transaction 22 months ago, position 40% reduced
-
-Output: "The CFO just sold $12M in stock — her first sale in
-        almost 2 years, outside her normal scheduled plan.
-        That's the kind of move insiders make when they're
-        not feeling great about the next few months."
-```
 
 ### Stock Data APIs (Free, No Paid Subscription)
 
@@ -182,108 +176,87 @@ ticker = yf.Ticker("NVDA")
 insider_df = ticker.insider_transactions  # Done. DataFrame.
 ```
 
-### Sponsor Integration (4 tools — Option A: deep on Ghost, drop Aerospike)
+### Sponsor Integration (5 tools)
 
 | Sponsor | What We Build (Real) | What We WoZ | Prize Track |
 |---|---|---|---|
 | **Bland AI** | Outbound call + inbound agent | — | $500 |
 | **Auth0** | CIBA approval flow (or WoZ) | Login screen | $1,750 |
-| **Ghost** | Real Postgres DB: watchlists, signals, patterns, learnings | — | $1,998 + $500/member |
+| **Ghost** | Real Postgres DB: watchlists, signals, patterns, learnings, alerts | — | $1,998 + $500/member |
+| **Overmind** | Agent supervision, traces, policy compliance (or screenshot) | — | $651 |
 | **Airbyte** | — | Narrative only ("data pipeline") | $1,000 |
 
-**Dropped:** Aerospike (Ghost covers storage + patterns), Overmind (focus on fewer, deeper integrations)
+**Key change:** Ghost DB (ghost.build) replaces both Aerospike AND Ghost CMS. One real Postgres DB instead of two fakes. Biggest single cash prize.
 
 ### Prize Tracks
 - Ghost ($1,998 + $500/member Visa gift card) — **biggest cash prize, real integration**
 - Auth0 ($1,750)
 - Airbyte ($1,000/$500/$250 + job interview)
+- Overmind ($651 + mystery prize)
 - Bland ($500 "Most Ab-Norm-al")
-- **Total potential: up to $5,248+**
+- **Total potential: up to $5,899+**
 
-### Build Plan (5.5 hours)
+### Build Plan (2-person split — see plan.md for full chunk details)
 
 ```
-Hour 1 (11:00-12:00): FOUNDATION + TALK TO SPONSORS
-  - Project setup, pip install yfinance finnhub-python
-  - Ghost: `curl -fsSL https://install.ghost.build | sh` + `ghost mcp install`
-  - Ghost: create DB for watchlists, signals, agent learnings
-  - Auth0 signup flow → enter watchlist + phone number
-  - Talk to 1-2 sponsors while things install
+Person A (Product/UX):                    Person B (CTO/Backend):
+  A1: Project setup (15 min)                B1: Ghost DB + Bland outbound (30 min)
+  A2: Watchlist screen (30 min)             B2: Signal detection + Claude (30 min)
+  A3: Dashboard screen (30 min)             B3: SSE streaming (15 min)
+  A4: Resolution screen (20 min)            B4: Auth0 CIBA backend (30 min)
+  A5: Auth0 CIBA UX (20 min)               B5: Bland inbound agent (20 min)
+  A6: Polish + demo prep (30 min)           B6: Overmind supervision (15 min)
+                                            B7: Ghost self-improvement (15 min)
+                                            B8: Wire + test (15 min)
 
-Hour 2 (12:00-1:00): CORE AGENT
-  - Signal detection agent (Bedrock/Claude)
-  - yfinance + Finnhub → insider transactions, news, sentiment
-  - Scoring engine: significance × relevance to user's portfolio
-  - Ghost DB: store signals, user watchlists, scoring results
-  - Plain-English explanation generator (THE PRODUCT)
-
-Hour 3 (1:00-2:00): OUTPUT PIPELINE
-  - Bland AI → phone call with portfolio-aware script
-  - Aerospike: signal dedup + vector similarity for pattern matching
-  - Ghost: fork DB before experimental analysis, store outcomes
-  - Wire full pipeline: detect → score → explain → store → call
-
-Hour 4 (2:00-3:00): SELF-IMPROVEMENT + POLISH
-  - Learning loop via Ghost + Aerospike: query past signals
-  - "This matches 3 previous insider sales" moment
-  - Polish 3-screen demo: watchlist → agent working → phone rings
-  - Wizard of Oz anything broken
-
-Hour 5 (3:00-4:00): DEMO PREP
-  - Rehearse 3-min demo 3 times
-  - Record backup video
-  - Test phone call end-to-end
-  - Devpost submission + GitHub repo
-
-Buffer (4:00-4:30): Fix whatever broke
+Shared: S1 smoke test | S2 rehearsals | S3 submission
 ```
 
 ### 3-Minute Demo Script
 
 ```
-0:00-0:20  "I own Tesla and NVIDIA. Most people check their stocks
-            once a day. But insider transactions, SEC filings, and
-            market signals happen 24/7. By the time you see it on
-            CNBC, it's too late."
+0:00-0:20  PROBLEM
+           "I own SMCI, Tesla, and NVIDIA. Insider transactions
+           happen 24/7. By the time I see it on CNBC, it's too late."
 
-0:20-0:40  Show the app. Enter watchlist. "Personal Stock Guardian
-            watches YOUR stocks and only contacts you when something
-            matters for what YOU own."
+0:20-0:40  SOLUTION
+           [Show watchlist] "This is 911Stock. 911 for your stocks."
+           [Press the red button]
 
-0:40-1:40  Trigger the agent live. Show it pulling insider data,
-            detecting a significant sale, storing and scoring it in
-            Ghost DB, matching historical patterns (Aerospike),
-            generating a plain-English explanation.
-            ALL AUTONOMOUS. Don't touch anything.
+0:40-1:40  AUTONOMY
+           [Dashboard streams] Scanning SEC filings... signal detected...
+           querying Ghost DB for patterns... 3 matches... scoring...
+           generating explanation. All autonomous.
+           [Phone rings] "And there it is."
 
-1:40-2:10  THE MOMENT: Phone rings. Pick up on speaker. AI explains
-            the insider sale in plain English, specific to your holdings.
-            "Want me to tell you more?" Say yes. It goes deeper.
+1:40-2:10  HERO MOMENT
+           [Phone on speaker] AI explains the SMCI insider sale.
+           "Want me to reduce your position by 50%?" Say "Yes."
+           [Resolution screen appears]
 
-2:10-2:40  Flash the observability: "5 sponsor tools working together:
-            Airbyte for data, Auth0 for identity, Ghost for the agent's
-            database, Aerospike for pattern matching, Bland for the call.
-            The agent learns — it said 'historically' because it queried
-            its own past signals in Ghost and matched patterns in Aerospike."
+2:10-2:40  DEPTH
+           "5 sponsor tools. Bland for the call. Auth0 CIBA for
+           trade approval. Ghost — the agent's own database.
+           Overmind supervising every decision. The agent gets
+           smarter every time."
 
-2:40-3:00  "Nothing calls your phone, knows your specific holdings,
-            and explains what an insider sale means for you in plain
-            English. Personal Stock Guardian. Your portfolio, watched."
+2:40-3:00  CLOSE
+           [Hand judge the phone] "Call 911Stock. Ask it anything."
+           "911Stock. Your portfolio, watched."
 ```
 
 ---
 
-## The Winning Architecture (6 Layers)
+## 911Stock Architecture
 
 ```
-BRAIN:    Amazon Bedrock (Claude) -- multi-agent supervisor + sub-agents
-SENSES:   Airbyte (SaaS data) + Tavily (web search) + Macroscope (code)
-MEMORY:   Aerospike (vector search + KV state + graph)
-HANDS:    Auth0 (OAuth) + Bland AI (voice) + GitHub APIs
-SHIELD:   Overmind (supervision, drift detection, RL safety)
-EYES:     TrueFoundry (observability, deployment, traces)
-BUILD:    Kiro (agentic IDE)
-STORE:    TigerData (agentic Postgres)
+BRAIN:    Claude (Anthropic API) -- signal analysis + plain-English generation
+DATA:     yfinance + Finnhub (insider transactions, prices, news)
+MEMORY:   Ghost DB (ghost.build) -- watchlists, signals, patterns, learnings
+VOICE:    Bland AI -- outbound alert calls + inbound Q&A
+AUTH:     Auth0 (CIBA) -- agent asks permission before executing trades
+SHIELD:   Overmind -- agent supervision, policy compliance, traces
+FRONTEND: Next.js (App Router) + Tailwind CSS
 ```
 
 ---
@@ -353,11 +326,11 @@ The playbook says the biggest insights come from the first 10 minutes of convers
 ## The Context Engineering Winning Formula
 
 Map directly to the challenge language:
-1. **"Tap into real-time data sources"** -- Airbyte connectors + Tavily search + live APIs
-2. **"Make sense of what they find"** -- Multi-agent reasoning (Bedrock), code analysis (Macroscope), vector correlation (Aerospike)
-3. **"Take meaningful action"** -- Auth0-authenticated PRs, Bland AI phone calls, automated deploys
-4. **"Continuously learn and improve"** -- Aerospike stores outcomes; each run makes agent smarter
-5. **"Alive, adaptive, real-world impact"** -- Live demo, real data, agent adapts mid-run
+1. **"Tap into real-time data sources"** -- yfinance/Finnhub insider transactions + SEC filings
+2. **"Make sense of what they find"** -- Claude analysis + Ghost DB historical pattern matching
+3. **"Take meaningful action"** -- Bland AI phone calls + Auth0 CIBA trade approval
+4. **"Continuously learn and improve"** -- Ghost DB stores signals + outcomes; agent queries its own history
+5. **"Alive, adaptive, real-world impact"** -- Live demo, real SMCI March 19 data, phone rings on stage
 
 ---
 
@@ -371,6 +344,10 @@ Map directly to the challenge language:
 | `LOTR Guide to Deep Agents.md` | 13-chapter Fellowship guide, every sponsor mapped to Middle-earth |
 | `PRODUCT-DESIGN-PLAYBOOK.md` | IDEO framework, hero moment test, UX research, one-problem rule, Wizard of Oz prototyping |
 | `Event Info.md` | Raw event page from Luma |
+| `plan.md` | Full build plan: tech stack, project structure, chunks, Person A/B split, demo script |
+| `Talking to judges.m4a.txt` | Transcript of sponsor/judge conversations (Airbyte, Overmind, Auth0) |
+| `Improvement Ideas.md` | Inbound call expansion idea |
+| `names.md` | Project name: 911Stock |
 | `CLAUDE.md` | Claude Code project config with gstack skills |
 | `refresh.md` | This file |
 
