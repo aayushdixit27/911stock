@@ -36,21 +36,23 @@ export async function initiateCIBA(
   userId: string,
   bindingMessage: string
 ): Promise<CIBAInitResult> {
+  const params = new URLSearchParams({
+    client_id: AUTH0_CLIENT_ID,
+    client_secret: AUTH0_CLIENT_SECRET,
+    login_hint: JSON.stringify({
+      format: "iss_sub",
+      iss: `https://${AUTH0_DOMAIN}/`,
+      sub: userId,
+    }),
+    binding_message: bindingMessage,
+    scope: "openid",
+    audience: AUTH0_AUDIENCE,
+  });
+
   const res = await fetch(`https://${AUTH0_DOMAIN}/bc-authorize`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      client_id: AUTH0_CLIENT_ID,
-      client_secret: AUTH0_CLIENT_SECRET,
-      login_hint: JSON.stringify({
-        format: "iss_sub",
-        iss: `https://${AUTH0_DOMAIN}/`,
-        sub: userId,
-      }),
-      binding_message: bindingMessage,
-      scope: "openid stock:trade",
-      audience: AUTH0_AUDIENCE,
-    }),
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: params.toString(),
   });
 
   if (!res.ok) {
@@ -71,15 +73,17 @@ export async function initiateCIBA(
  * Call this repeatedly (every `interval` seconds) until status is not "pending".
  */
 export async function pollCIBA(authReqId: string): Promise<CIBAStatus> {
+  const params = new URLSearchParams({
+    grant_type: "urn:openid:params:grant-type:ciba",
+    client_id: AUTH0_CLIENT_ID,
+    client_secret: AUTH0_CLIENT_SECRET,
+    auth_req_id: authReqId,
+  });
+
   const res = await fetch(`https://${AUTH0_DOMAIN}/oauth/token`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      grant_type: "urn:openid:params:grant-type:ciba",
-      client_id: AUTH0_CLIENT_ID,
-      client_secret: AUTH0_CLIENT_SECRET,
-      auth_req_id: authReqId,
-    }),
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: params.toString(),
   });
 
   const data = await res.json();

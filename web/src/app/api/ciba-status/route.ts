@@ -1,10 +1,11 @@
 import { NextResponse } from "next/server";
 import { pollCIBA } from "@/lib/auth0-ciba";
-import { currentCIBAReqId, cibaStatus } from "@/app/api/bland-webhook/route";
+import { getCIBAReqId, getCIBAStatus, setCIBAStatus } from "@/lib/state";
 
-// The dashboard polls this endpoint every 3 seconds to check if the
-// Auth0 Guardian push notification was approved
 export async function GET() {
+  const cibaStatus = getCIBAStatus();
+  const currentCIBAReqId = getCIBAReqId();
+
   // WoZ / auto-approved case
   if (cibaStatus === "approved" && !currentCIBAReqId) {
     return NextResponse.json({ status: "approved" });
@@ -23,7 +24,12 @@ export async function GET() {
     const result = await pollCIBA(currentCIBAReqId);
 
     if (result.status === "approved") {
+      setCIBAStatus("approved");
       return NextResponse.json({ status: "approved" });
+    }
+
+    if (result.status === "denied") {
+      setCIBAStatus("denied");
     }
 
     return NextResponse.json({ status: result.status });

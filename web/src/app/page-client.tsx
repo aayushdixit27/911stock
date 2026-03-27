@@ -181,19 +181,36 @@ export default function PageClient({ userId }: { userId: string }) {
         >
           911stock
         </span>
-        <span
-          style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: "var(--text-xs)",
-            fontWeight: 500,
-            letterSpacing: "0.05em",
-            color: "var(--ink-30)",
-            padding: "0.375rem 0.75rem",
-            background: "var(--paper)",
-            borderRadius: "4px",
-          }}
-        >
-          Deep Agents Hackathon 2026
+        <span style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+          <span
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: "var(--text-xs)",
+              fontWeight: 500,
+              letterSpacing: "0.05em",
+              color: "var(--ink-30)",
+              padding: "0.375rem 0.75rem",
+              background: "var(--paper)",
+              borderRadius: "4px",
+            }}
+          >
+            Deep Agents Hackathon 2026
+          </span>
+          <a
+            href="/settings"
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: "var(--text-xs)",
+              fontWeight: 500,
+              color: "var(--ink-30)",
+              padding: "0.375rem 0.75rem",
+              border: "1px solid var(--ink-08)",
+              borderRadius: "4px",
+              textDecoration: "none",
+            }}
+          >
+            Settings
+          </a>
         </span>
       </nav>
 

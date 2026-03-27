@@ -37,11 +37,22 @@ export default function Dashboard() {
   const [awaitingApproval, setAwaitingApproval] = useState(false);
   const pollRef = useRef<NodeJS.Timeout | null>(null);
 
-  function startCIBAPolling() {
+  async function startCIBAPolling() {
     setAwaitingApproval(true);
     setSteps((prev) =>
       prev.map((s) => (s.key === "awaiting_ciba" ? { ...s, status: "active" } : s))
     );
+
+    // Initiate CIBA push notification immediately — works even on localhost
+    try {
+      await fetch("/api/initiate-ciba", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ticker: "SMCI" }),
+      });
+    } catch {
+      // non-fatal, polling will still run
+    }
 
     pollRef.current = setInterval(async () => {
       try {
