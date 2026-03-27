@@ -41,24 +41,20 @@ export function NewsTimeline({
   onPriceUpdate?: (prices: Record<string, PriceData>) => void;
 }) {
   const [currentDay, setCurrentDay] = useState(0);
-  const [playing, setPlaying] = useState(false);
   const [revealedEvents, setRevealedEvents] = useState(0);
+  const [revealing, setRevealing] = useState(false);
   const hasTriggered = useRef(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
-
-  // Use refs so the timer callback always sees fresh state
-  const currentDayRef = useRef(currentDay);
   const revealedRef = useRef(revealedEvents);
-  const playingRef = useRef(playing);
-
-  currentDayRef.current = currentDay;
   revealedRef.current = revealedEvents;
-  playingRef.current = playing;
 
   const day = timeline[currentDay];
   const totalEvents = day.events.length;
+  const allRevealed = revealedEvents >= totalEvents;
+  const isLastDay = currentDay >= timeline.length - 1;
+  const isMar19 = day.date === "2026-03-19";
 
-  // Clear any running timer
+  // Clear timer
   const clearTimer = useCallback(() => {
     if (timerRef.current) {
       clearInterval(timerRef.current);
@@ -66,36 +62,24 @@ export function NewsTimeline({
     }
   }, []);
 
-  // The core tick — reads from refs to avoid stale closures
-  const tick = useCallback(() => {
-    const d = currentDayRef.current;
-    const r = revealedRef.current;
-    const dayData = timeline[d];
-    const total = dayData.events.length;
+  // Reveal events one by one within current day
+  const startRevealing = useCallback(() => {
+    setRevealing(true);
+    setRevealedEvents(0);
 
-    if (r < total) {
-      // Reveal next event
-      setRevealedEvents(r + 1);
-    } else {
-      // All events revealed — move to next day
-      const nextDay = d + 1;
-      if (nextDay >= timeline.length) {
-        setPlaying(false);
-        return;
-      }
-      setCurrentDay(nextDay);
-      setRevealedEvents(0);
-    }
-  }, []);
-
-  // Start/stop the interval when playing changes
-  useEffect(() => {
-    clearTimer();
-    if (playing) {
-      timerRef.current = setInterval(tick, 2000);
-    }
-    return clearTimer;
-  }, [playing, tick, clearTimer]);
+    timerRef.current = setInterval(() => {
+      setRevealedEvents((prev) => {
+        const next = prev + 1;
+        const total = timeline[currentDay]?.events.length ?? 0;
+        if (next >= total) {
+          clearTimer();
+          setRevealing(false);
+          return total;
+        }
+        return next;
+      });
+    }, 1500);
+  }, [currentDay, clearTimer]);
 
   // Update prices when day changes
   useEffect(() => {
@@ -105,40 +89,92 @@ export function NewsTimeline({
     }
   }, [currentDay, onPriceUpdate]);
 
-  // Detect when we hit Mar 19 high-significance events
+  // Detect when all Mar 19 events are revealed — fire the call
   useEffect(() => {
     if (
       !hasTriggered.current &&
-      day.date === "2026-03-19" &&
-      revealedEvents >= 1 &&
+      isMar19 &&
+      allRevealed &&
       onSignalDetected
     ) {
-      hasTriggered.current = true;
-      onSignalDetected();
+      // Short delay so user sees the last event before call fires
+      const t = setTimeout(() => {
+        hasTriggered.current = true;
+        onSignalDetected();
+      }, 2000);
+      return () => clearTimeout(t);
     }
-  }, [day, revealedEvents, onSignalDetected]);
+  }, [isMar19, allRevealed, onSignalDetected]);
 
-  function handlePlay() {
-    if (currentDay >= timeline.length - 1 && revealedEvents >= totalEvents) {
-      setCurrentDay(0);
+  // Cleanup on unmount
+  useEffect(() => clearTimer, [clearTimer]);
+
+  function handleNextDay() {
+    clearTimer();
+    setRevealing(false);
+
+    if (currentDay === 0 && revealedEvents === 0) {
+      // First click — start revealing Mar 18 events
+      startRevealing();
+      return;
+    }
+
+    if (!allRevealed) {
+      // Still revealing — skip to all revealed
+      clearTimer();
+      setRevealedEvents(totalEvents);
+      setRevealing(false);
+      return;
+    }
+
+    // Move to next day and start revealing
+    if (!isLastDay) {
+      const next = currentDay + 1;
+      setCurrentDay(next);
       setRevealedEvents(0);
-      hasTriggered.current = false;
+      // Start revealing after a beat
+      setTimeout(() => {
+        setRevealing(true);
+        let count = 0;
+        timerRef.current = setInterval(() => {
+          count++;
+          const total = timeline[next]?.events.length ?? 0;
+          if (count >= total) {
+            clearTimer();
+            setRevealing(false);
+          }
+          setRevealedEvents(count);
+        }, 1500);
+      }, 500);
     }
-    setPlaying(true);
-  }
-
-  function handlePause() {
-    setPlaying(false);
   }
 
   function goToDay(idx: number) {
-    setPlaying(false);
+    clearTimer();
+    setRevealing(false);
     setCurrentDay(idx);
     setRevealedEvents(timeline[idx].events.length);
-    const d = timeline[idx];
-    if (d.prices && onPriceUpdate) {
-      onPriceUpdate(d.prices);
-    }
+  }
+
+  // Button label logic
+  let buttonLabel = "Start — Mar 18";
+  let buttonIcon = "play";
+  if (currentDay === 0 && revealedEvents === 0) {
+    buttonLabel = "Start — Mar 18";
+    buttonIcon = "play";
+  } else if (revealing) {
+    buttonLabel = "Skip to end of day";
+    buttonIcon = "skip";
+  } else if (allRevealed && isMar19 && hasTriggered.current) {
+    buttonLabel = "Agent calling...";
+    buttonIcon = "phone";
+  } else if (allRevealed && !isLastDay) {
+    const nextLabel = timeline[currentDay + 1]?.label ?? "Next";
+    buttonLabel = `Next Day — ${nextLabel}`;
+    buttonIcon = "arrow";
+  } else if (allRevealed && isLastDay) {
+    buttonLabel = "Timeline complete";
+    buttonIcon = "check";
   }
 
   return (
@@ -195,46 +231,64 @@ export function NewsTimeline({
         })}
       </div>
 
-      {/* Play/Pause button */}
-      <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "1rem" }}>
+      {/* Next Day button — the main control */}
+      <div style={{ marginBottom: "1rem" }}>
         <button
-          onClick={playing ? handlePause : handlePlay}
-          className="mark-fire"
+          onClick={handleNextDay}
+          disabled={(allRevealed && isLastDay) || (isMar19 && hasTriggered.current)}
+          className={isMar19 && allRevealed && !hasTriggered.current ? "mark-fire" : ""}
           style={{
-            border: "none",
-            color: "var(--white)",
+            width: "100%",
+            border: isMar19 && allRevealed ? "none" : "1px solid var(--ink-08)",
+            background: isMar19 && allRevealed
+              ? undefined // mark-fire handles it
+              : revealing
+                ? "var(--paper)"
+                : "var(--white)",
+            color: isMar19 && allRevealed ? "var(--white)" : "var(--ink)",
+            fontFamily: "var(--font-body)",
             fontWeight: 600,
-            fontSize: "var(--text-xs)",
+            fontSize: "var(--text-sm)",
             letterSpacing: "0.02em",
-            padding: "0.5rem 1rem",
-            borderRadius: "4px",
-            cursor: "pointer",
+            padding: "0.75rem 1.25rem",
+            borderRadius: "6px",
+            cursor: (allRevealed && isLastDay) || (isMar19 && hasTriggered.current) ? "default" : "pointer",
+            opacity: (allRevealed && isLastDay) || (isMar19 && hasTriggered.current) ? 0.5 : 1,
             display: "flex",
             alignItems: "center",
-            gap: "0.375rem",
+            justifyContent: "center",
+            gap: "0.5rem",
+            transition: "all 0.2s",
+            position: "relative",
+            zIndex: 1,
           }}
         >
-          {playing ? (
-            <>
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="white">
-                <rect x="2" y="2" width="3" height="8" rx="1" />
-                <rect x="7" y="2" width="3" height="8" rx="1" />
-              </svg>
-              Pause
-            </>
-          ) : (
-            <>
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="white">
-                <polygon points="2,2 10,6 2,10" />
-              </svg>
-              {currentDay === 0 && revealedEvents === 0 ? "Play" : "Resume"}
-            </>
+          {buttonIcon === "play" && (
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
+              <polygon points="3,1 12,7 3,13" />
+            </svg>
           )}
+          {buttonIcon === "arrow" && (
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+              <path d="M3 7h8M8 3l4 4-4 4" />
+            </svg>
+          )}
+          {buttonIcon === "skip" && (
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
+              <polygon points="1,1 7,7 1,13" />
+              <polygon points="7,1 13,7 7,13" />
+            </svg>
+          )}
+          {buttonIcon === "phone" && (
+            <span className="mark-spinner" style={{ width: 14, height: 14, borderWidth: 2 }} />
+          )}
+          {buttonIcon === "check" && (
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+              <path d="M3 7l3 3 5-6" />
+            </svg>
+          )}
+          {buttonLabel}
         </button>
-
-        <span style={{ fontSize: "var(--text-xs)", color: "var(--ink-30)" }}>
-          {day.label} — {revealedEvents}/{totalEvents} events
-        </span>
       </div>
 
       {/* Events feed */}
@@ -291,7 +345,6 @@ export function NewsTimeline({
                   </span>
                 </div>
 
-                {/* Headline — link if url exists */}
                 <p
                   style={{
                     fontWeight: 600,
