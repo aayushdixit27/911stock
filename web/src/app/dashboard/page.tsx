@@ -296,13 +296,15 @@ export default function Dashboard() {
         {/* Phone ringing */}
         {callActive && <PhoneRinging />}
 
-        {/* Auth0 Guardian — waiting for approval */}
+        {/* ── AUTH0 CIBA — trade approval (Law 3: terracotta at THE inflection point) ── */}
         {awaitingApproval && (
           <div style={{ marginBottom: 40 }}>
             <div className="mark-eyebrow" style={{ marginBottom: 24 }}>
-              auth0 guardian — awaiting approval
+              auth0 ciba — trade approval required
             </div>
-            <div className="mark-card" style={{ padding: "28px 28px" }}>
+
+            <div className="mark-card" style={{ padding: "0", overflow: "hidden" }}>
+              {/* Terracotta top stripe — this IS the decision point */}
               <div
                 style={{
                   position: "absolute",
@@ -313,40 +315,98 @@ export default function Dashboard() {
                   background: "linear-gradient(to right, var(--terra), var(--terra-lt))",
                 }}
               />
-              <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
+
+              {/* Header with pulse */}
+              <div
+                style={{
+                  padding: "24px 28px",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 14,
+                  borderBottom: "1px solid var(--ink-10)",
+                }}
+              >
                 <div
                   style={{
-                    width: 8,
-                    height: 8,
+                    width: 10,
+                    height: 10,
                     borderRadius: "50%",
                     background: "var(--terra)",
                     animation: "joint-pulse 1.5s ease-in-out infinite",
+                    flexShrink: 0,
                   }}
                 />
                 <span
                   style={{
                     fontFamily: "var(--font-body)",
-                    fontWeight: 400,
+                    fontWeight: 600,
                     fontSize: 15,
                     color: "var(--ink)",
                   }}
                 >
-                  Waiting for your approval
+                  Agent is requesting authorization
                 </span>
               </div>
-              <p
-                style={{
-                  fontFamily: "var(--font-body)",
-                  fontWeight: 400,
-                  fontSize: 14,
-                  color: "var(--ink-60)",
-                  lineHeight: 1.8,
-                  paddingLeft: 20,
-                }}
-              >
-                Auth0 Guardian sent a push notification to your phone.
-                Open the Guardian app and tap Approve.
-              </p>
+
+              {/* Trade request details */}
+              <div style={{ padding: "24px 28px", background: "var(--paper)" }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                  {[
+                    { label: "action", value: "Reduce SMCI position by 50%" },
+                    { label: "shares", value: "Sell 500 shares @ $42.50" },
+                    { label: "reason", value: "CEO unscheduled sale — HIGH significance" },
+                    { label: "method", value: "Auth0 CIBA backchannel request" },
+                  ].map((row) => (
+                    <div
+                      key={row.label}
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "baseline",
+                      }}
+                    >
+                      <span
+                        style={{
+                          fontFamily: "var(--font-mono)",
+                          fontSize: 11,
+                          letterSpacing: "0.15em",
+                          color: "var(--ink-30)",
+                        }}
+                      >
+                        {row.label}
+                      </span>
+                      <span
+                        style={{
+                          fontFamily: "var(--font-body)",
+                          fontWeight: 500,
+                          fontSize: 13,
+                          color: "var(--ink)",
+                          textAlign: "right" as const,
+                        }}
+                      >
+                        {row.value}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Auth0 flow status */}
+              <div style={{ padding: "20px 28px", display: "flex", alignItems: "center", gap: 12 }}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--terra)" strokeWidth="2" strokeLinecap="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
+                <span
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontWeight: 400,
+                    fontSize: 14,
+                    color: "var(--ink-60)",
+                  }}
+                >
+                  Push notification sent via Auth0 Guardian. Open the app and tap <strong style={{ fontWeight: 600, color: "var(--ink)" }}>Approve</strong>.
+                </span>
+              </div>
             </div>
           </div>
         )}

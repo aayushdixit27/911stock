@@ -167,6 +167,7 @@ export default function Home() {
       <div style={{ padding: "90px 7vw 40px" }}>
         {/* ── TOP ROW: Watchlist + Signal Feed ── */}
         <div
+          className="mark-grid-2"
           style={{
             display: "grid",
             gridTemplateColumns: "1fr 1fr",
@@ -475,11 +476,14 @@ export default function Home() {
               zIndex: 1,
             }}
           >
-            {loading
-              ? "connecting to agent..."
-              : selectedSignal
-                ? `call ai — discuss ${selectedSignal.ticker} signal`
-                : "select a signal above"}
+            {loading ? (
+              <span style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 12 }}>
+                <span className="mark-spinner" />
+                connecting to agent...
+              </span>
+            ) : selectedSignal
+              ? `call ai — discuss ${selectedSignal.ticker} signal`
+              : "select a signal above"}
           </button>
           {error && (
             <p
@@ -499,6 +503,7 @@ export default function Home() {
         {/* ── BOTTOM ROW: Reasons + Context ── */}
         {selectedSignal && (
           <div
+            className="mark-grid-2"
             style={{
               display: "grid",
               gridTemplateColumns: "1fr 1fr",
