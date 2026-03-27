@@ -182,23 +182,23 @@ ticker = yf.Ticker("NVDA")
 insider_df = ticker.insider_transactions  # Done. DataFrame.
 ```
 
-### Sponsor Integration (5 tools)
+### Sponsor Integration (4 tools — Option A: deep on Ghost, drop Aerospike)
 
-| Sponsor | Role | Why It's Load-Bearing |
-|---|---|---|
-| **Airbyte** | Pull financial news, sentiment, market signals | The eyes — real-time data pipeline |
-| **Auth0** | User signup, portfolio watchlist, phone number | The front door — identity tied to holdings |
-| **Ghost** | Agent's persistent Postgres DB — watchlists, signals, learnings | The brain's storage — fork before risky ops, store everything |
-| **Aerospike** | Fast signal dedup + vector similarity for pattern matching | The pattern matcher — "last time this happened..." |
-| **Bland AI** | Phone call with personalized explanation | The hero moment — phone rings, AI explains |
+| Sponsor | What We Build (Real) | What We WoZ | Prize Track |
+|---|---|---|---|
+| **Bland AI** | Outbound call + inbound agent | — | $500 |
+| **Auth0** | CIBA approval flow (or WoZ) | Login screen | $1,750 |
+| **Ghost** | Real Postgres DB: watchlists, signals, patterns, learnings | — | $1,998 + $500/member |
+| **Airbyte** | — | Narrative only ("data pipeline") | $1,000 |
+
+**Dropped:** Aerospike (Ghost covers storage + patterns), Overmind (focus on fewer, deeper integrations)
 
 ### Prize Tracks
-- Ghost ($1,998 cash + $500/member Visa gift card)
+- Ghost ($1,998 + $500/member Visa gift card) — **biggest cash prize, real integration**
 - Auth0 ($1,750)
 - Airbyte ($1,000/$500/$250 + job interview)
-- Aerospike ($650)
 - Bland ($500 "Most Ab-Norm-al")
-- **Total potential: up to $6,398+**
+- **Total potential: up to $5,248+**
 
 ### Build Plan (5.5 hours)
 

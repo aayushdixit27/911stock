@@ -19,10 +19,30 @@
 | LLM | Claude (Anthropic API) | Signal analysis + plain-English generation |
 | Voice | Bland AI | Outbound calls (hero moment) + inbound calls (judge interaction) |
 | Auth | Auth0 (CIBA flow) | Agent asks user approval before executing trades |
+| Database | Ghost (ghost.build) | Agent's own Postgres DB — watchlists, signals, patterns, learnings |
 | Monitoring | Overmind | Agent supervision, traces, policy compliance |
-| Database | JSON files (WoZ) | Aerospike stand-in. Historical patterns, signals. |
-| Publishing | Static HTML (WoZ) | Ghost stand-in. Alert feed page. |
 | Deploy | Vercel (or localhost for demo) | One-command deploy |
+
+### Key Change: Ghost DB replaces both Aerospike AND Ghost CMS
+
+Ghost (ghost.build) is a managed Postgres platform built for AI agents. Instead of:
+- ~~Aerospike WoZ (JSON files for historical patterns)~~ → Ghost DB tables
+- ~~Ghost CMS WoZ (static HTML for alert feed)~~ → Ghost DB storing alert history, queryable
+
+**Why this is better:**
+- One real sponsor integration instead of two fake ones
+- Ghost prize ($1,998 + $500/member) is the single biggest cash prize
+- Agent managing its own database is the strongest "context engineering" signal
+- Fork-before-risky-ops shows the judges the agent is self-aware about safety
+- Fewer integrations to wire = more time to polish the demo
+
+**Ghost setup (5 min):**
+```bash
+curl -fsSL https://install.ghost.build | sh
+ghost login
+ghost create   # → returns DB ID + connection string
+ghost mcp install  # → MCP tools available to Claude Code
+```
 
 ---
 
@@ -37,8 +57,6 @@
 │   │   └── page.tsx            # Live ticker dashboard (Screen 2)
 │   ├── resolution/
 │   │   └── page.tsx            # Position closed screen (Screen 3)
-│   ├── feed/
-│   │   └── page.tsx            # Ghost WoZ - alert history feed
 │   └── api/
 │       ├── trigger/
 │       │   └── route.ts        # POST: triggers the full agent pipeline
@@ -58,12 +76,11 @@
 │   ├── bland.ts                # Bland AI client (outbound + inbound setup)
 │   ├── claude.ts               # Anthropic client for signal analysis
 │   ├── auth0-ciba.ts           # Auth0 CIBA flow helpers
-│   ├── overmind.ts             # Overmind SDK client
+│   ├── ghost-db.ts             # Ghost DB client (pg connection, queries)
+│   ├── overmind.ts             # Overmind SDK client (agent traces + policy)
 │   └── signals.ts              # Signal detection logic + scoring
 ├── data/
-│   ├── watchlist.json          # User's portfolio: SMCI, TSLA, NVDA
-│   ├── signals.json            # Pre-loaded SMCI March 19 insider data
-│   └── historical.json         # Historical insider sale patterns (WoZ Aerospike)
+│   └── seed.sql                # SQL to seed Ghost DB with watchlist + historical patterns
 ├── components/
 │   ├── WatchlistCard.tsx       # Stock card with ticker, price, status
 │   ├── SignalFeed.tsx          # Streaming signal detection feed
@@ -80,71 +97,95 @@
 
 ---
 
-## Pre-loaded Data
+## Ghost DB Schema
 
-### data/watchlist.json
-```json
-{
-  "user": {
-    "name": "Demo User",
-    "phone": "+1XXXXXXXXXX",
-    "stocks": ["SMCI", "TSLA", "NVDA"],
-    "sensitivity": "major_events_only"
-  }
-}
+```sql
+-- seed.sql — run via: ghost sql <id> "$(cat data/seed.sql)"
+
+-- User watchlists
+CREATE TABLE watchlists (
+  id SERIAL PRIMARY KEY,
+  user_name TEXT NOT NULL,
+  phone TEXT NOT NULL,
+  tickers TEXT[] NOT NULL,
+  sensitivity TEXT DEFAULT 'major_events_only',
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+INSERT INTO watchlists (user_name, phone, tickers) VALUES
+  ('Demo User', '+1XXXXXXXXXX', ARRAY['SMCI', 'TSLA', 'NVDA']);
+
+-- Historical insider patterns (replaces Aerospike/JSON)
+CREATE TABLE historical_patterns (
+  id SERIAL PRIMARY KEY,
+  ticker TEXT NOT NULL,
+  event_type TEXT NOT NULL,
+  insider_role TEXT,
+  event_date DATE,
+  subsequent_30d_drop_pct FLOAT,
+  confidence TEXT DEFAULT 'medium'
+);
+
+INSERT INTO historical_patterns (ticker, event_type, insider_role, event_date, subsequent_30d_drop_pct, confidence) VALUES
+  ('SMCI', 'unscheduled_insider_sell', 'CFO', '2025-08-12', 15.2, 'high'),
+  ('SMCI', 'unscheduled_insider_sell', 'CEO', '2024-11-03', 9.1, 'high'),
+  ('SMCI', 'unscheduled_insider_sell', 'VP Sales', '2024-03-22', 11.8, 'high'),
+  ('NVDA', 'unscheduled_insider_sell', 'CFO', '2025-06-15', 8.7, 'medium');
+
+-- Signals detected by the agent
+CREATE TABLE signals (
+  id SERIAL PRIMARY KEY,
+  ticker TEXT NOT NULL,
+  insider TEXT NOT NULL,
+  role TEXT,
+  action TEXT NOT NULL,
+  shares INT,
+  price_per_share FLOAT,
+  total_value FLOAT,
+  signal_date DATE,
+  filed_at TIMESTAMPTZ,
+  scheduled_10b5_1 BOOLEAN DEFAULT FALSE,
+  last_transaction_months_ago INT,
+  position_reduced_pct FLOAT,
+  significance_score FLOAT,
+  plain_english TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Agent's learning log (self-improvement)
+CREATE TABLE agent_learnings (
+  id SERIAL PRIMARY KEY,
+  signal_id INT REFERENCES signals(id),
+  pattern_match_count INT,
+  avg_historical_drop FLOAT,
+  action_taken TEXT,
+  user_approved BOOLEAN,
+  notes TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Alert history (replaces Ghost CMS feed)
+CREATE TABLE alerts (
+  id SERIAL PRIMARY KEY,
+  signal_id INT REFERENCES signals(id),
+  user_name TEXT,
+  alert_type TEXT, -- 'call', 'push', 'feed'
+  plain_english TEXT,
+  delivered_at TIMESTAMPTZ DEFAULT NOW()
+);
 ```
 
-### data/signals.json (SMCI March 19 Event)
-```json
-{
-  "signals": [
-    {
-      "id": "smci-ceo-sell-20260319",
-      "ticker": "SMCI",
-      "insider": "Charles Liang",
-      "role": "CEO",
-      "action": "SELL",
-      "shares": 50000,
-      "price_per_share": 42.50,
-      "total_value": 2125000,
-      "date": "2026-03-19",
-      "filed": "2026-03-19T16:30:00Z",
-      "scheduled_10b5_1": false,
-      "last_transaction_months_ago": 14,
-      "position_reduced_pct": 18,
-      "source": "SEC Form 4"
-    }
-  ]
-}
-```
+---
 
-### data/historical.json (WoZ Aerospike)
-```json
-{
-  "patterns": [
-    {
-      "ticker": "SMCI",
-      "event_type": "unscheduled_insider_sell",
-      "occurrences": [
-        { "date": "2025-08-12", "insider": "CFO", "subsequent_30d_drop_pct": 15.2 },
-        { "date": "2024-11-03", "insider": "CEO", "subsequent_30d_drop_pct": 9.1 },
-        { "date": "2024-03-22", "insider": "VP Sales", "subsequent_30d_drop_pct": 11.8 }
-      ],
-      "avg_30d_drop_pct": 12.0,
-      "confidence": "high"
-    },
-    {
-      "ticker": "NVDA",
-      "event_type": "unscheduled_insider_sell",
-      "occurrences": [
-        { "date": "2025-06-15", "insider": "CFO", "subsequent_30d_drop_pct": 8.7 }
-      ],
-      "avg_30d_drop_pct": 8.7,
-      "confidence": "medium"
-    }
-  ]
-}
-```
+## Pre-loaded Signal Data (SMCI March 19 Event)
+
+Instead of JSON files, this is seeded into Ghost DB via the signals table above. The agent pipeline:
+1. Detects signal (from yfinance/Finnhub or pre-seeded in Ghost DB)
+2. Queries `historical_patterns` table: "What happened last time SMCI insiders sold?"
+3. Gets back 3 matches with avg 12% 30-day drop
+4. Sends to Claude for plain-English generation
+5. Stores the result in `signals` table + `agent_learnings` table
+6. Triggers Bland call + stores in `alerts` table
 
 ---
 
@@ -156,20 +197,26 @@
         ▼
 POST /api/trigger
         │
-        ├──▶ Load watchlist.json + signals.json
+        ├──▶ Query Ghost DB: SELECT * FROM watchlists WHERE user_name = 'Demo User'
         │
-        ├──▶ Signal Detection: match signal to user's stocks
+        ├──▶ Signal Detection: check for new insider transactions
+        │    (yfinance/Finnhub OR pre-seeded in Ghost DB signals table)
         │    "SMCI insider sale detected. User owns SMCI."
         │
         ├──▶ SSE stream to /dashboard (status updates)
         │    → "Scanning SEC filings..."
         │    → "Signal detected: SMCI CEO sold $2.1M"
-        │    → "Cross-referencing historical patterns..."
+        │    → "Querying historical patterns in Ghost DB..."
+        │    → "3 matches found. Avg 30-day drop: 12%"
         │    → "Scoring significance: HIGH"
         │    → "Generating plain-English explanation..."
         │
+        ├──▶ Ghost DB: SELECT * FROM historical_patterns
+        │    WHERE ticker = 'SMCI' AND event_type = 'unscheduled_insider_sell'
+        │    → Returns 3 past events, avg 12% drop
+        │
         ├──▶ POST /api/analyze (Claude)
-        │    Input: signal + historical patterns
+        │    Input: signal + historical patterns from Ghost DB
         │    Output: plain-English explanation
         │    → "SMCI's CEO just sold $2.1M in stock — his first
         │       sale in 14 months, outside his scheduled plan.
@@ -177,8 +224,12 @@ POST /api/trigger
         │       sales, the stock dropped an average of 12% over
         │       30 days. You own SMCI. This is worth watching."
         │
+        ├──▶ Ghost DB: INSERT INTO signals (...) + INSERT INTO agent_learnings (...)
+        │    Agent stores its analysis + learning for future reference
+        │
         ├──▶ POST /api/overmind (log decision)
-        │    → "Agent decided: HIGH significance, recommend alert"
+        │    → "Signal: HIGH significance. Action: alert user + suggest trade."
+        │    → Overmind validates against safety policy
         │
         ├──▶ POST /api/call (Bland outbound)
         │    Phone rings. AI reads the explanation.
@@ -188,6 +239,9 @@ POST /api/trigger
         ├──▶ POST /api/approve (Auth0 CIBA)
         │    → Approval request sent → User confirms
         │    → Trade authorized
+        │
+        ├──▶ Ghost DB: INSERT INTO alerts (...) + UPDATE agent_learnings
+        │    Agent records the alert delivery + user's decision
         │
         └──▶ Redirect to /resolution
              → "SMCI position reduced by 50%."
@@ -226,7 +280,7 @@ POST /api/trigger
 │                                              │
 │  ✅ Scanning SEC filings...          [done]  │
 │  ✅ Signal: SMCI CEO sold $2.1M     [done]  │
-│  ✅ Cross-referencing 3 patterns    [done]  │
+│  ✅ Querying Ghost DB: 3 matches    [done]  │
 │  ✅ Significance: HIGH              [done]  │
 │  ✅ Plain-English explanation ready  [done]  │
 │  🔄 Calling your phone...          [live]  │
@@ -263,8 +317,9 @@ POST /api/trigger
 │  │  (based on historical 12% decline)  │    │
 │  └─────────────────────────────────────┘    │
 │                                              │
+│  Ghost DB: signal stored, learning logged ✓  │
 │  Overmind: 3 decisions, all within policy ✓  │
-│  Agent learning: pattern stored for future   │
+│  Agent memory: pattern + outcome saved       │
 │                                              │
 │  Still watching: TSLA, NVDA (no signals)     │
 │                                              │
@@ -280,17 +335,8 @@ POST /api/trigger
 ### Chunk A1: Project Setup (15 min)
 - [ ] `npx create-next-app@latest 911stock --typescript --tailwind --app --src-dir=false`
 - [ ] Set up project structure (folders above)
-- [ ] Create `data/` folder with watchlist.json, signals.json, historical.json
-- [ ] Create `.env.example` with required vars:
-  ```
-  ANTHROPIC_API_KEY=
-  BLAND_API_KEY=
-  BLAND_INBOUND_NUMBER=
-  AUTH0_DOMAIN=
-  AUTH0_CLIENT_ID=
-  AUTH0_CLIENT_SECRET=
-  OVERMIND_API_KEY=
-  ```
+- [ ] Create `data/seed.sql` with Ghost DB schema
+- [ ] Create `.env.example` with required vars
 - [ ] Push to GitHub
 
 ### Chunk A2: Watchlist Screen (30 min)
@@ -312,22 +358,17 @@ POST /api/trigger
 ### Chunk A4: Resolution Screen (20 min)
 - [ ] Build `app/resolution/page.tsx` — position closed summary
 - [ ] Build `components/ResolutionCard.tsx` — trade details, savings estimate
-- [ ] Overmind status line ("3 decisions, all within policy")
+- [ ] Ghost DB status line ("signal stored, learning logged")
 - [ ] "Call 911Stock" section with inbound phone number
 - [ ] "Still watching: TSLA, NVDA" section
 
-### Chunk A5: Ghost WoZ Feed (10 min)
-- [ ] Build `app/feed/page.tsx` — static alert history
-- [ ] 3-4 pre-written alert cards (past "events" the agent detected)
-- [ ] Simple timeline layout
-
-### Chunk A6: Auth0 CIBA UX (20 min)
+### Chunk A5: Auth0 CIBA UX (20 min)
 - [ ] Add approval step to dashboard flow
 - [ ] "Agent is requesting trade approval..." UI state
 - [ ] "Approved via Auth0 CIBA ✓" confirmation
 - [ ] Wire to /api/approve endpoint (or WoZ if backend not ready)
 
-### Chunk A7: Polish + Demo Prep (30 min)
+### Chunk A6: Polish + Demo Prep (30 min)
 - [ ] Responsive check (looks good on projected screen)
 - [ ] Loading states, transitions between screens
 - [ ] Error states (if call fails, show fallback)
@@ -338,7 +379,12 @@ POST /api/trigger
 
 ## Build Chunks — Person B (CTO/Backend)
 
-### Chunk B1: Bland Outbound Call — THE PRIORITY (30 min)
+### Chunk B1: Ghost DB Setup + Bland Outbound Call — THE PRIORITIES (30 min)
+- [ ] Install Ghost CLI: `curl -fsSL https://install.ghost.build | sh`
+- [ ] `ghost login` → `ghost create` → note DB ID
+- [ ] Run seed.sql: `ghost sql <id> "$(cat data/seed.sql)"`
+- [ ] Verify: `ghost sql <id> "SELECT * FROM watchlists"` → should return demo user
+- [ ] Create `lib/ghost-db.ts` — pg client using `ghost connect <id>` connection string
 - [ ] Create `lib/bland.ts` — Bland API client
 - [ ] Build `app/api/call/route.ts` — triggers outbound call
 - [ ] Call script template:
@@ -355,24 +401,27 @@ POST /api/trigger
 
 ### Chunk B2: Signal Detection + Claude Analysis (30 min)
 - [ ] Create `lib/claude.ts` — Anthropic client
-- [ ] Create `lib/signals.ts` — loads signals.json, matches against watchlist, scores
+- [ ] Create `lib/signals.ts` — queries Ghost DB for signals, matches against watchlist, scores
 - [ ] Build `app/api/analyze/route.ts`:
-  - Input: signal JSON + historical patterns
+  - Input: signal + historical patterns from Ghost DB
   - Prompt Claude: "You are 911Stock. Analyze this insider transaction and explain in plain English what it means for someone who owns this stock. Be direct, specific, no jargon. Include the historical pattern."
   - Output: plain-English explanation string
 - [ ] Build `app/api/trigger/route.ts` — orchestrator:
-  1. Load data
-  2. Detect signal
-  3. Send SSE updates
-  4. Call Claude for analysis
-  5. Trigger Bland call
-  6. Log to Overmind
+  1. Query Ghost DB for watchlist
+  2. Detect signal (from DB or live yfinance)
+  3. Query Ghost DB for historical patterns
+  4. Send SSE updates
+  5. Call Claude for analysis
+  6. Store signal + learning in Ghost DB
+  7. Trigger Bland call
 
 ### Chunk B3: SSE Streaming Endpoint (15 min)
 - [ ] Build `app/api/signal/route.ts` — Server-Sent Events
 - [ ] Stream status updates as the pipeline runs:
   - `{ step: "scanning", status: "active" }`
   - `{ step: "signal_detected", status: "done", data: {...} }`
+  - `{ step: "querying_ghost", status: "active" }`
+  - `{ step: "patterns_found", status: "done", count: 3 }`
   - `{ step: "analyzing", status: "active" }`
   - `{ step: "explanation_ready", status: "done", text: "..." }`
   - `{ step: "calling", status: "active" }`
@@ -411,17 +460,26 @@ POST /api/trigger
   ```
 - [ ] Test with 3 questions: "What's happening with SMCI?" / "Should I sell?" / "Any news on Tesla?"
 
-### Chunk B6: Overmind Integration (20 min) — FIRST TO CUT
-- [ ] Create `lib/overmind.ts` — Overmind SDK client
+### Chunk B6: Overmind Agent Supervision (15 min) — FIRST TO CUT
+- [ ] Create `lib/overmind.ts` — Overmind SDK client (see overmindlab.ai/hackathon)
 - [ ] Build `app/api/overmind/route.ts` — logs agent decisions
 - [ ] Log 3 decisions during pipeline:
   1. "Signal detected: HIGH significance (SMCI CEO sell)"
   2. "Recommendation: Alert user + suggest position reduction"
   3. "Trade executed: SMCI -50% (user approved via CIBA)"
-- [ ] If SDK doesn't work → screenshot their dashboard, show pre-captured image
+- [ ] If SDK doesn't work after 15 min → screenshot their hosted dashboard, show as image in resolution screen
 
-### Chunk B7: Wire Together + Test (15 min)
+### Chunk B7: Ghost DB Self-Improvement Demo (15 min)
+- [ ] After signal is processed, INSERT into `agent_learnings`:
+  - pattern_match_count, avg_historical_drop, action_taken, user_approved
+- [ ] Before calling, agent does: `SELECT COUNT(*) FROM signals WHERE ticker = 'SMCI'`
+  - If > 1: "I've seen SMCI signals before. Combining with my previous analysis..."
+  - This IS the self-improvement moment judges will see
+- [ ] Optional: `ghost fork <id>` before experimental analysis, show in demo as safety measure
+
+### Chunk B8: Wire Together + Test (15 min)
 - [ ] End-to-end smoke test: button → dashboard → call → resolution
+- [ ] Verify Ghost DB has new rows after pipeline runs
 - [ ] Fix any integration bugs
 - [ ] Push final code to GitHub
 
@@ -431,6 +489,7 @@ POST /api/trigger
 
 ### Chunk S1: Smoke Test (Start of Hour 3)
 - [ ] Full end-to-end run: press button on watchlist → dashboard streams → phone rings → resolution shows
+- [ ] Verify Ghost DB writes: `ghost sql <id> "SELECT * FROM signals"` → should show new row
 - [ ] Time it. Must complete within 60 seconds for demo pacing.
 - [ ] Fix blockers. This is the integration checkpoint.
 
@@ -454,21 +513,21 @@ POST /api/trigger
 ```
 ~12:00 PM  START BUILDING
            Person A: Chunk A1 (setup) → A2 (watchlist)
-           Person B: Chunk B1 (Bland outbound — TEST FIRST)
+           Person B: Chunk B1 (Ghost DB setup + Bland outbound — TEST FIRST)
 
 ~12:30 PM  Person A: Chunk A3 (dashboard)
-           Person B: Chunk B2 (signal detection + Claude)
+           Person B: Chunk B2 (signal detection + Claude + Ghost queries)
 
-~1:00 PM   Person A: Chunk A4 (resolution) → A5 (ghost feed)
+~1:00 PM   Person A: Chunk A4 (resolution)
            Person B: Chunk B3 (SSE) → B4 (Auth0 CIBA)
 
 ~1:30 PM   SMOKE TEST (both): Chunk S1
            Fix any blockers from end-to-end test
 
-~1:45 PM   Person A: Chunk A6 (CIBA UX) → A7 (polish)
-           Person B: Chunk B5 (inbound agent) → B6 (Overmind)
+~1:45 PM   Person A: Chunk A5 (CIBA UX) → A6 (polish)
+           Person B: Chunk B5 (inbound agent) → B6 (Overmind) → B7 (Ghost self-improvement)
 
-~2:30 PM   Person B: Chunk B7 (wire + test)
+~2:30 PM   Person B: Chunk B8 (wire + test)
            Person A: Start demo prep
 
 ~3:00 PM   DEMO REHEARSALS (both): Chunk S2
@@ -485,13 +544,14 @@ POST /api/trigger
 | What breaks | When to cut | Fallback |
 |---|---|---|
 | Phone doesn't ring | 20 sec after trigger | Play backup recording from laptop speaker |
+| Ghost DB connection fails | After 15 min of effort | Fall back to JSON files, explain Ghost verbally |
 | Auth0 CIBA too complex | After 30 min of effort | WoZ: fake approval with setTimeout, show Auth0 logo |
-| Overmind SDK fails | After 15 min of effort | Screenshot their hosted dashboard, show as image |
 | Inbound call gives bad answer | During rehearsal | Pre-rehearse 3 safe questions, avoid open-ended |
 | Dashboard SSE doesn't stream | After 15 min of effort | Hardcode timed sequence with setInterval |
 | Claude API rate limited | If it happens | Pre-generate the explanation, hardcode as fallback |
+| Overmind SDK fails | After 15 min of effort | Screenshot their hosted dashboard, show as image |
 
-**Cut order (if running out of time):** Overmind → Auth0 CIBA → Inbound call → Ghost feed → Dashboard streaming. NEVER cut: outbound phone call, plain-English explanation, watchlist screen.
+**Cut order (if running out of time):** Overmind → Auth0 CIBA → Inbound call → Ghost self-improvement demo → Dashboard streaming. NEVER cut: outbound phone call, plain-English explanation, watchlist screen, Ghost DB (it's our biggest prize track).
 
 ---
 
@@ -516,9 +576,10 @@ POST /api/trigger
            [Dashboard comes alive — streaming status]
            "Watch. It's scanning SEC filings... found something.
            SMCI's CEO sold $2.1 million in stock on March 19th.
-           It's scoring the significance... cross-referencing
-           historical patterns... generating a plain-English
-           explanation. All autonomous. I'm not touching anything."
+           It's querying its Ghost database for historical patterns...
+           3 matches found. Scoring the significance...
+           generating a plain-English explanation.
+           All autonomous. I'm not touching anything."
            [Phone rings]
            "And there it is."
 
@@ -533,13 +594,14 @@ POST /api/trigger
            [Resolution screen appears]
 
 2:10-2:40  DEPTH
-           [Show resolution + Overmind trace]
-           "6 sponsor tools working together. Bland AI for the call.
+           [Show resolution screen + Overmind trace]
+           "5 sponsor tools working together. Bland AI for the call.
            Auth0 CIBA for trade approval — the agent can't act
-           without my permission. Aerospike for historical patterns.
-           Ghost for my alert feed. Overmind supervising every
-           decision. And the agent learns — it said 'the last 3
-           times' because it remembered."
+           without my permission. Ghost — the agent's own database.
+           It queried historical patterns, stored this signal, and
+           logged what it learned. And Overmind supervising every
+           decision — 3 actions, all within policy.
+           The agent gets smarter every time."
 
 2:40-3:00  CLOSE
            [Hand judge the phone]
@@ -560,6 +622,8 @@ ANTHROPIC_API_KEY=sk-ant-...          # Claude API for signal analysis
 BLAND_API_KEY=sk-...                   # Bland AI for phone calls
 BLAND_INBOUND_NUMBER=+1...            # Bland inbound number for judge calls
 MY_PHONE_NUMBER=+1...                 # Phone to call during demo
+GHOST_DB_ID=...                        # Ghost database ID
+GHOST_CONNECTION_STRING=postgresql://... # Ghost DB connection string
 AUTH0_DOMAIN=xxx.auth0.com            # Auth0 tenant
 AUTH0_CLIENT_ID=...                   # Auth0 app client ID
 AUTH0_CLIENT_SECRET=...               # Auth0 app client secret
@@ -574,21 +638,28 @@ OVERMIND_API_KEY=...                  # Overmind agent supervision
 |---|---|---|---|
 | **Bland AI** | Outbound call + inbound agent | — | $500 |
 | **Auth0** | CIBA approval flow (or WoZ) | Login screen | $1,750 |
-| **Aerospike** | — | JSON files for historical patterns | $650 |
-| **Ghost** | — | Static HTML alert feed | $1,998 |
-| **Airbyte** | — | Narrative only ("data pipeline") | $1,000 |
-| **Overmind** | Agent trace logging (or screenshot) | — | $651 |
+| **Ghost** | Real Postgres DB: watchlists, signals, patterns, learnings, alerts | — | $1,998 + $500/member |
+| **Overmind** | Agent supervision, traces, policy compliance (or screenshot fallback) | — | $651 |
+| **Airbyte** | — | Narrative only ("data pipeline for SEC data") | $1,000 |
 
-**Total potential: up to $6,549**
+**Total potential: up to $5,899+**
+
+**Why we dropped Aerospike:** Ghost DB covers everything Aerospike was doing (storage, patterns, dedup) plus gives us forking, SQL, and the biggest single cash prize. One real integration beats two fake ones.
 
 ---
 
 ## What We're NOT Building
 - Real brokerage API integration
-- Real Airbyte data pipeline (no financial connectors available)
-- Real Aerospike deployment (JSON files are the WoZ)
-- Real Ghost CMS (static HTML page)
+- Real Airbyte data pipeline (mentioning it in narrative for the prize track)
 - Multi-user support (hardcoded single demo user)
 - Mobile app
 - Real trade execution
 - User registration / signup flow
+
+## What We ARE Building (Real, Not WoZ)
+- Real Ghost DB with real Postgres tables, queries, and agent writes
+- Real Bland AI outbound + inbound phone calls
+- Real Claude analysis with plain-English generation
+- Auth0 CIBA (real if time allows, WoZ if not)
+- Overmind agent supervision traces (real if time allows, screenshot fallback)
+- Real SSE streaming dashboard
