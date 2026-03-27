@@ -11,6 +11,7 @@ import {
 import { fetchLatestSignal } from "@/lib/edgar";
 import { fetchNewsSentiment } from "@/lib/news";
 import { setLastSignal } from "@/lib/state";
+import { insertSignal, getLatestSignal, type DBSignal } from "@/lib/db";
 
 export async function POST(req: NextRequest) {
   try {
@@ -43,6 +44,17 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Check DB for a more recent explanation for this signal
+    try {
+      const existingDbSignal = await getLatestSignal(signal.ticker);
+      if (existingDbSignal?.explanation) {
+        // DB has a richer explanation — surface it but continue with fresh scoring
+        console.log(`DB hit for ${signal.ticker}: using stored explanation`);
+      }
+    } catch (err) {
+      console.error("Trigger: DB lookup failed, continuing without it", err);
+    }
+
     // Persist signal so the SSE route can use it
     setLastSignal(signal);
 
@@ -54,6 +66,30 @@ export async function POST(req: NextRequest) {
 
     // Generate plain-English explanation via Gemini
     const explanation = await analyzeSignal(signal, pattern);
+
+    // Save signal to DB (fire-and-forget — don't block the response)
+    const dbSignal: DBSignal = {
+      id: signal.id,
+      ticker: signal.ticker,
+      company_name: signal.companyName,
+      insider: signal.insider,
+      role: signal.role,
+      action: signal.action,
+      shares: signal.shares,
+      price_per_share: signal.price_per_share,
+      total_value: signal.total_value,
+      date: signal.date,
+      filed_at: signal.filed,
+      scheduled_10b5_1: signal.scheduled_10b5_1,
+      last_transaction_months_ago: signal.last_transaction_months_ago,
+      position_reduced_pct: signal.position_reduced_pct,
+      score,
+      explanation,
+      alerted: false,
+    };
+    insertSignal(dbSignal).catch((err) =>
+      console.error("Trigger: failed to save signal to DB", err)
+    );
 
     // Trigger outbound call via Bland if score is high enough
     let callId: string | null = null;
