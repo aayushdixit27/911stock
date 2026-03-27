@@ -592,6 +592,165 @@ export default function PageClient({ userId }: { userId: string }) {
         )}
       </div>
 
+      {/* ── VERIFIED SOURCES — shown when signal detected ── */}
+      {signalDetected && (
+        <div
+          style={{
+            padding: "2rem 5vw",
+            background: "var(--ink)",
+            position: "relative",
+            overflow: "hidden",
+          }}
+        >
+          {/* Fire glow */}
+          <div
+            style={{
+              position: "absolute",
+              width: 400,
+              height: 400,
+              borderRadius: "50%",
+              top: "50%",
+              right: "5%",
+              transform: "translate(0, -50%)",
+              background: "radial-gradient(circle, rgba(234,76,0,0.1) 0%, transparent 65%)",
+              pointerEvents: "none",
+            }}
+          />
+
+          <div
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: "var(--text-xs)",
+              fontWeight: 500,
+              letterSpacing: "0.08em",
+              textTransform: "uppercase" as const,
+              color: "var(--terra-lt)",
+              display: "flex",
+              alignItems: "center",
+              gap: "0.625rem",
+              marginBottom: "1.25rem",
+              position: "relative",
+            }}
+          >
+            <span style={{ display: "inline-block", width: "1.25rem", height: 2, background: "var(--terra-lt)", borderRadius: 1 }} />
+            Verified Sources
+          </div>
+
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr 1fr",
+              gap: "1px",
+              background: "rgba(255,255,255,0.08)",
+              borderRadius: "6px",
+              overflow: "hidden",
+              position: "relative",
+            }}
+          >
+            {[
+              {
+                type: "SEC Filing",
+                title: "Form 4 — Insider Transaction",
+                detail: "Filed Mar 19, 2026 at 4:30 PM EST",
+                url: "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=SMCI&type=4",
+                badge: "Primary Source",
+              },
+              {
+                type: "DOJ Press Release",
+                title: "Three Charged With Conspiring to Divert AI Technology to China",
+                detail: "Office of Public Affairs · Mar 19, 2026",
+                url: "https://www.justice.gov/opa/pr/three-charged-conspiring-unlawfully-divert-cutting-edge-us-artificial-intelligence",
+                badge: "Government",
+              },
+              {
+                type: "Reuters",
+                title: "US charges 3 tied to Super Micro with smuggling AI chips to China",
+                detail: "Kanishka Singh, Karen Freifeld · Mar 19, 2026",
+                url: "https://www.reuters.com/world/us-charges-three-people-with-conspiring-divert-ai-tech-china-2026-03-19/",
+                badge: "Wire Service",
+              },
+            ].map((src, i) => (
+              <a
+                key={i}
+                href={src.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  background: "rgba(26,26,24,0.95)",
+                  padding: "1.25rem",
+                  textDecoration: "none",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "0.5rem",
+                  transition: "background 0.2s",
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(26,26,24,0.85)"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(26,26,24,0.95)"; }}
+              >
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                  <span
+                    style={{
+                      fontFamily: "var(--font-mono)",
+                      fontSize: "var(--text-xs)",
+                      fontWeight: 500,
+                      color: "var(--orange)",
+                      letterSpacing: "0.04em",
+                    }}
+                  >
+                    {src.type}
+                  </span>
+                  <span
+                    style={{
+                      fontFamily: "var(--font-body)",
+                      fontSize: "10px",
+                      fontWeight: 500,
+                      color: "rgba(255,255,255,0.3)",
+                      background: "rgba(255,255,255,0.06)",
+                      padding: "0.125rem 0.5rem",
+                      borderRadius: "3px",
+                    }}
+                  >
+                    {src.badge}
+                  </span>
+                </div>
+                <p
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: "var(--text-sm)",
+                    fontWeight: 600,
+                    color: "var(--white)",
+                    lineHeight: 1.4,
+                  }}
+                >
+                  {src.title}
+                </p>
+                <p
+                  style={{
+                    fontFamily: "var(--font-mono)",
+                    fontSize: "11px",
+                    color: "rgba(255,255,255,0.35)",
+                  }}
+                >
+                  {src.detail}
+                </p>
+              </a>
+            ))}
+          </div>
+
+          <p
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: "11px",
+              color: "rgba(255,255,255,0.2)",
+              marginTop: "1rem",
+              position: "relative",
+            }}
+          >
+            911Stock cites its sources. Every alert is traceable to primary filings.
+          </p>
+        </div>
+      )}
+
       {/* ── FOOTER ── */}
       <footer
         style={{
