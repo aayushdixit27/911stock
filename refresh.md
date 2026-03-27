@@ -151,12 +151,12 @@ A hackathon happening **March 27, 2026** at **AWS Builder Loft** (525 Market St,
 ### What It Does
 An autonomous agent that monitors SEC filings and insider transactions for YOUR specific portfolio. When it detects something significant, it writes a plain-English analysis, stores the signal in its own Ghost database, and calls your phone to explain what it means for YOU. You can also call it back and ask questions.
 
-### The Hero Moment
-You walk on stage, say "I own SMCI, Tesla, and NVIDIA," show your watchlist. Press the trigger button. Dashboard comes alive. Phone rings. The AI says:
+### The Hero Moment (UPDATED)
+You walk on stage, show the dashboard with SMCI, TSLA, NVDA in your watchlist. Press **Play Timeline**. News scrolls through — Mar 18, everything calm, SMCI at $42.50 +4.2%. Then Mar 19 hits: DOJ indictment, Reuters, Bloomberg. SMCI drops to $39.10. The agent **automatically** fires the pipeline — no button click. Phone rings. The AI says:
 
-> "Hey, this is 911Stock. I'm watching SMCI for you. The CEO just sold $2.1 million in stock — his first sale in 14 months, outside his scheduled plan. The last 3 times SMCI insiders did unscheduled sales, the stock dropped an average of 12% over the next 30 days. Want me to reduce your position by 50%?"
+> "Hey, this is 911Stock. I'm watching SMCI for you. The co-founder was just charged with smuggling $2.5 billion of AI servers to China. The stock is already down 8% after hours. Based on 3 similar events in SMCI's history, the average 30-day decline is 12%. Want me to reduce your position by 50%?"
 
-You say "Yes." Resolution screen shows position closed + savings estimate. Then you hand the judge your phone: "Call 911Stock. Ask it anything."
+You say "Yes." Auth0 CIBA approval → trade executes in Ghost DB → resolution screen shows live trade confirmation with order ID, before/after position, estimated savings. Then you hand the judge your phone: "Call 911Stock. Ask it anything."
 
 ### The One Sentence That IS The Product
 The plain-English explanation generator is the product. Everything else is infrastructure to deliver it.
@@ -196,6 +196,22 @@ insider_df = ticker.insider_transactions  # Done. DataFrame.
 - Bland ($500 "Most Ab-Norm-al")
 - **Total potential: up to $5,899+**
 
+### Build Status (as of ~1:30 PM)
+
+| Chunk | Status | What Was Built |
+|---|---|---|
+| A1: Setup | DONE | CTO scaffolded Next.js app |
+| A2: Watchlist | DONE | Two-column dashboard: watchlist + news timeline, add/remove stocks, sensitivity dropdowns |
+| A3: Dashboard | DONE | Pipeline steps, ink takeover agent analysis, phone ringing, Auth0 Guardian polling |
+| A4: Resolution | DONE | Ink hero, trade confirmation with live order ID, Overmind trace, Ghost DB status, still watching |
+| A5: Auth0 CIBA UX | DONE | Trade details card, shield icon, Guardian push notification flow |
+| A6: Polish | DONE | Page transitions, loading spinners, focus states, responsive grids, hover states |
+| NEW: News Timeline | DONE | 6 days of real SMCI news (DOJ, Reuters, Bloomberg), play/pause slideshow, auto-trigger on signal |
+| NEW: Trade Execution | DONE | Portfolio positions, /api/execute-trade, live trade confirmation on resolution page |
+| NEW: Live Prices | DONE | Stock prices update per day as timeline plays (SMCI $42.50→$28.48→$24.10) |
+
+**Design:** MARK philosophy — Inter + JetBrains Mono + DM Serif Display, fire gradient, ink/paper ground, terracotta accents
+
 ### Build Plan (2-person split — see plan.md for full chunk details)
 
 ```
@@ -212,37 +228,48 @@ Person A (Product/UX):                    Person B (CTO/Backend):
 Shared: S1 smoke test | S2 rehearsals | S3 submission
 ```
 
-### 3-Minute Demo Script
+### 3-Minute Demo Script (UPDATED)
 
 ```
 0:00-0:20  PROBLEM
-           "I own SMCI, Tesla, and NVIDIA. Insider transactions
-           happen 24/7. By the time I see it on CNBC, it's too late."
+           "I own SMCI, Tesla, and NVIDIA. March 19th, the DOJ
+           charged SMCI's co-founder with smuggling $2.5 billion
+           of AI chips to China. By the time CNBC covered it,
+           the stock had already dropped 33%."
 
 0:20-0:40  SOLUTION
-           [Show watchlist] "This is 911Stock. 911 for your stocks."
-           [Press the red button]
+           [Show dashboard — watchlist + news timeline]
+           "This is 911Stock. It watches real news sources for
+           your specific holdings. Watch what happens."
+           [Press Play Timeline]
 
 0:40-1:40  AUTONOMY
-           [Dashboard streams] Scanning SEC filings... signal detected...
-           querying Ghost DB for patterns... 3 matches... scoring...
-           generating explanation. All autonomous.
-           [Phone rings] "And there it is."
+           [Timeline plays — Mar 18 calm, SMCI $42.50]
+           "Mar 18, everything's fine..."
+           [Mar 19 hits — DOJ, Reuters, Bloomberg flood in]
+           "Mar 19. The agent detects it immediately."
+           [Auto-triggers — no button press]
+           [Dashboard streams — pipeline running]
+           "It's scanning, matching patterns, generating analysis..."
+           [Phone rings] "And there it is. Calling automatically."
 
 1:40-2:10  HERO MOMENT
-           [Phone on speaker] AI explains the SMCI insider sale.
+           [Phone on speaker] AI explains the situation.
            "Want me to reduce your position by 50%?" Say "Yes."
-           [Resolution screen appears]
+           [Auth0 CIBA approval → trade executes in Ghost DB]
+           [Resolution: order ID, 1000→500 shares, est. savings]
 
 2:10-2:40  DEPTH
-           "5 sponsor tools. Bland for the call. Auth0 CIBA for
-           trade approval. Ghost — the agent's own database.
-           Overmind supervising every decision. The agent gets
-           smarter every time."
+           "5 sponsor tools. Bland AI for the call. Auth0 CIBA —
+           the agent can't trade without permission. Ghost DB —
+           the agent's own database, it wrote that trade.
+           Overmind supervising every decision. Real news. Real
+           analysis. Real trade execution."
 
 2:40-3:00  CLOSE
            [Hand judge the phone] "Call 911Stock. Ask it anything."
-           "911Stock. Your portfolio, watched."
+           "If you owned SMCI on March 18th, this call would have
+           saved you $5,000. 911Stock. Your portfolio, watched."
 ```
 
 ---
