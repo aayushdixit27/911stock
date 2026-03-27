@@ -39,21 +39,24 @@
           "headline": "Three charged with conspiring to unlawfully divert cutting-edge U.S. AI technology to China",
           "summary": "DOJ unseals indictment: co-founder Wally Liaw, sales manager Steven Chang, and contractor Willy Sun charged with smuggling $2.5B of AI servers to China via dummy servers and false documents.",
           "significance": "high",
-          "sentiment": "negative"
+          "sentiment": "negative",
+          "url": "https://www.justice.gov/opa/pr/three-charged-conspiring-unlawfully-divert-cutting-edge-us-artificial-intelligence"
         },
         {
           "source": "Reuters",
           "headline": "US charges 3 tied to Super Micro Computer with helping smuggle billions of dollars of AI chips to China",
           "summary": "Liaw arrested in Northern District of California. Chang remains a fugitive in Taiwan. SMCI stock falls 8% after hours.",
           "significance": "high",
-          "sentiment": "negative"
+          "sentiment": "negative",
+          "url": "https://www.reuters.com/world/us-charges-three-people-with-conspiring-divert-ai-tech-china-2026-03-19/"
         },
         {
           "source": "Super Micro IR",
           "headline": "Super Micro Computer issues statement on action by U.S. Attorney's Office",
           "summary": "Company not named as defendant. Liaw and Chang placed on administrative leave. Contractor Sun terminated. Company cooperating with investigation.",
           "significance": "high",
-          "sentiment": "negative"
+          "sentiment": "negative",
+          "url": "https://ir.supermicro.com/news/news-details/2026/Super-Micro-Computer-Issues-Statement-on-Action-by-U-S--Attorneys-Office/default.aspx"
         }
       ]
     },

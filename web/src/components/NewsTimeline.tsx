@@ -9,6 +9,7 @@ type NewsEvent = {
   summary: string;
   significance: string;
   sentiment: string;
+  url?: string;
 };
 
 type PriceData = {
@@ -42,41 +43,59 @@ export function NewsTimeline({
   const [currentDay, setCurrentDay] = useState(0);
   const [playing, setPlaying] = useState(false);
   const [revealedEvents, setRevealedEvents] = useState(0);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const hasTriggered = useRef(false);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Use refs so the timer callback always sees fresh state
+  const currentDayRef = useRef(currentDay);
+  const revealedRef = useRef(revealedEvents);
+  const playingRef = useRef(playing);
+
+  currentDayRef.current = currentDay;
+  revealedRef.current = revealedEvents;
+  playingRef.current = playing;
 
   const day = timeline[currentDay];
   const totalEvents = day.events.length;
 
-  const advance = useCallback(() => {
-    setRevealedEvents((prev) => {
-      const next = prev + 1;
-      if (next > totalEvents) {
-        // Move to next day
-        setCurrentDay((d) => {
-          const nextDay = d + 1;
-          if (nextDay >= timeline.length) {
-            setPlaying(false);
-            return d;
-          }
-          return nextDay;
-        });
-        return 0;
-      }
-      return next;
-    });
-  }, [totalEvents]);
-
-  useEffect(() => {
-    if (playing) {
-      intervalRef.current = setInterval(advance, 2000);
-    } else if (intervalRef.current) {
-      clearInterval(intervalRef.current);
+  // Clear any running timer
+  const clearTimer = useCallback(() => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
     }
-    return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-    };
-  }, [playing, advance]);
+  }, []);
+
+  // The core tick — reads from refs to avoid stale closures
+  const tick = useCallback(() => {
+    const d = currentDayRef.current;
+    const r = revealedRef.current;
+    const dayData = timeline[d];
+    const total = dayData.events.length;
+
+    if (r < total) {
+      // Reveal next event
+      setRevealedEvents(r + 1);
+    } else {
+      // All events revealed — move to next day
+      const nextDay = d + 1;
+      if (nextDay >= timeline.length) {
+        setPlaying(false);
+        return;
+      }
+      setCurrentDay(nextDay);
+      setRevealedEvents(0);
+    }
+  }, []);
+
+  // Start/stop the interval when playing changes
+  useEffect(() => {
+    clearTimer();
+    if (playing) {
+      timerRef.current = setInterval(tick, 2000);
+    }
+    return clearTimer;
+  }, [playing, tick, clearTimer]);
 
   // Update prices when day changes
   useEffect(() => {
@@ -85,17 +104,6 @@ export function NewsTimeline({
       onPriceUpdate(d.prices);
     }
   }, [currentDay, onPriceUpdate]);
-  
-  // Reset revealed events when day changes while playing
-  useEffect(() => {
-    if (playing) {
-      // Using requestAnimationFrame to avoid synchronous setState warning
-      const frame = requestAnimationFrame(() => {
-        setRevealedEvents(0);
-      });
-      return () => cancelAnimationFrame(frame);
-    }
-  }, [currentDay, playing]);
 
   // Detect when we hit Mar 19 high-significance events
   useEffect(() => {
@@ -112,7 +120,6 @@ export function NewsTimeline({
 
   function handlePlay() {
     if (currentDay >= timeline.length - 1 && revealedEvents >= totalEvents) {
-      // Reset
       setCurrentDay(0);
       setRevealedEvents(0);
       hasTriggered.current = false;
@@ -173,11 +180,11 @@ export function NewsTimeline({
             >
               {d.label}
               {hasHigh && isPast && !isActive && (
-                <span style={{ 
-                  display: "inline-block", 
-                  width: 4, 
-                  height: 4, 
-                  borderRadius: "50%", 
+                <span style={{
+                  display: "inline-block",
+                  width: 4,
+                  height: 4,
+                  borderRadius: "50%",
                   background: "var(--orange)",
                   marginLeft: "0.25rem",
                   verticalAlign: "middle"
@@ -236,7 +243,7 @@ export function NewsTimeline({
           const isVisible = i < revealedEvents;
           return (
             <div
-              key={i}
+              key={`${currentDay}-${i}`}
               style={{
                 opacity: isVisible ? 1 : 0.12,
                 transform: isVisible ? "translateY(0)" : "translateY(6px)",
@@ -246,7 +253,6 @@ export function NewsTimeline({
             >
               <div style={{ padding: "0.875rem 0" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.375rem" }}>
-                  {/* Significance dot */}
                   <div
                     style={{
                       width: 6,
@@ -259,7 +265,6 @@ export function NewsTimeline({
                         : "none",
                     }}
                   />
-                  {/* Source */}
                   <span
                     style={{
                       fontFamily: "var(--font-mono)",
@@ -270,7 +275,6 @@ export function NewsTimeline({
                   >
                     {event.source}
                   </span>
-                  {/* Sentiment badge */}
                   <span
                     style={{
                       fontFamily: "var(--font-body)",
@@ -287,7 +291,7 @@ export function NewsTimeline({
                   </span>
                 </div>
 
-                {/* Headline */}
+                {/* Headline — link if url exists */}
                 <p
                   style={{
                     fontWeight: 600,
@@ -298,10 +302,20 @@ export function NewsTimeline({
                     marginBottom: "0.25rem",
                   }}
                 >
-                  {event.headline}
+                  {event.url ? (
+                    <a
+                      href={event.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ color: "inherit", textDecoration: "none", borderBottom: "1px solid var(--ink-15)" }}
+                    >
+                      {event.headline}
+                    </a>
+                  ) : (
+                    event.headline
+                  )}
                 </p>
 
-                {/* Summary */}
                 <p
                   style={{
                     fontSize: "var(--text-xs)",
