@@ -62,7 +62,7 @@ If they ask questions:
     body: JSON.stringify({
       phone_number: phoneNumber,
       task,
-      voice: "maya",
+      voice: "e95b741c-f2da-4422-9a09-46617c6bdd8f",
       wait_for_greeting: true,
       record: true,
       max_duration: 5,
