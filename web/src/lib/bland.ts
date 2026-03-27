@@ -10,20 +10,31 @@ export async function makeOutboundCall(
     role: string;
     total_value: number;
     last_transaction_months_ago: number;
-  },
-  avgDropPct: number
+  }
 ): Promise<{ callId: string }> {
-  const task = `You are 911Stock, a portfolio monitoring AI. Be conversational and concise.
+  const appUrl = process.env.NEXT_PUBLIC_URL || "http://localhost:3000";
 
-Start with: "Hey, this is 911Stock. I found something about ${signal.ticker} in your portfolio."
+  const task = `You are 911Stock, a portfolio monitoring AI. Be conversational, direct, and concise.
 
-Then say: "${explanation}"
+Start the call with:
+"Hey, this is 911Stock. I found something important about ${signal.ticker} in your portfolio."
 
-Then ask: "Want me to reduce your ${signal.ticker} position by 50% as a precaution? Say yes or no."
+Then say:
+"${explanation}"
 
-If they say yes: Say "Got it. I'll flag this for your approval now. Check the 911Stock app to confirm."
-If they say no: Say "Understood. I'll keep watching and let you know if anything changes."
-If they ask questions: Answer briefly based on the data you have. Keep responses under 2 sentences.`;
+Then ask:
+"I can reduce your ${signal.ticker} position by 50% as a precaution. If you want me to do that, say yes and I'll send an approval request to your phone right now. Say no if you'd like to hold."
+
+If they say YES or agree:
+- Call the request_approval tool immediately
+- Then say: "Done — I've sent an approval request to your phone. Open the Auth0 Guardian app and tap Approve to confirm."
+
+If they say NO or decline:
+- Say: "Got it. I'll keep watching ${signal.ticker} and alert you if anything else comes up."
+
+If they ask questions:
+- Answer briefly in 1-2 sentences based on what you know.
+- Always return to asking about the trade if they haven't answered.`;
 
   const response = await fetch(`${BLAND_BASE}/calls`, {
     method: "POST",
@@ -37,7 +48,27 @@ If they ask questions: Answer briefly based on the data you have. Keep responses
       voice: "maya",
       wait_for_greeting: true,
       record: true,
-      max_duration: 4,
+      max_duration: 5,
+      tools: [
+        {
+          name: "request_approval",
+          description: "Call this tool when the user says yes and wants to approve the trade",
+          url: `${appUrl}/api/bland-webhook`,
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: {
+            approved: true,
+            ticker: signal.ticker,
+          },
+          response_data: [
+            {
+              name: "status",
+              data: "$.status",
+              context: "Whether the approval request was sent successfully",
+            },
+          ],
+        },
+      ],
     }),
   });
 

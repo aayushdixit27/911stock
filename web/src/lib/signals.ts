@@ -1,6 +1,7 @@
 import signalsData from "@/data/signals.json";
 import historicalData from "@/data/historical.json";
 import watchlistData from "@/data/watchlist.json";
+import type { NewsSentiment } from "./news";
 
 export type Signal = (typeof signalsData.signals)[0];
 export type HistoricalPattern = (typeof historicalData.patterns)[0];
@@ -16,7 +17,10 @@ export function getHistoricalPattern(ticker: string): HistoricalPattern | null {
   return historicalData.patterns.find((p) => p.ticker === ticker) ?? null;
 }
 
-export function scoreSignal(signal: Signal): number {
+export function scoreSignal(
+  signal: Signal,
+  newsSentiment?: NewsSentiment | null
+): number {
   let score = 0;
 
   // Discretionary sale (not scheduled) is the biggest signal
@@ -34,6 +38,12 @@ export function scoreSignal(signal: Signal): number {
 
   // High value sale
   if (signal.total_value >= 2_000_000) score += 1;
+
+  // News sentiment reinforces insider sell signal
+  if (newsSentiment != null) {
+    if (newsSentiment.overallScore < -0.4) score += 2;
+    else if (newsSentiment.overallScore < -0.2) score += 1;
+  }
 
   return score;
 }

@@ -1,0 +1,164 @@
+{
+  "agent_description": "This agent monitors insider stock sales for a retail investor and turns a structured trading signal into a short plain-English explanation of what happened, how long it has been since the insider last traded, whether the sale was routine or discretionary, and why the holder of the stock should care.",
+  "agent_path": "/Users/bunyasit/dev/hackathon/911stock/overclaw/agents/signal_agent.py",
+  "input_schema": {
+    "signal": {
+      "type": "text",
+      "description": "Structured insider-trading signal containing company name, ticker, insider identity and role, transaction value, share count, whether the sale was on a scheduled plan, months since the insider's last transaction, and position reduction percentage."
+    },
+    "pattern": {
+      "type": "text",
+      "description": "Optional historical pattern data for similar insider sales, including occurrence history and average 30-day stock drop after unscheduled sales."
+    }
+  },
+  "output_fields": {
+    "explanation": {
+      "type": "text",
+      "description": "A 2-4 sentence plain-English explanation of the insider sale and its relevance to a stock holder.",
+      "weight": 70,
+      "importance": "critical",
+      "eval_mode": "non_empty"
+    }
+  },
+  "structure_weight": 20,
+  "total_points": 100,
+  "optimizable_elements": [
+    "SYSTEM_PROMPT \u2014 instructions can be refined for clarity, safety, and style enforcement",
+    "run() \u2014 agent orchestration: input validation, prompt formatting, error handling, retry logic, and output post-processing can be improved",
+    "call_llm tool definition \u2014 descriptions and parameter schemas can be clarified",
+    "Model selection \u2014 the chosen LLM can be swapped or tuned for latency/cost/quality",
+    "Input formatting logic inside run() \u2014 how signal and pattern fields are rendered into the prompt can be adjusted"
+  ],
+  "fixed_elements": [
+    "call_llm implementation",
+    "Data sources / databases behind the signal and pattern objects",
+    "Import structure and tracing integration",
+    "Output parsing logic that extracts response.choices[0].message.content",
+    "The external contract that the final returned object contains an explanation field"
+  ],
+  "tool_config": {
+    "expected_tools": [
+      "call_llm"
+    ],
+    "dependencies": [
+      {
+        "from_tool": "call_llm",
+        "from_field": "choices[0].message.content",
+        "to_tool": "run",
+        "to_param": "explanation",
+        "description": "The LLM-generated content is stripped and returned as the final explanation output."
+      }
+    ],
+    "param_constraints": {
+      "call_llm": {
+        "model": [
+          "gemini/gemini-2.0-flash-exp"
+        ],
+        "messages": [
+          "list of chat messages with roles system and user"
+        ]
+      }
+    }
+  },
+  "tool_usage_weight": 10,
+  "consistency_rules": [
+    {
+      "field_a": "signal.scheduled_10b5_1",
+      "field_b": "explanation",
+      "type": "correlation",
+      "description": "If the sale is on a scheduled plan, the explanation should frame it as routine; if not, it should frame it as the insider's own decision.",
+      "penalty": 4.0
+    },
+    {
+      "field_a": "signal.last_transaction_months_ago",
+      "field_b": "explanation",
+      "type": "correlation",
+      "description": "The explanation should explicitly mention how long it has been since the insider's last transaction.",
+      "penalty": 4.0
+    },
+    {
+      "field_a": "pattern.avg_30d_drop_pct",
+      "field_b": "explanation",
+      "type": "correlation",
+      "description": "When historical pattern data is provided, the explanation should clearly state the average 30-day drop from similar unscheduled sales.",
+      "penalty": 3.5
+    }
+  ],
+  "policy": {
+    "purpose": "Explain insider stock sales in plain English for retail holders, using structured signal data and optional historical pattern context.",
+    "domain_rules": [
+      "If the sale was NOT on a scheduled 10b5-1 plan, treat it as more significant.",
+      "If the insider hasn't sold in 12+ months, emphasize the unusual timing.",
+      "If position was reduced by 20%+, highlight this as a large reduction.",
+      "Always cite the historical average drop % if pattern data is available.",
+      "If the sale IS scheduled (10b5-1 = true), frame it as routine and calm.",
+      "The explanation should explicitly mention how long it has been since the insider\u2019s last transaction. (added)",
+      "The explanation should say why a holder of the stock should care. (added)",
+      "If the trade is unscheduled, the wording should imply it was the insider\u2019s own decision rather than a routine plan. (added)",
+      "If pattern data is provided, mention that it refers to similar unscheduled insider sales and summarize the average 30-day drop. (added)"
+    ],
+    "domain_edge_cases": [
+      {
+        "scenario": "Scheduled 10b5-1 sale",
+        "correct_handling": "Frame as routine, no alarm."
+      },
+      {
+        "scenario": "No historical pattern",
+        "correct_handling": "Omit pattern commentary and focus on the trade itself."
+      },
+      {
+        "scenario": "Small position reduction (<5%)",
+        "correct_handling": "Downplay concern even if dollar value is large."
+      },
+      {
+        "scenario": "Multiple insiders selling",
+        "correct_handling": "Note that more than one insider is selling. (added)"
+      },
+      {
+        "scenario": "C-suite vs director",
+        "correct_handling": "CEO/CFO/CTO sales warrant more attention than board members. (added)"
+      },
+      {
+        "scenario": "Optional pattern object absent",
+        "correct_handling": "Do not mention historical averages unless pattern data is present. (added)"
+      }
+    ],
+    "terminology": {
+      "scheduled": "A sale made under a pre-planned 10b5-1 arrangement.",
+      "unscheduled": "A sale not made under a pre-planned sale plan.",
+      "position_reduced_pct": "The percentage reduction in the insider\u2019s ownership from this sale.",
+      "historical_pattern": "Prior similar insider sales and their average 30-day stock move."
+    },
+    "output_constraints": [
+      "Return only the `explanation` field.",
+      "`explanation` must be a non-empty string. (added)",
+      "2\u20134 sentences maximum; never more than 4 sentences.",
+      "Use plain English and avoid jargon such as Form 4, 10b5-1, SEC filing, and discretionary.",
+      "Do not recommend buying or selling.",
+      "Always address the reader as someone who holds the stock.",
+      "Do not speculate beyond the provided data."
+    ],
+    "tool_requirements": [
+      "Use exactly one LLM call via `call_llm`. (added)",
+      "Use model `gemini/gemini-2.0-flash-exp`. (added)",
+      "Send exactly one system message and one user message. (added)",
+      "Do not rely on retries or fallback tools; include all needed context in the prompt. (added)",
+      "Return text that can be read from `response.choices[0].message.content`. (added)"
+    ],
+    "decision_mapping": [
+      "If `signal.scheduled_10b5_1` is true, describe the sale as routine and calm.",
+      "If `signal.scheduled_10b5_1` is false, describe it as the insider\u2019s own decision and more significant.",
+      "Always include `signal.last_transaction_months_ago`.",
+      "If `pattern` is present, include `pattern.avg_30d_drop_pct` and connect it to similar unscheduled sales.",
+      "Include the dollar amount, share count, and position reduction percentage when available.",
+      "End with why this matters to the holder."
+    ],
+    "quality_expectations": [
+      "Be specific with numbers, especially the dollar amount and months since last transaction.",
+      "Keep the tone calibrated: calm for scheduled sales, more cautious for unscheduled sales.",
+      "Make the explanation easy for a 16-year-old to understand. (added)",
+      "Prefer a direct, human-sounding summary over technical phrasing. (added)",
+      "Clearly connect the insider trade to relevance for the stock holder. (added)"
+    ]
+  }
+}

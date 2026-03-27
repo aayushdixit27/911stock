@@ -1,81 +1,101 @@
-import { Auth0AI, setAIContext } from "@auth0/ai-vercel";
-import { generateText } from "ai";
-import { createGoogleGenerativeAI } from "@ai-sdk/google";
-import { tool } from "ai";
-import { z } from "zod";
-import crypto from "node:crypto";
+/**
+ * Auth0 CIBA (Client-Initiated Backchannel Authentication)
+ *
+ * Flow:
+ * 1. initiateCIBA()    → sends push notification to user's Auth0 Guardian app
+ *                        returns auth_req_id
+ * 2. pollCIBA()        → polls Auth0 until user approves/denies
+ *                        returns { approved: boolean, accessToken? }
+ */
 
-const google = createGoogleGenerativeAI({
-  apiKey: process.env.GEMINI_API_KEY!,
-});
+const AUTH0_DOMAIN = process.env.AUTH0_DOMAIN!;
+const AUTH0_CLIENT_ID = process.env.AUTH0_CLIENT_ID!;
+const AUTH0_CLIENT_SECRET = process.env.AUTH0_CLIENT_SECRET!;
+const AUTH0_AUDIENCE = process.env.AUTH0_AUDIENCE || "911stock-api";
 
-const auth0AI = new Auth0AI({
-  auth0: {
-    domain: process.env.AUTH0_DOMAIN!,
-    clientId: process.env.AUTH0_CLIENT_ID!,
-    clientSecret: process.env.AUTH0_CLIENT_SECRET!,
-  },
-});
+export type CIBAInitResult = {
+  authReqId: string;
+  expiresIn: number;
+  interval: number; // polling interval in seconds
+};
 
-// CIBA-protected trade tool
-// Wraps the trade action with Auth0 async authorization
-export function createTradeAuthorizer(userId: string) {
-  const useAsyncAuthz = auth0AI.withAsyncAuthorization({
-    userID: () => userId,
-    bindingMessage: async ({ ticker, action, pct }: { ticker: string; action: string; pct: number }) =>
-      `911Stock wants to ${action} your ${ticker} position by ${pct}%`,
-    scopes: ["openid", "stock:trade"],
-    audience: process.env.AUTH0_AUDIENCE || "911stock-api",
+export type CIBAStatus =
+  | { status: "pending" }
+  | { status: "approved"; accessToken: string }
+  | { status: "denied" }
+  | { status: "expired" };
+
+/**
+ * Initiates a CIBA request. Sends a push notification via Auth0 Guardian
+ * to the user's enrolled device.
+ *
+ * @param userId - Auth0 subject ID (e.g. "auth0|abc123")
+ * @param bindingMessage - Short message shown on the Guardian push notification
+ */
+export async function initiateCIBA(
+  userId: string,
+  bindingMessage: string
+): Promise<CIBAInitResult> {
+  const res = await fetch(`https://${AUTH0_DOMAIN}/bc-authorize`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      client_id: AUTH0_CLIENT_ID,
+      client_secret: AUTH0_CLIENT_SECRET,
+      login_hint: JSON.stringify({
+        format: "iss_sub",
+        iss: `https://${AUTH0_DOMAIN}/`,
+        sub: userId,
+      }),
+      binding_message: bindingMessage,
+      scope: "openid stock:trade",
+      audience: AUTH0_AUDIENCE,
+    }),
   });
 
-  return useAsyncAuthz(
-    tool({
-      description: "Reduce stock position after user approval",
-      inputSchema: z.object({
-        ticker: z.string(),
-        action: z.string(),
-        pct: z.number(),
-      }),
-      execute: async ({ ticker, action, pct }) => {
-        // Simulated trade execution (WoZ — no real brokerage)
-        return {
-          success: true,
-          message: `${action} ${ticker} by ${pct}% — authorized via Auth0 CIBA`,
-          estimatedSavings: 2550,
-        };
-      },
-    })
-  );
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(`CIBA initiation failed: ${err.error_description || err.error}`);
+  }
+
+  const data = await res.json();
+  return {
+    authReqId: data.auth_req_id,
+    expiresIn: data.expires_in,
+    interval: data.interval ?? 5,
+  };
 }
 
-// Initiate the CIBA authorization flow for a trade
-export async function requestTradeApproval(params: {
-  userId: string;
-  ticker: string;
-  action: string;
-  pct: number;
-}) {
-  const threadID = crypto.randomUUID();
-
-  // Set AI context for this thread
-  setAIContext({ threadID });
-
-  const tradeTool = createTradeAuthorizer(params.userId);
-
-  const result = await generateText({
-    model: google("gemini-2.0-flash-exp"),
-    messages: [
-      {
-        role: "user",
-        content: `Execute trade: ${params.action} ${params.ticker} by ${params.pct}%`,
-      },
-    ],
-    tools: {
-      executeTrade: tradeTool,
-    },
-    // @ts-expect-error — maxSteps exists at runtime but type defs differ across versions
-    maxSteps: 2,
+/**
+ * Polls Auth0 once for CIBA approval status.
+ * Call this repeatedly (every `interval` seconds) until status is not "pending".
+ */
+export async function pollCIBA(authReqId: string): Promise<CIBAStatus> {
+  const res = await fetch(`https://${AUTH0_DOMAIN}/oauth/token`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      grant_type: "urn:openid:params:grant-type:ciba",
+      client_id: AUTH0_CLIENT_ID,
+      client_secret: AUTH0_CLIENT_SECRET,
+      auth_req_id: authReqId,
+    }),
   });
 
-  return { threadID, result: result.text };
+  const data = await res.json();
+
+  if (res.ok) {
+    return { status: "approved", accessToken: data.access_token };
+  }
+
+  switch (data.error) {
+    case "authorization_pending":
+      return { status: "pending" };
+    case "access_denied":
+      return { status: "denied" };
+    case "expired_token":
+      return { status: "expired" };
+    default:
+      throw new Error(`CIBA poll error: ${data.error_description || data.error}`);
+  }
 }

@@ -1,0 +1,507 @@
+[
+  {
+    "input": {
+      "signal": {
+        "ticker": "SMCI",
+        "companyName": "Super Micro Computer",
+        "insider": "Charles Liang",
+        "role": "CEO",
+        "action": "SELL",
+        "shares": 50000,
+        "total_value": 2125000,
+        "scheduled_10b5_1": false,
+        "last_transaction_months_ago": 14,
+        "position_reduced_pct": 18
+      },
+      "pattern": {
+        "occurrences": [
+          {
+            "date": "2025-08-12",
+            "insider": "CFO",
+            "subsequent_30d_drop_pct": 15.2
+          },
+          {
+            "date": "2024-11-03",
+            "insider": "CEO",
+            "subsequent_30d_drop_pct": 9.1
+          },
+          {
+            "date": "2024-03-22",
+            "insider": "VP Sales",
+            "subsequent_30d_drop_pct": 11.8
+          }
+        ],
+        "avg_30d_drop_pct": 12.0,
+        "confidence": "high"
+      }
+    },
+    "expected_output": {
+      "explanation": "A response that: (1) says CEO sold $2.1M without jargon, (2) mentions 14 months since last sale, (3) says the sale wasn't planned/scheduled, (4) cites the ~12% average historical drop, (5) tells the SMCI holder why this matters to them"
+    }
+  },
+  {
+    "input": {
+      "signal": {
+        "ticker": "NVDA",
+        "companyName": "NVIDIA Corporation",
+        "insider": "Colette Kress",
+        "role": "CFO",
+        "action": "SELL",
+        "shares": 84723,
+        "total_value": 12084081,
+        "scheduled_10b5_1": false,
+        "last_transaction_months_ago": 22,
+        "position_reduced_pct": 40
+      },
+      "pattern": {
+        "occurrences": [
+          {
+            "date": "2025-06-15",
+            "insider": "CFO",
+            "subsequent_30d_drop_pct": 8.7
+          }
+        ],
+        "avg_30d_drop_pct": 8.7,
+        "confidence": "medium"
+      }
+    },
+    "expected_output": {
+      "explanation": "A response that: (1) mentions $12M sale without jargon, (2) emphasizes 22 months since last transaction (nearly 2 years), (3) notes 40% position reduction, (4) cites 8.7% historical drop, (5) clearly addresses an NVDA holder"
+    }
+  },
+  {
+    "input": {
+      "signal": {
+        "ticker": "TSLA",
+        "companyName": "Tesla Inc",
+        "insider": "Elon Musk",
+        "role": "CEO",
+        "action": "SELL",
+        "shares": 10000000,
+        "total_value": 350000000,
+        "scheduled_10b5_1": true,
+        "last_transaction_months_ago": 3,
+        "position_reduced_pct": 2
+      },
+      "pattern": null
+    },
+    "expected_output": {
+      "explanation": "A response that: (1) notes this was a scheduled/planned sale (not alarming), (2) contextualizes the large dollar amount against small position reduction (2%), (3) does NOT catastrophize since it's routine, (4) is calm and reassuring to a TSLA holder"
+    }
+  },
+  {
+    "input": {
+      "signal": {
+        "ticker": "SMCI",
+        "companyName": "Super Micro Computer",
+        "insider": "David Weigand",
+        "role": "CFO",
+        "action": "SELL",
+        "shares": 15000,
+        "total_value": 637500,
+        "scheduled_10b5_1": false,
+        "last_transaction_months_ago": 8,
+        "position_reduced_pct": 25
+      },
+      "pattern": {
+        "occurrences": [
+          {
+            "date": "2025-08-12",
+            "insider": "CFO",
+            "subsequent_30d_drop_pct": 15.2
+          },
+          {
+            "date": "2024-11-03",
+            "insider": "CEO",
+            "subsequent_30d_drop_pct": 9.1
+          },
+          {
+            "date": "2024-03-22",
+            "insider": "VP Sales",
+            "subsequent_30d_drop_pct": 11.8
+          }
+        ],
+        "avg_30d_drop_pct": 12.0,
+        "confidence": "high"
+      }
+    },
+    "expected_output": {
+      "explanation": "A response that: (1) notes CFO sold $637K, (2) flags 25% position reduction as significant, (3) mentions 8 months since last sale, (4) connects to same ~12% historical pattern as CEO sale, (5) signals this is a second insider selling (more concerning)"
+    }
+  },
+  {
+    "input": {
+      "signal": {
+        "ticker": "MSFT",
+        "companyName": "Microsoft Corporation",
+        "insider": "Satya Nadella",
+        "role": "CEO",
+        "action": "SELL",
+        "shares": 42000,
+        "total_value": 17850000,
+        "scheduled_10b5_1": false,
+        "last_transaction_months_ago": 12,
+        "position_reduced_pct": 5
+      },
+      "pattern": null
+    },
+    "expected_output": {
+      "explanation": "Microsoft\u2019s CEO sold shares on his own, not through a routine pre-planned setup, so that deserves a bit more attention for someone who holds MSFT. It had been 12 months since his last transaction, which makes the timing stand out, and the sale trimmed his stake by 5%, right at the boundary of a modest reduction. Since there\u2019s no historical pattern here, the main takeaway is that this is a meaningful insider sale to watch, because it can hint at how the top executive feels about the stock."
+    }
+  },
+  {
+    "input": {
+      "signal": {
+        "companyName": "Broadcom Inc.",
+        "ticker": "AVGO",
+        "insider": "Hock Tan",
+        "role": "CEO",
+        "action": "SELL",
+        "shares": 250000,
+        "total_value": 42500000,
+        "scheduled_10b5_1": true,
+        "last_transaction_months_ago": 1,
+        "position_reduced_pct": 3
+      },
+      "pattern": {
+        "occurrences": [
+          {
+            "date": "2025-10-14",
+            "insider": "CEO",
+            "subsequent_30d_drop_pct": 4.2
+          },
+          {
+            "date": "2025-07-09",
+            "insider": "CFO",
+            "subsequent_30d_drop_pct": 6.1
+          },
+          {
+            "date": "2024-12-03",
+            "insider": "Director",
+            "subsequent_30d_drop_pct": 3.8
+          }
+        ],
+        "avg_30d_drop_pct": 4.7,
+        "confidence": "medium"
+      }
+    },
+    "expected_output": {
+      "explanation": "Broadcom's CEO sold $42.5M of stock, but it was part of a planned routine sale, so this is not an alarm bell. He last traded just 1 month ago, and his stake was only cut by 3%, which keeps the move fairly small despite the large dollar amount. The historical pattern you provided is based on similar unscheduled insider sales, with an average 30-day drop of 4.7%, but that doesn't change the fact this sale looks routine; if you hold AVGO, you should care because a CEO sale is still worth watching, even when it's pre-planned."
+    }
+  },
+  {
+    "input": {
+      "signal": {
+        "companyName": "Alphabet Inc.",
+        "ticker": "GOOGL",
+        "insider": "Ruth Porat",
+        "role": "CFO",
+        "action": "SELL",
+        "shares": 120000,
+        "total_value": 17640000,
+        "scheduled_10b5_1": true,
+        "last_transaction_months_ago": 1,
+        "position_reduced_pct": 4
+      },
+      "pattern": {
+        "occurrences": [
+          {
+            "date": "2025-10-04",
+            "insider": "CFO",
+            "subsequent_30d_drop_pct": 6.1
+          },
+          {
+            "date": "2025-06-18",
+            "insider": "CEO",
+            "subsequent_30d_drop_pct": 4.8
+          },
+          {
+            "date": "2024-12-09",
+            "insider": "Director",
+            "subsequent_30d_drop_pct": 5.3
+          }
+        ],
+        "avg_30d_drop_pct": 5.4,
+        "confidence": "high"
+      }
+    },
+    "expected_output": {
+      "explanation": "Ruth Porat sold shares at Alphabet, but this was part of a routine plan, so it reads as calm rather than alarming. It\u2019s only been 1 month since her last transaction, and her stake was cut by 4%, which is a small move even with the large dollar amount. The pattern you provided is about similar unscheduled insider sales, so it doesn\u2019t change the fact that this sale looks planned. If you hold GOOGL, you should care because it shows insider selling is happening, but this one does not point to a strong warning sign."
+    }
+  },
+  {
+    "input": {
+      "signal": {
+        "companyName": "Adobe Inc.",
+        "ticker": "ADBE",
+        "insider": "Anil Chakravarthy",
+        "role": "Director",
+        "action": "SELL",
+        "shares": 4200,
+        "total_value": 2100000,
+        "scheduled_10b5_1": false,
+        "last_transaction_months_ago": 12,
+        "position_reduced_pct": 4,
+        "insider_group_count": 2
+      },
+      "pattern": {
+        "occurrences": [
+          {
+            "date": "2025-04-18",
+            "insider": "Director",
+            "subsequent_30d_drop_pct": 6.4
+          },
+          {
+            "date": "2024-12-09",
+            "insider": "CFO",
+            "subsequent_30d_drop_pct": 5.1
+          },
+          {
+            "date": "2024-07-23",
+            "insider": "Director",
+            "subsequent_30d_drop_pct": 7.0
+          }
+        ],
+        "avg_30d_drop_pct": 6.2,
+        "confidence": "medium"
+      }
+    },
+    "expected_output": {
+      "explanation": "A director sold about $2.1M of Adobe shares, and this was not part of a routine plan, so it reads as a more meaningful insider move. It has been 12 months since this insider\u2019s last transaction, which makes the timing stand out even though the stake was cut by only 4%; since more than one insider is selling, holders should pay a little extra attention. Similar unscheduled insider sales have been followed by an average 6.2% drop over 30 days, so if you hold ADBE, this is worth watching because it can hint at how confident insiders feel."
+    }
+  },
+  {
+    "input": {
+      "signal": {
+        "companyName": "Adobe Inc.",
+        "ticker": "ADBE",
+        "insider": "Shantanu Narayen",
+        "role": "CEO",
+        "action": "SELL",
+        "shares": 25000,
+        "total_value": 11250000,
+        "scheduled_10b5_1": true,
+        "last_transaction_months_ago": 1,
+        "position_reduced_pct": 4
+      },
+      "pattern": null
+    },
+    "expected_output": {
+      "explanation": "Adobe\u2019s CEO sold shares under a planned sale, so this reads as routine and not alarming. It\u2019s been just 1 month since his last transaction, and the position was reduced by only 4%, so this looks like a small move. If you hold ADBE, you should care because even routine insider sales can still show how the top executive is managing their stake."
+    }
+  },
+  {
+    "input": {
+      "signal": {
+        "companyName": "Adobe Inc",
+        "ticker": "ADBE",
+        "insider": "Anil Chakravarthy",
+        "role": "Director",
+        "action": "SELL",
+        "shares": 8000,
+        "total_value": 3600000,
+        "scheduled_10b5_1": false,
+        "last_transaction_months_ago": 12,
+        "position_reduced_pct": 4
+      },
+      "pattern": null
+    },
+    "expected_output": {
+      "explanation": "Adobe\u2019s director sold about $3.6M of stock, and since this was not part of a pre-set plan, it looks like their own decision rather than a routine sale. It\u2019s also been 12 months since their last transaction, which makes the timing stand out a bit, though the cut is only 4% so it\u2019s not a huge reduction. If you hold ADBE, you should care because a fresh unscheduled sale from a board member can hint at more caution from people closest to the business."
+    }
+  },
+  {
+    "input": {
+      "signal": {
+        "companyName": "Salesforce, Inc.",
+        "ticker": "CRM",
+        "insider": "Brian Millard",
+        "role": "CFO",
+        "action": "SELL",
+        "shares": 180000,
+        "total_value": 45000000,
+        "scheduled_10b5_1": true,
+        "last_transaction_months_ago": 1,
+        "position_reduced_pct": 3
+      },
+      "pattern": {
+        "occurrences": [
+          {
+            "date": "2025-11-18",
+            "insider": "CFO",
+            "subsequent_30d_drop_pct": 4.1
+          },
+          {
+            "date": "2025-06-09",
+            "insider": "Director",
+            "subsequent_30d_drop_pct": 2.8
+          },
+          {
+            "date": "2024-12-14",
+            "insider": "CEO",
+            "subsequent_30d_drop_pct": 5.0
+          }
+        ],
+        "avg_30d_drop_pct": 4.0,
+        "confidence": "medium"
+      }
+    },
+    "expected_output": {
+      "explanation": "Salesforce\u2019s CFO sold shares under a routine plan, so this looks like a planned sale rather than a warning sign. Even though the dollar amount is big, the stake was cut by only 3%, and it\u2019s only been 1 month since the last transaction, which makes it look fairly normal. For someone who holds CRM, the main takeaway is that this is routine insider selling, not a big confidence signal."
+    }
+  },
+  {
+    "input": {
+      "signal": {
+        "companyName": "Apple Inc.",
+        "ticker": "AAPL",
+        "insider": "Eddy Cue",
+        "role": "SVP Services",
+        "action": "SELL",
+        "shares": 180000,
+        "total_value": 41220000,
+        "scheduled_10b5_1": true,
+        "last_transaction_months_ago": 1,
+        "position_reduced_pct": 3
+      },
+      "pattern": {
+        "occurrences": [
+          {
+            "date": "2025-10-02",
+            "insider": "SVP Services",
+            "subsequent_30d_drop_pct": 2.1
+          },
+          {
+            "date": "2025-07-18",
+            "insider": "SVP Services",
+            "subsequent_30d_drop_pct": 3.4
+          },
+          {
+            "date": "2025-03-11",
+            "insider": "Director",
+            "subsequent_30d_drop_pct": 1.8
+          }
+        ],
+        "avg_30d_drop_pct": 2.4,
+        "confidence": "high"
+      }
+    },
+    "expected_output": {
+      "explanation": "This was a routine scheduled sale by Eddy Cue, and it does not look like an alarm bell. He last traded just 1 month ago, so the timing is recent, and his stake was cut by only 3%, which keeps the concern low even with the large dollar amount. If you hold AAPL, what matters most is that similar unscheduled sales have tended to be followed by a small average 30-day drop of 2.4%."
+    }
+  },
+  {
+    "input": {
+      "signal": {
+        "companyName": "Broadcom Inc.",
+        "ticker": "AVGO",
+        "insider": "Julie S. Brown",
+        "role": "Director",
+        "action": "SELL",
+        "shares": 18000,
+        "total_value": 26100000,
+        "scheduled_10b5_1": false,
+        "last_transaction_months_ago": 12,
+        "position_reduced_pct": 5
+      },
+      "pattern": null
+    },
+    "expected_output": {
+      "explanation": "A Broadcom director sold shares on their own, not through a routine plan, so this is more notable. It\u2019s been exactly 12 months since their last transaction, and the stake was reduced by 5%, which is right at the edge of a meaningful move. Since there\u2019s no pattern data here, there\u2019s no average drop to cite. If you hold AVGO, you should care because even a director sale can matter, but this one is less concerning than a much larger or repeated selloff."
+    }
+  },
+  {
+    "input": {
+      "signal": {
+        "companyName": "MercadoLibre, Inc.",
+        "ticker": "MELI",
+        "insider": "Mart\u00edn de los Santos",
+        "role": "Director",
+        "action": "SELL",
+        "shares": 18000,
+        "total_value": 28900000,
+        "scheduled_10b5_1": false,
+        "last_transaction_months_ago": 12,
+        "position_reduced_pct": 4.8
+      },
+      "pattern": {
+        "occurrences": [
+          {
+            "date": "2025-09-18",
+            "insider": "Director",
+            "subsequent_30d_drop_pct": 5.4
+          },
+          {
+            "date": "2024-11-27",
+            "insider": "Director",
+            "subsequent_30d_drop_pct": 7.0
+          }
+        ],
+        "avg_30d_drop_pct": 6.2,
+        "confidence": "low"
+      }
+    },
+    "expected_output": {
+      "explanation": "MercadoLibre's director sold $28.9M of stock on his own, not through a routine plan, so that makes it more notable. He hadn't sold in 12 months, which is a long gap, and his stake was cut by 4.8%, so the size of the reduction is still modest even though the dollar amount is large. The pattern you gave is for similar unscheduled insider sales, and they were followed by an average 30-day drop of 6.2%; if you hold MELI, you should care because a fresh, unscheduled sale after a long pause can be a signal to watch more closely."
+    }
+  },
+  {
+    "input": {
+      "signal": {
+        "companyName": "Salesforce, Inc.",
+        "ticker": "CRM",
+        "insider": "Brian Millham",
+        "role": "COO",
+        "total_value": 1850000,
+        "shares": 9200,
+        "scheduled_10b5_1": true,
+        "last_transaction_months_ago": 1,
+        "position_reduced_pct": 3.9
+      },
+      "pattern": {
+        "occurrences": [
+          {
+            "date": "2025-08-04",
+            "insider": "COO",
+            "subsequent_30d_drop_pct": 2.1
+          },
+          {
+            "date": "2024-12-19",
+            "insider": "Director",
+            "subsequent_30d_drop_pct": -1.4
+          },
+          {
+            "date": "2024-05-27",
+            "insider": "CFO",
+            "subsequent_30d_drop_pct": 3.0
+          }
+        ],
+        "avg_30d_drop_pct": 1.2,
+        "confidence": "high"
+      }
+    },
+    "expected_output": {
+      "explanation": "A Salesforce COO sold about $1.9M of stock, but it was on a pre-planned schedule, so this looks routine and not alarming. Their last transaction was just 1 month ago, and the stake was reduced by only 3.9%, which keeps this on the mild side. Similar unscheduled insider sales have averaged a 1.2% drop over 30 days, so someone who holds CRM should care mainly as a routine update rather than a red flag."
+    }
+  },
+  {
+    "input": {
+      "signal": {
+        "ticker": "ORCL",
+        "companyName": "Oracle Corporation",
+        "insider": "Jeff Henley",
+        "role": "Director",
+        "action": "SELL",
+        "shares": 18000,
+        "total_value": 2160000,
+        "scheduled_10b5_1": false,
+        "last_transaction_months_ago": 12,
+        "position_reduced_pct": 21
+      },
+      "pattern": null
+    },
+    "expected_output": {
+      "explanation": "Oracle\u2019s director sold shares on his own, not on a routine plan, and that makes it more noteworthy. It has been 12 months since his last transaction, and the sale cut his position by 21%, which is a large reduction. If you hold ORCL, you should care because a big, unscheduled sale from a board member can be a caution flag even without any past trend data."
+    }
+  }
+]

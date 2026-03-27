@@ -23,7 +23,7 @@ export async function POST(_req: NextRequest) {
     const phone = process.env.MY_PHONE_NUMBER || user.phone;
 
     if (score >= 7 && phone && phone !== "+1XXXXXXXXXX") {
-      const result = await makeOutboundCall(phone, explanation, signal, pattern?.avg_30d_drop_pct ?? 0);
+      const result = await makeOutboundCall(phone, explanation, signal);
       callId = result.callId;
     }
 

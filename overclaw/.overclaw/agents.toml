@@ -1,0 +1,5 @@
+#  OverClaw agent registry — use: overclaw agent register / list / remove / update 
+
+agents = [
+    {name = "911stock", entrypoint = "agents.signal_agent:run"},
+]

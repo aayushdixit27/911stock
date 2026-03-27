@@ -29,12 +29,7 @@ export async function POST(req: NextRequest) {
       body.explanation ||
       `${signal.companyName}'s ${signal.role} just sold $${(signal.total_value / 1_000_000).toFixed(1)} million in stock — their first sale in ${signal.last_transaction_months_ago} months, outside their scheduled plan. ${pattern ? `The last ${pattern.occurrences.length} times ${signal.ticker} insiders did this, the stock dropped an average of ${pattern.avg_30d_drop_pct}% over 30 days.` : ""}`;
 
-    const { callId } = await makeOutboundCall(
-      phone,
-      explanation,
-      signal,
-      pattern?.avg_30d_drop_pct ?? 0
-    );
+    const { callId } = await makeOutboundCall(phone, explanation, signal);
 
     return NextResponse.json({ success: true, callId });
   } catch (err) {

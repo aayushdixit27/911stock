@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { StatusStep } from "@/components/StatusStep";
 import { PhoneRinging } from "@/components/PhoneRinging";
@@ -25,7 +25,8 @@ const INITIAL_STEPS: Step[] = [
   { key: "cross_referencing", label: "Cross-referencing historical patterns...", status: "pending" },
   { key: "scoring", label: "Scoring significance", status: "pending" },
   { key: "explanation_ready", label: "Generating plain-English explanation...", status: "pending" },
-  { key: "calling", label: "Calling your phone", status: "pending" },
+  { key: "calling", label: "Calling your phone...", status: "pending" },
+  { key: "awaiting_ciba", label: "Awaiting Auth0 Guardian approval", status: "pending" },
 ];
 
 export default function Dashboard() {
@@ -33,7 +34,48 @@ export default function Dashboard() {
   const [steps, setSteps] = useState<Step[]>(INITIAL_STEPS);
   const [explanation, setExplanation] = useState<string | null>(null);
   const [callActive, setCallActive] = useState(false);
-  const [showApproval, setShowApproval] = useState(false);
+  const [awaitingApproval, setAwaitingApproval] = useState(false);
+  const pollRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Poll for CIBA approval once phone call step is active
+  function startCIBAPolling() {
+    setAwaitingApproval(true);
+    setSteps((prev) =>
+      prev.map((s) => (s.key === "awaiting_ciba" ? { ...s, status: "active" } : s))
+    );
+
+    pollRef.current = setInterval(async () => {
+      try {
+        const res = await fetch("/api/ciba-status");
+        const data = await res.json();
+
+        if (data.status === "approved") {
+          clearInterval(pollRef.current!);
+          setSteps((prev) =>
+            prev.map((s) =>
+              s.key === "awaiting_ciba"
+                ? { ...s, status: "done", detail: "Approved via Auth0 Guardian ✓" }
+                : s
+            )
+          );
+          // Short delay for visual confirmation before redirect
+          setTimeout(() => router.push("/resolution"), 1200);
+        } else if (data.status === "denied") {
+          clearInterval(pollRef.current!);
+          setAwaitingApproval(false);
+          setSteps((prev) =>
+            prev.map((s) =>
+              s.key === "awaiting_ciba"
+                ? { ...s, status: "done", detail: "Denied by user" }
+                : s
+            )
+          );
+        }
+      } catch {
+        // ignore poll errors, keep trying
+      }
+    }, 3000);
+  }
 
   useEffect(() => {
     const es = new EventSource("/api/signal");
@@ -55,10 +97,6 @@ export default function Dashboard() {
             }
             return { ...s, status: "done", detail };
           }
-          // Activate next pending step
-          if (event.step === "calling" && s.key === "calling") {
-            return { ...s, status: "active" };
-          }
           return s;
         })
       );
@@ -69,25 +107,29 @@ export default function Dashboard() {
 
       if (event.step === "calling") {
         setCallActive(true);
-        // Show approval after 8s (simulates call completing)
+        setSteps((prev) =>
+          prev.map((s) => (s.key === "calling" ? { ...s, status: "active" } : s))
+        );
+
+        // After 10s, assume call connected — start polling for CIBA approval
         setTimeout(() => {
           setCallActive(false);
-          setShowApproval(true);
           setSteps((prev) =>
-            prev.map((s) => (s.key === "calling" ? { ...s, status: "done", detail: "Connected" } : s))
+            prev.map((s) =>
+              s.key === "calling" ? { ...s, status: "done", detail: "Connected — awaiting response" } : s
+            )
           );
-        }, 8000);
+          startCIBAPolling();
+        }, 10000);
       }
     };
 
     es.onerror = () => es.close();
-
-    return () => es.close();
-  }, []);
-
-  function handleApprove() {
-    router.push("/resolution");
-  }
+    return () => {
+      es.close();
+      if (pollRef.current) clearInterval(pollRef.current);
+    };
+  }, []);  // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <main className="min-h-screen flex flex-col items-center justify-center px-6 py-16 gap-8 max-w-lg mx-auto">
@@ -110,9 +152,7 @@ export default function Dashboard() {
       {/* Explanation card */}
       {explanation && (
         <div className="w-full border border-zinc-700 rounded-lg p-4 bg-zinc-900">
-          <p className="text-xs text-zinc-500 uppercase tracking-widest mb-2">
-            Agent analysis
-          </p>
+          <p className="text-xs text-zinc-500 uppercase tracking-widest mb-2">Agent analysis</p>
           <p className="text-sm text-zinc-100 leading-relaxed">{explanation}</p>
         </div>
       )}
@@ -120,29 +160,18 @@ export default function Dashboard() {
       {/* Phone ringing */}
       {callActive && <PhoneRinging />}
 
-      {/* Auth0 approval */}
-      {showApproval && (
-        <div className="w-full border border-yellow-700 rounded-lg p-4 bg-yellow-950/30">
-          <p className="text-xs text-yellow-500 uppercase tracking-widest mb-2">
-            Auth0 CIBA — Trade approval required
-          </p>
-          <p className="text-sm text-zinc-300 mb-4">
-            Agent is requesting to reduce your SMCI position by 50%.
-            Your approval is required before any action is taken.
-          </p>
-          <div className="flex gap-3">
-            <button
-              onClick={handleApprove}
-              className="flex-1 bg-green-700 hover:bg-green-600 text-white text-sm font-semibold py-2 rounded-lg transition-colors"
-            >
-              ✓ Approve via Auth0
-            </button>
-            <button
-              onClick={() => router.push("/")}
-              className="flex-1 border border-zinc-700 text-zinc-400 text-sm py-2 rounded-lg hover:bg-zinc-900 transition-colors"
-            >
-              Deny
-            </button>
+      {/* Waiting for Guardian approval */}
+      {awaitingApproval && (
+        <div className="w-full border border-yellow-700 rounded-lg p-4 bg-yellow-950/20 flex items-start gap-3">
+          <div className="w-2 h-2 rounded-full bg-yellow-400 animate-pulse mt-1.5 flex-shrink-0" />
+          <div>
+            <p className="text-yellow-400 text-sm font-medium">
+              Waiting for your approval
+            </p>
+            <p className="text-zinc-400 text-xs mt-1">
+              Auth0 Guardian sent a push notification to your phone.
+              Open the Guardian app and tap <strong>Approve</strong>.
+            </p>
           </div>
         </div>
       )}
