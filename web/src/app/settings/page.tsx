@@ -1,7 +1,28 @@
-import { auth0 } from "@/lib/auth0";
+"use client";
 
-export default async function Settings() {
-  const session = await auth0.getSession();
+import { useEffect, useState } from "react";
+
+export default function Settings() {
+  const [qrUrl, setQrUrl] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("/api/guardian-enroll")
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.ticketUrl) {
+          const encoded = encodeURIComponent(data.ticketUrl);
+          setQrUrl(
+            `https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=12&data=${encoded}`
+          );
+        } else {
+          setError(data.error ?? "Could not generate enrollment QR");
+        }
+      })
+      .catch(() => setError("Network error"))
+      .finally(() => setLoading(false));
+  }, []);
 
   return (
     <main
@@ -40,14 +61,14 @@ export default async function Settings() {
               color: "var(--ink-30)",
             }}
           >
-            Settings
+            Auth0 Guardian Setup
           </p>
         </div>
 
-        {/* Auth card */}
+        {/* QR card */}
         <div
           className="mark-card"
-          style={{ padding: "1.5rem", overflow: "hidden" }}
+          style={{ padding: "1.5rem", overflow: "hidden", textAlign: "center" }}
         >
           <div
             style={{
@@ -58,102 +79,98 @@ export default async function Settings() {
           />
 
           <div className="mark-eyebrow" style={{ marginBottom: "1rem" }}>
-            Auth0 Guardian
+            Enroll Guardian
           </div>
 
-          {session ? (
-            <>
+          <p
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: "var(--text-sm)",
+              color: "var(--ink-50)",
+              marginBottom: "1.5rem",
+              lineHeight: 1.6,
+            }}
+          >
+            Open the <strong style={{ color: "var(--ink)" }}>Auth0 Guardian</strong> app on your phone and scan this code to receive trade approval push notifications.
+          </p>
+
+          {loading && (
+            <div
+              style={{
+                width: 220,
+                height: 220,
+                background: "var(--paper)",
+                borderRadius: "8px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                margin: "0 auto 1.5rem",
+              }}
+            >
+              <span className="mark-spinner" style={{ width: 24, height: 24 }} />
+            </div>
+          )}
+
+          {qrUrl && !loading && (
+            <div style={{ margin: "0 auto 1.5rem", display: "inline-block" }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={qrUrl}
+                alt="Auth0 Guardian enrollment QR code"
+                width={220}
+                height={220}
+                style={{ borderRadius: "8px", display: "block" }}
+              />
+            </div>
+          )}
+
+          {error && !loading && (
+            <div
+              style={{
+                background: "rgba(234,76,0,0.06)",
+                border: "1px solid rgba(234,76,0,0.2)",
+                borderRadius: "6px",
+                padding: "1rem",
+                marginBottom: "1.5rem",
+              }}
+            >
               <p
                 style={{
-                  fontFamily: "var(--font-body)",
-                  fontSize: "var(--text-sm)",
-                  color: "var(--ink-50)",
-                  marginBottom: "1rem",
-                  lineHeight: 1.6,
-                }}
-              >
-                Logged in as{" "}
-                <strong style={{ color: "var(--ink)", fontWeight: 600 }}>
-                  {session.user.email ?? session.user.sub}
-                </strong>
-                . Auth0 Guardian push notifications will be sent to this account.
-              </p>
-
-              <div
-                style={{
-                  background: "var(--paper)",
-                  borderRadius: "4px",
-                  padding: "0.75rem 1rem",
-                  marginBottom: "1.25rem",
                   fontFamily: "var(--font-mono)",
                   fontSize: "var(--text-xs)",
-                  color: "var(--ink-30)",
-                  wordBreak: "break-all" as const,
+                  color: "var(--orange)",
+                  lineHeight: 1.5,
                 }}
               >
-                <span style={{ color: "var(--ink-50)" }}>sub: </span>
-                {session.user.sub}
-              </div>
-
-              <a
-                href="/auth/logout"
-                style={{
-                  display: "block",
-                  textAlign: "center",
-                  fontFamily: "var(--font-body)",
-                  fontWeight: 600,
-                  fontSize: "var(--text-xs)",
-                  letterSpacing: "0.08em",
-                  textTransform: "uppercase" as const,
-                  color: "var(--ink-30)",
-                  border: "1px solid var(--ink-08)",
-                  borderRadius: "4px",
-                  padding: "0.75rem 1rem",
-                  textDecoration: "none",
-                }}
-              >
-                Sign out
-              </a>
-            </>
-          ) : (
-            <>
-              <p
-                style={{
-                  fontFamily: "var(--font-body)",
-                  fontSize: "var(--text-sm)",
-                  color: "var(--ink-50)",
-                  marginBottom: "1.25rem",
-                  lineHeight: 1.6,
-                }}
-              >
-                Sign in with your Auth0 account to enable Guardian push
-                notifications for trade approvals via CIBA.
+                {error.includes("Forbidden") || error.includes("403")
+                  ? "Management API not authorized. Go to Auth0 Dashboard → Applications → APIs → Auth0 Management API → grant create:guardian_enrollment_tickets to this app."
+                  : error}
               </p>
-
-              <a
-                href="/auth/login"
-                style={{
-                  display: "block",
-                  textAlign: "center",
-                  fontFamily: "var(--font-body)",
-                  fontWeight: 700,
-                  fontSize: "var(--text-sm)",
-                  letterSpacing: "0.08em",
-                  textTransform: "uppercase" as const,
-                  color: "var(--white)",
-                  background: "var(--ink)",
-                  borderRadius: "4px",
-                  padding: "0.875rem 1rem",
-                  textDecoration: "none",
-                }}
-              >
-                Sign in with Auth0
-              </a>
-            </>
+            </div>
           )}
+
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "0.5rem",
+              fontSize: "var(--text-xs)",
+              fontFamily: "var(--font-mono)",
+              color: "var(--ink-30)",
+              textAlign: "left",
+            }}
+          >
+            {["Download Auth0 Guardian from the App Store or Google Play", "Tap + in the app, then scan this code", "Once enrolled, trade approvals will push to your phone"].map((step, i) => (
+              <div key={i} style={{ display: "flex", gap: "0.625rem" }}>
+                <span style={{ color: "var(--orange)", fontWeight: 600, flexShrink: 0 }}>
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <span>{step}</span>
+              </div>
+            ))}
+          </div>
         </div>
 
-        {/* Back link */}
         <div style={{ textAlign: "center", marginTop: "1.5rem" }}>
           <a
             href="/"
