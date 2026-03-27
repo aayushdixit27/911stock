@@ -94,7 +94,14 @@ export default function Dashboard() {
     const es = new EventSource("/api/signal");
 
     es.onmessage = (e) => {
-      const event: PipelineEvent = JSON.parse(e.data);
+      const raw = e.data?.trim();
+      if (!raw) return;
+      let event: PipelineEvent;
+      try {
+        event = JSON.parse(raw) as PipelineEvent;
+      } catch {
+        return;
+      }
 
       setSteps((prev) =>
         prev.map((s) => {
@@ -156,28 +163,27 @@ export default function Dashboard() {
           left: 0,
           right: 0,
           zIndex: 500,
-          padding: "18px 7vw",
+          padding: "1rem 5vw",
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          background: "rgba(255,255,255,0.92)",
-          backdropFilter: "blur(16px)",
-          borderBottom: "1px solid var(--ink-10)",
+          background: "rgba(255,255,255,0.95)",
+          backdropFilter: "blur(12px)",
+          borderBottom: "1px solid var(--ink-08)",
         }}
       >
         <span
           style={{
-            fontFamily: "var(--font-body)",
-            fontWeight: 700,
-            fontSize: 14,
-            letterSpacing: "0.25em",
-            textTransform: "uppercase" as const,
+            fontFamily: "var(--font-display)",
+            fontWeight: 500,
+            fontSize: "1.25rem",
+            fontStyle: "italic",
             color: "var(--orange)",
           }}
         >
           911stock
         </span>
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
           <div
             style={{
               width: 8,
@@ -190,27 +196,26 @@ export default function Dashboard() {
           <span
             style={{
               fontFamily: "var(--font-mono)",
-              fontSize: 12,
-              letterSpacing: "0.25em",
-              textTransform: "lowercase" as const,
+              fontSize: "var(--text-xs)",
+              fontWeight: 500,
               color: "var(--orange)",
             }}
           >
-            agent active
+            Agent active
           </span>
         </div>
       </nav>
 
       {/* ── CONTENT ── */}
-      <div style={{ maxWidth: 640, margin: "0 auto", padding: "90px 7vw 80px" }}>
-        <div className="mark-eyebrow" style={{ marginBottom: 40 }}>
-          pipeline
+      <div style={{ maxWidth: "680px", margin: "0 auto", padding: "5rem 5vw 5rem" }}>
+        <div className="mark-eyebrow" style={{ marginBottom: "1.5rem" }}>
+          Pipeline
         </div>
 
         {/* Pipeline steps */}
         <div
           className="mark-card"
-          style={{ padding: "8px 28px", marginBottom: 40 }}
+          style={{ padding: "0.5rem 0", marginBottom: "2rem" }}
         >
           <div
             style={{
@@ -218,15 +223,16 @@ export default function Dashboard() {
               top: 0,
               left: 0,
               right: 0,
-              height: 2,
+              height: "3px",
               background: "linear-gradient(to right, var(--orange), var(--ember))",
+              borderRadius: "3px 3px 0 0",
             }}
           />
           {steps.map((step, i) => (
-            <div key={step.key}>
+            <div key={step.key} style={{ padding: "0 1.5rem" }}>
               <StatusStep label={step.label} status={step.status} detail={step.detail} />
               {i < steps.length - 1 && (
-                <div style={{ height: 1, background: "var(--ink-10)" }} />
+                <div style={{ height: "1px", background: "var(--ink-08)" }} />
               )}
             </div>
           ))}
@@ -236,73 +242,60 @@ export default function Dashboard() {
         {explanation && (
           <div
             style={{
-              margin: "0 -7vw 40px",
-              padding: "56px 7vw",
+              margin: "0 -5vw 2rem",
+              padding: "3rem 5vw",
               background: "var(--ink)",
               position: "relative",
               overflow: "hidden",
+              borderRadius: "8px",
             }}
           >
             <div
               style={{
                 position: "absolute",
-                width: 400,
-                height: 400,
+                width: 300,
+                height: 300,
                 borderRadius: "50%",
-                top: "40%",
-                right: "-5%",
-                transform: "translate(0, -50%)",
-                background: "radial-gradient(circle, rgba(255,69,0,0.15) 0%, transparent 65%)",
+                top: "50%",
+                right: "0",
+                transform: "translate(30%, -50%)",
+                background: "radial-gradient(circle, rgba(234,76,0,0.12) 0%, transparent 60%)",
                 pointerEvents: "none",
               }}
             />
-            <div
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: 12,
-                letterSpacing: "0.4em",
-                textTransform: "lowercase" as const,
-                color: "var(--terra-lt)",
-                display: "flex",
-                alignItems: "center",
-                gap: 14,
-                marginBottom: 28,
-                position: "relative",
-              }}
-            >
-              <span style={{ display: "inline-block", width: 24, height: 1.5, background: "var(--terra-lt)" }} />
-              agent analysis
+            <div className="mark-eyebrow" style={{ marginBottom: "1.25rem", color: "var(--terra-lt)" }}>
+              Agent Analysis
             </div>
             <p
               style={{
                 fontFamily: "var(--font-display)",
                 fontWeight: 400,
                 fontStyle: "italic",
-                fontSize: "clamp(22px, 3.5vw, 34px)",
-                lineHeight: 1.4,
-                letterSpacing: "-0.02em",
+                fontSize: "clamp(1.375rem, 3vw, 1.75rem)",
+                lineHeight: 1.5,
                 color: "var(--white)",
                 position: "relative",
-                maxWidth: 540,
+                maxWidth: "600px",
               }}
             >
               {explanation}
             </p>
             <div
               style={{
-                marginTop: 28,
+                marginTop: "1.5rem",
                 display: "flex",
-                gap: 24,
+                gap: "1rem",
                 alignItems: "center",
                 position: "relative",
+                flexWrap: "wrap",
               }}
             >
-              <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: "0.25em", color: "rgba(255,255,255,0.25)" }}>
-                ghost db: 3 pattern matches
+              <span style={{ fontFamily: "var(--font-mono)", fontSize: "var(--text-xs)", color: "rgba(255,255,255,0.35)" }}>
+                Ghost DB: 3 pattern matches
               </span>
-              <span style={{ width: 4, height: 4, borderRadius: "50%", background: "var(--terra)", display: "inline-block" }} />
-              <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: "0.25em", color: "rgba(255,255,255,0.25)" }}>
-                significance: high
+              <span style={{ width: 4, height: 4, borderRadius: "50%", background: "var(--terra)" }} />
+              <span style={{ fontFamily: "var(--font-mono)", fontSize: "var(--text-xs)", color: "rgba(255,255,255,0.35)" }}>
+                Significance: High
               </span>
             </div>
           </div>
@@ -311,34 +304,30 @@ export default function Dashboard() {
         {/* Phone ringing */}
         {callActive && <PhoneRinging />}
 
-        {/* ── AUTH0 CIBA — trade approval (Law 3: terracotta at THE inflection point) ── */}
+        {/* ── AUTH0 CIBA — trade approval ── */}
         {awaitingApproval && (
-          <div style={{ marginBottom: 40 }}>
-            <div className="mark-eyebrow" style={{ marginBottom: 24 }}>
-              auth0 ciba — trade approval required
+          <div style={{ marginBottom: "2rem" }}>
+            <div className="mark-eyebrow" style={{ marginBottom: "1rem" }}>
+              Auth0 CIBA — Trade Approval Required
             </div>
 
-            <div className="mark-card" style={{ padding: "0", overflow: "hidden" }}>
-              {/* Terracotta top stripe — this IS the decision point */}
+            <div className="mark-card" style={{ overflow: "hidden" }}>
+              {/* Terracotta accent line */}
               <div
                 style={{
-                  position: "absolute",
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  height: 3,
+                  height: "3px",
                   background: "linear-gradient(to right, var(--terra), var(--terra-lt))",
                 }}
               />
 
-              {/* Header with pulse */}
+              {/* Header */}
               <div
                 style={{
-                  padding: "24px 28px",
+                  padding: "1.25rem 1.5rem",
                   display: "flex",
                   alignItems: "center",
-                  gap: 14,
-                  borderBottom: "1px solid var(--ink-10)",
+                  gap: "0.75rem",
+                  borderBottom: "1px solid var(--ink-08)",
                 }}
               >
                 <div
@@ -351,26 +340,19 @@ export default function Dashboard() {
                     flexShrink: 0,
                   }}
                 />
-                <span
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontWeight: 600,
-                    fontSize: 15,
-                    color: "var(--ink)",
-                  }}
-                >
+                <span style={{ fontWeight: 600, fontSize: "var(--text-base)", color: "var(--ink)" }}>
                   Agent is requesting authorization
                 </span>
               </div>
 
-              {/* Trade request details */}
-              <div style={{ padding: "24px 28px", background: "var(--paper)" }}>
-                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              {/* Trade details */}
+              <div style={{ padding: "1.25rem 1.5rem", background: "var(--paper)" }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.625rem" }}>
                   {[
-                    { label: "action", value: "Reduce SMCI position by 50%" },
-                    { label: "shares", value: "Sell 500 shares @ $42.50" },
-                    { label: "reason", value: "CEO unscheduled sale — HIGH significance" },
-                    { label: "method", value: "Auth0 CIBA backchannel request" },
+                    { label: "Action", value: "Reduce SMCI position by 50%" },
+                    { label: "Shares", value: "Sell 500 shares @ $42.50" },
+                    { label: "Reason", value: "CEO unscheduled sale — HIGH significance" },
+                    { label: "Method", value: "Auth0 CIBA backchannel request" },
                   ].map((row) => (
                     <div
                       key={row.label}
@@ -378,27 +360,13 @@ export default function Dashboard() {
                         display: "flex",
                         justifyContent: "space-between",
                         alignItems: "baseline",
+                        padding: "0.25rem 0",
                       }}
                     >
-                      <span
-                        style={{
-                          fontFamily: "var(--font-mono)",
-                          fontSize: 11,
-                          letterSpacing: "0.15em",
-                          color: "var(--ink-30)",
-                        }}
-                      >
+                      <span style={{ fontSize: "var(--text-xs)", color: "var(--ink-30)", textTransform: "capitalize" }}>
                         {row.label}
                       </span>
-                      <span
-                        style={{
-                          fontFamily: "var(--font-body)",
-                          fontWeight: 500,
-                          fontSize: 13,
-                          color: "var(--ink)",
-                          textAlign: "right" as const,
-                        }}
-                      >
+                      <span style={{ fontSize: "var(--text-sm)", fontWeight: 500, color: "var(--ink)" }}>
                         {row.value}
                       </span>
                     </div>
@@ -406,19 +374,12 @@ export default function Dashboard() {
                 </div>
               </div>
 
-              {/* Auth0 flow status */}
-              <div style={{ padding: "20px 28px", display: "flex", alignItems: "center", gap: 12 }}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--terra)" strokeWidth="2" strokeLinecap="round">
+              {/* Status */}
+              <div style={{ padding: "1rem 1.5rem", display: "flex", alignItems: "center", gap: "0.75rem" }}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--terra)" strokeWidth="2">
                   <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                 </svg>
-                <span
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontWeight: 400,
-                    fontSize: 14,
-                    color: "var(--ink-60)",
-                  }}
-                >
+                <span style={{ fontSize: "var(--text-sm)", color: "var(--ink-50)", lineHeight: 1.5 }}>
                   Push notification sent via Auth0 Guardian. Open the app and tap <strong style={{ fontWeight: 600, color: "var(--ink)" }}>Approve</strong>.
                 </span>
               </div>

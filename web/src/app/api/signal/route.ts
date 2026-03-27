@@ -1,8 +1,9 @@
-import { NextRequest } from "next/server";
+import { analyzeSignal } from "@/lib/gemini";
+import { detectSignal, getHistoricalPattern } from "@/lib/signals";
 import { getLastSignal } from "@/lib/state";
 
 // SSE endpoint — streams pipeline status to the dashboard
-export async function GET(_req: NextRequest) {
+export async function GET() {
   const encoder = new TextEncoder();
 
   const stream = new ReadableStream({
@@ -39,20 +40,21 @@ export async function GET(_req: NextRequest) {
       await delay(600);
       send({ step: "scoring", status: "done", data: { score: 8, significance: "HIGH" } });
 
-      // Step 5 — call the analyze endpoint internally
+      // Step 5 — same logic as POST /api/analyze (avoid self-fetch + empty JSON.parse on bad responses)
       await delay(800);
+      const fallback =
+        "SMCI's CEO just sold $2.1M in stock — his first sale in 14 months, outside his scheduled plan. The last 3 times SMCI insiders did this, the stock dropped an average of 12% over 30 days. You own SMCI. This is worth paying attention to.";
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_URL || "http://localhost:3000"}/api/analyze`, {
-          method: "POST",
-        });
-        const json = await res.json();
-        send({ step: "explanation_ready", status: "done", text: json.explanation });
+        const signal = detectSignal();
+        if (signal) {
+          const pattern = getHistoricalPattern(signal.ticker);
+          const explanation = await analyzeSignal(signal, pattern);
+          send({ step: "explanation_ready", status: "done", text: explanation });
+        } else {
+          send({ step: "explanation_ready", status: "done", text: fallback });
+        }
       } catch {
-        send({
-          step: "explanation_ready",
-          status: "done",
-          text: "SMCI's CEO just sold $2.1M in stock — his first sale in 14 months, outside his scheduled plan. The last 3 times SMCI insiders did this, the stock dropped an average of 12% over 30 days. You own SMCI. This is worth paying attention to.",
-        });
+        send({ step: "explanation_ready", status: "done", text: fallback });
       }
 
       // Step 6

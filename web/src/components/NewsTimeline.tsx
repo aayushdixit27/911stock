@@ -78,16 +78,24 @@ export function NewsTimeline({
     };
   }, [playing, advance]);
 
-  // Reset revealed events and update prices when day changes
+  // Update prices when day changes
   useEffect(() => {
-    if (playing) {
-      setRevealedEvents(0);
-    }
     const d = timeline[currentDay];
     if (d.prices && onPriceUpdate) {
       onPriceUpdate(d.prices);
     }
-  }, [currentDay, playing, onPriceUpdate]);
+  }, [currentDay, onPriceUpdate]);
+  
+  // Reset revealed events when day changes while playing
+  useEffect(() => {
+    if (playing) {
+      // Using requestAnimationFrame to avoid synchronous setState warning
+      const frame = requestAnimationFrame(() => {
+        setRevealedEvents(0);
+      });
+      return () => cancelAnimationFrame(frame);
+    }
+  }, [currentDay, playing]);
 
   // Detect when we hit Mar 19 high-significance events
   useEffect(() => {
@@ -133,8 +141,11 @@ export function NewsTimeline({
         style={{
           display: "flex",
           alignItems: "center",
-          gap: 0,
-          marginBottom: 24,
+          gap: "2px",
+          marginBottom: "1rem",
+          background: "var(--ink-08)",
+          padding: "2px",
+          borderRadius: "6px",
         }}
       >
         {timeline.map((d, i) => {
@@ -147,76 +158,74 @@ export function NewsTimeline({
               onClick={() => goToDay(i)}
               style={{
                 flex: 1,
-                padding: "10px 0",
+                padding: "0.5rem 0",
                 background: isActive ? "var(--ink)" : isPast ? "var(--paper)" : "var(--white)",
                 border: "none",
-                borderBottom: isActive
-                  ? "3px solid var(--orange)"
-                  : hasHigh && isPast
-                    ? "3px solid var(--orange)"
-                    : "1px solid var(--ink-10)",
+                borderRadius: "4px",
                 cursor: "pointer",
-                fontFamily: "var(--font-mono)",
-                fontSize: 11,
-                letterSpacing: "0.15em",
-                color: isActive ? "var(--white)" : isPast ? "var(--ink-60)" : "var(--ink-30)",
-                transition: "all 0.3s",
+                fontFamily: "var(--font-body)",
+                fontSize: "var(--text-xs)",
+                fontWeight: isActive ? 600 : 500,
+                color: isActive ? "var(--white)" : isPast ? "var(--ink-50)" : "var(--ink-30)",
+                transition: "all 0.2s",
+                boxShadow: isActive ? "0 1px 2px rgba(0,0,0,0.1)" : "none",
               }}
             >
               {d.label}
+              {hasHigh && isPast && !isActive && (
+                <span style={{ 
+                  display: "inline-block", 
+                  width: 4, 
+                  height: 4, 
+                  borderRadius: "50%", 
+                  background: "var(--orange)",
+                  marginLeft: "0.25rem",
+                  verticalAlign: "middle"
+                }} />
+              )}
             </button>
           );
         })}
       </div>
 
       {/* Play/Pause button */}
-      <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 24 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "1rem" }}>
         <button
           onClick={playing ? handlePause : handlePlay}
           className="mark-fire"
           style={{
             border: "none",
             color: "var(--white)",
-            fontFamily: "var(--font-body)",
-            fontWeight: 700,
-            fontSize: 12,
-            letterSpacing: "0.15em",
-            textTransform: "uppercase" as const,
-            padding: "12px 28px",
-            borderRadius: 3,
+            fontWeight: 600,
+            fontSize: "var(--text-xs)",
+            letterSpacing: "0.02em",
+            padding: "0.5rem 1rem",
+            borderRadius: "4px",
             cursor: "pointer",
-            position: "relative",
-            zIndex: 1,
             display: "flex",
             alignItems: "center",
-            gap: 10,
+            gap: "0.375rem",
           }}
         >
           {playing ? (
             <>
               <svg width="12" height="12" viewBox="0 0 12 12" fill="white">
-                <rect x="1" y="1" width="3.5" height="10" rx="1" />
-                <rect x="7.5" y="1" width="3.5" height="10" rx="1" />
+                <rect x="2" y="2" width="3" height="8" rx="1" />
+                <rect x="7" y="2" width="3" height="8" rx="1" />
               </svg>
-              pause
+              Pause
             </>
           ) : (
             <>
               <svg width="12" height="12" viewBox="0 0 12 12" fill="white">
-                <polygon points="2,1 11,6 2,11" />
+                <polygon points="2,2 10,6 2,10" />
               </svg>
-              {currentDay === 0 && revealedEvents === 0 ? "play timeline" : "resume"}
+              {currentDay === 0 && revealedEvents === 0 ? "Play" : "Resume"}
             </>
           )}
         </button>
 
-        <span
-          style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: 12,
-            color: "var(--ink-30)",
-          }}
-        >
+        <span style={{ fontSize: "var(--text-xs)", color: "var(--ink-30)" }}>
           {day.label} — {revealedEvents}/{totalEvents} events
         </span>
       </div>
@@ -229,19 +238,19 @@ export function NewsTimeline({
             <div
               key={i}
               style={{
-                opacity: isVisible ? 1 : 0.15,
-                transform: isVisible ? "translateY(0)" : "translateY(8px)",
-                transition: "opacity 0.5s ease, transform 0.5s ease",
+                opacity: isVisible ? 1 : 0.12,
+                transform: isVisible ? "translateY(0)" : "translateY(6px)",
+                transition: "opacity 0.4s ease, transform 0.4s ease",
                 pointerEvents: isVisible ? "auto" : "none",
               }}
             >
-              <div style={{ padding: "16px 0" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
+              <div style={{ padding: "0.875rem 0" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.375rem" }}>
                   {/* Significance dot */}
                   <div
                     style={{
-                      width: 8,
-                      height: 8,
+                      width: 6,
+                      height: 6,
                       borderRadius: "50%",
                       background: sigColor[event.significance] || "var(--ink-30)",
                       flexShrink: 0,
@@ -254,10 +263,9 @@ export function NewsTimeline({
                   <span
                     style={{
                       fontFamily: "var(--font-mono)",
-                      fontSize: 11,
-                      letterSpacing: "0.15em",
+                      fontSize: "var(--text-xs)",
+                      fontWeight: 500,
                       color: sigColor[event.significance] || "var(--ink-30)",
-                      textTransform: "uppercase" as const,
                     }}
                   >
                     {event.source}
@@ -265,31 +273,29 @@ export function NewsTimeline({
                   {/* Sentiment badge */}
                   <span
                     style={{
-                      fontFamily: "var(--font-mono)",
-                      fontSize: 9,
-                      letterSpacing: "0.2em",
-                      textTransform: "uppercase" as const,
+                      fontFamily: "var(--font-body)",
+                      fontSize: "var(--text-xs)",
+                      fontWeight: 500,
                       color: event.sentiment === "negative" ? "var(--orange)" : "var(--ink-30)",
                       marginLeft: "auto",
-                      border: `1px solid ${event.sentiment === "negative" ? "var(--orange)" : "var(--ink-10)"}`,
-                      padding: "2px 8px",
-                      borderRadius: 2,
+                      background: event.sentiment === "negative" ? "rgba(234,76,0,0.08)" : "var(--ink-08)",
+                      padding: "0.125rem 0.5rem",
+                      borderRadius: "4px",
                     }}
                   >
-                    {event.sentiment === "negative" ? "bearish" : "neutral"}
+                    {event.sentiment === "negative" ? "Bearish" : "Neutral"}
                   </span>
                 </div>
 
                 {/* Headline */}
                 <p
                   style={{
-                    fontFamily: "var(--font-body)",
                     fontWeight: 600,
-                    fontSize: 15,
+                    fontSize: "var(--text-sm)",
                     color: "var(--ink)",
                     lineHeight: 1.5,
-                    paddingLeft: 18,
-                    marginBottom: 6,
+                    paddingLeft: "0.75rem",
+                    marginBottom: "0.25rem",
                   }}
                 >
                   {event.headline}
@@ -298,19 +304,17 @@ export function NewsTimeline({
                 {/* Summary */}
                 <p
                   style={{
-                    fontFamily: "var(--font-body)",
-                    fontWeight: 400,
-                    fontSize: 13,
-                    color: "var(--ink-60)",
-                    lineHeight: 1.7,
-                    paddingLeft: 18,
+                    fontSize: "var(--text-xs)",
+                    color: "var(--ink-50)",
+                    lineHeight: 1.6,
+                    paddingLeft: "0.75rem",
                   }}
                 >
                   {event.summary}
                 </p>
               </div>
               {i < day.events.length - 1 && (
-                <div style={{ height: 1, background: "var(--ink-10)" }} />
+                <div style={{ height: "1px", background: "var(--ink-08)" }} />
               )}
             </div>
           );

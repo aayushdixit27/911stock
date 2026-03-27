@@ -1,8 +1,8 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { analyzeSignal } from "@/lib/gemini";
 import { detectSignal, getHistoricalPattern } from "@/lib/signals";
 
-export async function POST(_req: NextRequest) {
+export async function POST() {
   try {
     const signal = detectSignal();
     if (!signal) {

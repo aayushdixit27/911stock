@@ -1,55 +1,191 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600;700;900&family=JetBrains+Mono:wght@300;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@400;450;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
 @import "tailwindcss";
 
 /* Register MARK tokens with Tailwind v4 */
 @theme inline {
   --color-white:      #ffffff;
-  --color-paper:      #fafaf8;
-  --color-off:        #f2f0ec;
-  --color-ink:        #0d0d0b;
-  --color-orange:     #ff4500;
-  --color-ember:      #ff2000;
-  --color-terra:      #d4613a;
+  --color-paper:      #fafaf9;
+  --color-off:        #f5f5f3;
+  --color-ink:        #1a1a18;
+  --color-orange:     #ea4c00;
+  --color-ember:      #dc2626;
+  --color-terra:      #c45c2e;
 }
 
 :root {
-  /* MARK Color System */
+  /* MARK Color System — refined for readability */
   --white:      #ffffff;
-  --paper:      #fafaf8;
-  --off:        #f2f0ec;
-  --ink:        #0d0d0b;
-  --ink-60:     rgba(13,13,11,0.60);
-  --ink-30:     rgba(13,13,11,0.30);
-  --ink-10:     rgba(13,13,11,0.10);
-  --ink-05:     rgba(13,13,11,0.05);
+  --paper:      #fafaf9;
+  --off:        #f5f5f3;
+  --ink:        #1a1a18;
+  --ink-70:     rgba(26,26,24,0.70);
+  --ink-50:     rgba(26,26,24,0.50);
+  --ink-30:     rgba(26,26,24,0.30);
+  --ink-15:     rgba(26,26,24,0.15);
+  --ink-08:     rgba(26,26,24,0.08);
 
-  --orange:     #ff4500;
-  --orange-lt:  #ff6a2f;
-  --orange-dk:  #cc2200;
-  --ember:      #ff2000;
-  --terra:      #d4613a;
-  --terra-lt:   #e8856a;
-  --terra-10:   rgba(212,97,58,0.10);
-  --terra-20:   rgba(212,97,58,0.20);
+  --orange:     #ea4c00;
+  --orange-lt:  #ff6b35;
+  --orange-dk:  #c2410c;
+  --ember:      #dc2626;
+  --terra:      #c45c2e;
+  --terra-lt:   #d97706;
+  --terra-10:   rgba(196,92,46,0.10);
 
-  /* MARK Typography — adapted for dashboard legibility */
-  --font-display: 'DM Serif Display', serif;
-  --font-body: 'Inter', -apple-system, sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
+  /* MARK Typography — refined for readability */
+  --font-display: 'Crimson Pro', Georgia, serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'IBM Plex Mono', 'SF Mono', Consolas, monospace;
+
+  /* Spacing scale */
+  --space-xs:   0.25rem;   /* 4px */
+  --space-sm:   0.5rem;    /* 8px */
+  --space-md:   1rem;      /* 16px */
+  --space-lg:   1.5rem;    /* 24px */
+  --space-xl:   2rem;      /* 32px */
+  --space-2xl:  3rem;       /* 48px */
+
+  /* Font sizes */
+  --text-xs:    0.75rem;   /* 12px */
+  --text-sm:    0.8125rem; /* 13px */
+  --text-base:  0.9375rem; /* 15px */
+  --text-lg:    1.0625rem; /* 17px */
+  --text-xl:    1.25rem;   /* 20px */
+  --text-2xl:   1.5rem;    /* 24px */
+  --text-3xl:   2rem;      /* 32px */
 }
 
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+*, *::before, *::after { 
+  margin: 0; 
+  padding: 0; 
+  box-sizing: border-box; 
+}
+
+html {
+  scroll-behavior: smooth;
+}
 
 body {
-  background: var(--white) !important;
-  color: var(--ink) !important;
-  font-family: var(--font-body) !important;
+  background: var(--white);
+  color: var(--ink);
+  font-family: var(--font-body);
   font-weight: 400;
-  font-size: 15px;
-  letter-spacing: -0.01em;
+  font-size: var(--text-base);
   line-height: 1.6;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Selection */
+::selection {
+  background: rgba(234, 76, 0, 0.12);
+  color: var(--ink);
+}
+
+/* Focus states */
+*:focus-visible {
+  outline: 2px solid var(--terra);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+button:focus-visible {
+  outline-color: var(--orange);
+}
+
+/* Typography utilities */
+.text-balance {
+  text-wrap: balance;
+}
+
+/* MARK — Eyebrow label (refined) */
+.mark-eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--terra);
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+.mark-eyebrow::before {
+  content: '';
+  display: inline-block;
+  width: 1.25rem;
+  height: 2px;
+  background: var(--terra);
+  border-radius: 1px;
+}
+
+/* MARK — Display text (refined) */
+.mark-display {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-style: italic;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  color: var(--ink);
+}
+
+/* MARK — Section labels */
+.mark-label {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-50);
+}
+
+/* MARK — Mono label */
+.mark-mono-label {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--ink-50);
+}
+
+/* MARK — Fire field (the ONE mark) */
+.mark-fire {
+  background: linear-gradient(155deg, var(--orange), var(--ember));
+  position: relative;
+  overflow: hidden;
+}
+.mark-fire::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 35% 30%, rgba(255,255,255,0.12) 0%, transparent 55%);
+  pointer-events: none;
+}
+
+/* MARK — Card (refined) */
+.mark-card {
+  background: var(--white);
+  border: 1px solid var(--ink-08);
+  border-radius: 6px;
+  position: relative;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.mark-card:hover {
+  border-color: var(--ink-15);
+}
+
+/* Input refinements */
+input, select {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+}
+
+/* Button base */
+button {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 500;
 }
 
 /* MARK — Eyebrow label */
@@ -150,61 +286,57 @@ body {
   100% { transform: scale(1.6); opacity: 0; }
 }
 
-/* ── POLISH: Page transitions ── */
-@keyframes page-enter {
-  from { opacity: 0; transform: translateY(12px); }
+/* Animations */
+@keyframes mark-up {
+  from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-main {
-  animation: page-enter 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+@keyframes page-enter {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-/* ── POLISH: Smooth selection highlight ── */
-::selection {
-  background: rgba(255, 69, 0, 0.15);
-  color: var(--ink);
+@keyframes joint-pulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
 }
 
-/* ── POLISH: Focus states for accessibility ── */
-*:focus-visible {
-  outline: 2px solid var(--terra);
-  outline-offset: 2px;
-}
-
-button:focus-visible {
-  outline: 2px solid var(--orange);
-  outline-offset: 2px;
-}
-
-/* ── POLISH: Loading spinner ── */
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
+
+main {
+  animation: page-enter 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+/* Loading spinner */
 .mark-spinner {
   width: 16px;
   height: 16px;
-  border: 2px solid rgba(255,255,255,0.3);
+  border: 2px solid rgba(255,255,255,0.25);
   border-top-color: white;
   border-radius: 50%;
   animation: spin 0.6s linear infinite;
   display: inline-block;
 }
 
-/* ── POLISH: Responsive — stack on narrow screens ── */
-@media (max-width: 800px) {
+/* Fire button interactions */
+.mark-fire {
+  transition: transform 0.15s ease, filter 0.2s ease;
+}
+.mark-fire:hover:not(:disabled) {
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+}
+.mark-fire:active:not(:disabled) {
+  transform: translateY(0);
+  filter: brightness(0.98);
+}
+
+/* Responsive grids */
+@media (max-width: 768px) {
   .mark-grid-2 {
     grid-template-columns: 1fr !important;
   }
-}
-
-/* ── POLISH: Smooth hover on fire buttons ── */
-.mark-fire {
-  transition: filter 0.2s ease;
-}
-.mark-fire:hover:not(:disabled) {
-  filter: brightness(1.08);
-}
-.mark-fire:active:not(:disabled) {
-  filter: brightness(0.95);
 }

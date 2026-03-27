@@ -76,7 +76,6 @@ export default function PageClient({ userId }: { userId: string }) {
     { ticker: "NVDA", sensitivity: "all_news" },
   ]);
   const [input, setInput] = useState("");
-  const [signals] = useState<Signal[]>(SEED_SIGNALS);
   const [selectedSignal, setSelectedSignal] = useState<Signal | null>(SEED_SIGNALS[0]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -146,7 +145,7 @@ export default function PageClient({ userId }: { userId: string }) {
     }
   }
 
-  const sigColor: Record<string, string> = {
+  const sigColor: Record<Signal["significance"], string> = {
     high: "var(--orange)",
     medium: "var(--terra)",
     low: "var(--ink-30)",
@@ -162,22 +161,21 @@ export default function PageClient({ userId }: { userId: string }) {
           left: 0,
           right: 0,
           zIndex: 500,
-          padding: "18px 7vw",
+          padding: "1rem 5vw",
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          background: "rgba(255,255,255,0.92)",
-          backdropFilter: "blur(16px)",
-          borderBottom: "1px solid var(--ink-10)",
+          background: "rgba(255,255,255,0.95)",
+          backdropFilter: "blur(12px)",
+          borderBottom: "1px solid var(--ink-08)",
         }}
       >
         <span
           style={{
-            fontFamily: "var(--font-body)",
-            fontWeight: 700,
-            fontSize: 14,
-            letterSpacing: "0.18em",
-            textTransform: "uppercase" as const,
+            fontFamily: "var(--font-display)",
+            fontWeight: 500,
+            fontSize: "1.25rem",
+            fontStyle: "italic",
             color: "var(--orange)",
           }}
         >
@@ -186,38 +184,41 @@ export default function PageClient({ userId }: { userId: string }) {
         <span
           style={{
             fontFamily: "var(--font-mono)",
-            fontSize: 11,
-            letterSpacing: "0.25em",
+            fontSize: "var(--text-xs)",
+            fontWeight: 500,
+            letterSpacing: "0.05em",
             color: "var(--ink-30)",
-            border: "1px solid var(--ink-10)",
-            padding: "5px 14px",
+            padding: "0.375rem 0.75rem",
+            background: "var(--paper)",
+            borderRadius: "4px",
           }}
         >
-          deep agents hackathon 2026
+          Deep Agents Hackathon 2026
         </span>
       </nav>
 
       {/* ── DASHBOARD BODY ── */}
-      <div style={{ padding: "90px 7vw 40px" }}>
+      <div style={{ padding: "5rem 5vw 2.5rem" }}>
         {/* ── TOP ROW: Watchlist + Signal Feed ── */}
         <div
           className="mark-grid-2"
           style={{
             display: "grid",
             gridTemplateColumns: "1fr 1fr",
-            gap: 1,
-            background: "var(--ink-10)",
-            marginBottom: 1,
+            gap: "1px",
+            background: "var(--ink-08)",
+            borderRadius: "8px",
+            overflow: "hidden",
           }}
         >
           {/* LEFT: Watchlist */}
-          <div style={{ background: "var(--white)", padding: "32px 28px" }}>
-            <div className="mark-eyebrow" style={{ marginBottom: 28 }}>
-              watchlist
+          <div style={{ background: "var(--white)", padding: "1.5rem" }}>
+            <div className="mark-eyebrow" style={{ marginBottom: "1.25rem" }}>
+              Watchlist
             </div>
 
             {/* Ticker rows */}
-            <div style={{ marginBottom: 24 }}>
+            <div style={{ marginBottom: "1rem" }}>
               {watchlist.map((w, i) => {
                 const p = livePrices[w.ticker];
                 return (
@@ -226,18 +227,19 @@ export default function PageClient({ userId }: { userId: string }) {
                       style={{
                         display: "flex",
                         alignItems: "center",
-                        gap: 16,
-                        padding: "14px 0",
+                        gap: "1rem",
+                        padding: "0.75rem 0",
                       }}
                     >
                       {/* Ticker name */}
                       <span
                         style={{
                           fontFamily: "var(--font-display)",
-                          fontSize: 22,
-                          letterSpacing: "-0.02em",
+                          fontSize: "1.375rem",
+                          fontWeight: 500,
+                          letterSpacing: "-0.01em",
                           color: "var(--ink)",
-                          minWidth: 70,
+                          minWidth: "4rem",
                         }}
                       >
                         {w.ticker}
@@ -248,14 +250,19 @@ export default function PageClient({ userId }: { userId: string }) {
                         <span
                           style={{
                             fontFamily: "var(--font-mono)",
-                            fontSize: 13,
-                            color: p.changePct >= 0 ? "var(--ink-60)" : "var(--orange)",
-                            minWidth: 120,
+                            fontSize: "var(--text-sm)",
+                            fontWeight: 500,
+                            color: p.changePct >= 0 ? "var(--ink-50)" : "var(--orange)",
+                            minWidth: "7rem",
                             transition: "color 0.3s",
                           }}
                         >
                           ${p.price.toFixed(2)}{" "}
-                          <span style={{ color: p.changePct >= 0 ? "var(--ink-30)" : "var(--orange)" }}>
+                          <span style={{ 
+                            fontSize: "var(--text-xs)", 
+                            color: p.changePct >= 0 ? "var(--ink-30)" : "var(--orange)",
+                            marginLeft: "0.25rem"
+                          }}>
                             {p.changePct >= 0 ? "+" : ""}{p.changePct.toFixed(1)}%
                           </span>
                         </span>
@@ -266,17 +273,16 @@ export default function PageClient({ userId }: { userId: string }) {
                         value={w.sensitivity}
                         onChange={(e) => setSensitivity(w.ticker, e.target.value as Sensitivity)}
                         style={{
-                          fontFamily: "var(--font-mono)",
-                          fontSize: 11,
-                          letterSpacing: "0.15em",
-                          color: "var(--ink-60)",
+                          fontFamily: "var(--font-body)",
+                          fontSize: "var(--text-xs)",
+                          fontWeight: 500,
+                          color: "var(--ink-50)",
                           background: "var(--paper)",
-                          border: "1px solid var(--ink-10)",
-                          borderRadius: 3,
-                          padding: "6px 10px",
+                          border: "1px solid var(--ink-08)",
+                          borderRadius: "4px",
+                          padding: "0.375rem 0.625rem",
                           cursor: "pointer",
                           marginLeft: "auto",
-                          appearance: "auto" as const,
                         }}
                       >
                         <option value="major_only">{SENSITIVITY_LABELS.major_only}</option>
@@ -287,36 +293,38 @@ export default function PageClient({ userId }: { userId: string }) {
                       {/* Remove */}
                       <button
                         onClick={() => removeTicker(w.ticker)}
+                        aria-label={`Remove ${w.ticker}`}
                         style={{
                           background: "none",
-                          border: "1px solid var(--ink-10)",
-                          borderRadius: 3,
-                          width: 28,
-                          height: 28,
+                          border: "1px solid var(--ink-08)",
+                          borderRadius: "4px",
+                          width: "1.75rem",
+                          height: "1.75rem",
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center",
                           cursor: "pointer",
                           color: "var(--ink-30)",
-                          fontFamily: "var(--font-mono)",
-                          fontSize: 14,
-                          transition: "color 0.2s, border-color 0.2s",
+                          fontSize: "1rem",
+                          transition: "color 0.15s, border-color 0.15s, background 0.15s",
                           flexShrink: 0,
                         }}
                         onMouseEnter={(e) => {
                           e.currentTarget.style.color = "var(--orange)";
-                          e.currentTarget.style.borderColor = "var(--orange)";
+                          e.currentTarget.style.borderColor = "var(--orange-lt)";
+                          e.currentTarget.style.background = "rgba(234,76,0,0.04)";
                         }}
                         onMouseLeave={(e) => {
                           e.currentTarget.style.color = "var(--ink-30)";
-                          e.currentTarget.style.borderColor = "var(--ink-10)";
+                          e.currentTarget.style.borderColor = "var(--ink-08)";
+                          e.currentTarget.style.background = "transparent";
                         }}
                       >
-                        &times;
+                        ×
                       </button>
                     </div>
                     {i < watchlist.length - 1 && (
-                      <div style={{ height: 1, background: "var(--ink-10)" }} />
+                      <div style={{ height: "1px", background: "var(--ink-08)" }} />
                     )}
                   </div>
                 );
@@ -324,7 +332,7 @@ export default function PageClient({ userId }: { userId: string }) {
             </div>
 
             {/* Add ticker */}
-            <div style={{ display: "flex", gap: 8 }}>
+            <div style={{ display: "flex", gap: "0.5rem" }}>
               <input
                 type="text"
                 value={input}
@@ -333,53 +341,67 @@ export default function PageClient({ userId }: { userId: string }) {
                 placeholder="AAPL"
                 style={{
                   fontFamily: "var(--font-mono)",
-                  fontSize: 13,
-                  letterSpacing: "0.15em",
+                  fontSize: "var(--text-sm)",
+                  fontWeight: 500,
+                  letterSpacing: "0.02em",
                   textTransform: "uppercase" as const,
                   color: "var(--ink)",
                   background: "var(--paper)",
-                  border: "1px solid var(--ink-10)",
-                  borderRadius: 3,
-                  padding: "10px 14px",
+                  border: "1px solid var(--ink-08)",
+                  borderRadius: "4px",
+                  padding: "0.5rem 0.75rem",
                   flex: 1,
                   outline: "none",
-                  transition: "border-color 0.2s",
+                  transition: "border-color 0.15s, box-shadow 0.15s",
                 }}
-                onFocus={(e) => (e.currentTarget.style.borderColor = "var(--terra)")}
-                onBlur={(e) => (e.currentTarget.style.borderColor = "var(--ink-10)")}
+                onFocus={(e) => {
+                  e.currentTarget.style.borderColor = "var(--terra)";
+                  e.currentTarget.style.boxShadow = "0 0 0 3px rgba(196,92,46,0.08)";
+                }}
+                onBlur={(e) => {
+                  e.currentTarget.style.borderColor = "var(--ink-08)";
+                  e.currentTarget.style.boxShadow = "none";
+                }}
               />
               <button
                 onClick={addTicker}
                 style={{
                   fontFamily: "var(--font-body)",
                   fontWeight: 600,
-                  fontSize: 12,
-                  letterSpacing: "0.12em",
+                  fontSize: "var(--text-xs)",
+                  letterSpacing: "0.02em",
                   textTransform: "uppercase" as const,
                   color: "var(--white)",
                   background: "var(--ink)",
                   border: "none",
-                  borderRadius: 3,
-                  padding: "10px 20px",
+                  borderRadius: "4px",
+                  padding: "0.5rem 1rem",
                   cursor: "pointer",
+                  transition: "background 0.15s",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "var(--ink-70)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "var(--ink)";
                 }}
               >
-                + add
+                + Add
               </button>
             </div>
           </div>
 
           {/* RIGHT: News Timeline */}
-          <div style={{ background: "var(--paper)", padding: "32px 28px" }}>
-            <div className="mark-eyebrow" style={{ marginBottom: 28 }}>
-              news timeline
+          <div style={{ background: "var(--paper)", padding: "1.5rem" }}>
+            <div className="mark-eyebrow" style={{ marginBottom: "1.25rem" }}>
+              News Timeline
             </div>
             <NewsTimeline onSignalDetected={handleSignalDetected} onPriceUpdate={handlePriceUpdate} />
           </div>
         </div>
 
         {/* ── CALL AI BUTTON — full width fire field ── */}
-        <div style={{ marginBottom: 1 }}>
+        <div style={{ marginTop: "1px" }}>
           <button
             onClick={handleCallAI}
             disabled={loading || !signalDetected}
@@ -389,36 +411,50 @@ export default function PageClient({ userId }: { userId: string }) {
               border: "none",
               color: "var(--white)",
               fontFamily: "var(--font-body)",
-              fontWeight: 700,
-              fontSize: 14,
-              letterSpacing: "0.2em",
-              textTransform: "uppercase" as const,
-              padding: "28px 0",
-              borderRadius: 0,
+              fontWeight: 600,
+              fontSize: "var(--text-sm)",
+              letterSpacing: "0.04em",
+              padding: "1.25rem 0",
+              borderRadius: "0 0 8px 8px",
               cursor: loading || !signalDetected ? "not-allowed" : "pointer",
-              opacity: loading || !signalDetected ? 0.5 : 1,
-              transition: "opacity 0.3s",
+              opacity: loading || !signalDetected ? 0.6 : 1,
               position: "relative",
               zIndex: 1,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "0.75rem",
             }}
           >
             {loading ? (
-              <span style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 12 }}>
+              <>
                 <span className="mark-spinner" />
-                signal detected — calling you now...
-              </span>
-            ) : signalDetected && selectedSignal
-              ? `signal detected — ${selectedSignal.ticker}`
-              : "play timeline to detect signals"}
+                Signal detected — calling you now...
+              </>
+            ) : signalDetected && selectedSignal ? (
+              <>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+                </svg>
+                Signal detected — {selectedSignal.ticker}
+              </>
+            ) : (
+              <>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <polygon points="5 3 19 12 5 21 5 3"/>
+                </svg>
+                Play timeline to detect signals
+              </>
+            )}
           </button>
           {error && (
             <p
               style={{
                 textAlign: "center",
                 color: "var(--orange)",
-                fontFamily: "var(--font-mono)",
-                fontSize: 12,
-                padding: "12px 0",
+                fontFamily: "var(--font-body)",
+                fontSize: "var(--text-sm)",
+                padding: "1rem 0",
               }}
             >
               {error}
@@ -433,27 +469,54 @@ export default function PageClient({ userId }: { userId: string }) {
             style={{
               display: "grid",
               gridTemplateColumns: "1fr 1fr",
-              gap: 1,
-              background: "var(--ink-10)",
+              gap: "1px",
+              background: "var(--ink-08)",
+              borderRadius: "8px",
+              overflow: "hidden",
+              marginTop: "1.5rem",
             }}
           >
             {/* LEFT: Reasons for Call */}
-            <div style={{ background: "var(--white)", padding: "32px 28px" }}>
-              <div className="mark-eyebrow" style={{ marginBottom: 24 }}>
-                reasons for call
+            <div style={{ background: "var(--white)", padding: "1.5rem" }}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  gap: "0.75rem",
+                  marginBottom: "1.25rem",
+                }}
+              >
+                <div className="mark-eyebrow" style={{ marginBottom: 0 }}>
+                  Reasons for Call
+                </div>
+                <span
+                  style={{
+                    fontFamily: "var(--font-mono)",
+                    fontSize: "var(--text-xs)",
+                    fontWeight: 600,
+                    letterSpacing: "0.08em",
+                    textTransform: "uppercase" as const,
+                    color: sigColor[selectedSignal.significance],
+                  }}
+                >
+                  {selectedSignal.significance}
+                </span>
               </div>
 
               {selectedSignal.reasons.length > 0 ? (
-                <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.875rem" }}>
                   {selectedSignal.reasons.map((r, i) => (
-                    <div key={i} style={{ display: "flex", gap: 14, alignItems: "flex-start" }}>
+                    <div key={i} style={{ display: "flex", gap: "0.75rem", alignItems: "flex-start" }}>
                       <span
                         style={{
                           fontFamily: "var(--font-mono)",
-                          fontSize: 12,
+                          fontSize: "var(--text-xs)",
+                          fontWeight: 600,
                           color: "var(--orange)",
                           flexShrink: 0,
-                          marginTop: 2,
+                          marginTop: "0.125rem",
+                          minWidth: "1.25rem",
                         }}
                       >
                         {String(i + 1).padStart(2, "0")}
@@ -461,10 +524,9 @@ export default function PageClient({ userId }: { userId: string }) {
                       <p
                         style={{
                           fontFamily: "var(--font-body)",
-                          fontWeight: 400,
-                          fontSize: 15,
+                          fontSize: "var(--text-base)",
+                          lineHeight: 1.6,
                           color: "var(--ink)",
-                          lineHeight: 1.7,
                         }}
                       >
                         {r}
@@ -473,13 +535,7 @@ export default function PageClient({ userId }: { userId: string }) {
                   ))}
                 </div>
               ) : (
-                <p
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: 13,
-                    color: "var(--ink-30)",
-                  }}
-                >
+                <p style={{ fontSize: "var(--text-sm)", color: "var(--ink-50)" }}>
                   No significant reasons — routine transaction.
                 </p>
               )}
@@ -487,32 +543,24 @@ export default function PageClient({ userId }: { userId: string }) {
               {/* Signal detail */}
               <div
                 style={{
-                  marginTop: 28,
-                  paddingTop: 20,
-                  borderTop: "1px solid var(--ink-10)",
+                  marginTop: "1.25rem",
+                  paddingTop: "1rem",
+                  borderTop: "1px solid var(--ink-08)",
                 }}
               >
-                <p
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontWeight: 400,
-                    fontSize: 14,
-                    color: "var(--ink-60)",
-                    lineHeight: 1.8,
-                  }}
-                >
+                <p style={{ fontSize: "var(--text-sm)", lineHeight: 1.7, color: "var(--ink-50)" }}>
                   {selectedSignal.detail}
                 </p>
               </div>
             </div>
 
             {/* RIGHT: Context */}
-            <div style={{ background: "var(--paper)", padding: "32px 28px" }}>
-              <div className="mark-eyebrow" style={{ marginBottom: 24 }}>
-                context
+            <div style={{ background: "var(--paper)", padding: "1.5rem" }}>
+              <div className="mark-eyebrow" style={{ marginBottom: "1.25rem" }}>
+                Context
               </div>
 
-              <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.625rem" }}>
                 {Object.entries(selectedSignal.context).map(([key, val]) => (
                   <div
                     key={key}
@@ -520,22 +568,17 @@ export default function PageClient({ userId }: { userId: string }) {
                       display: "flex",
                       justifyContent: "space-between",
                       alignItems: "baseline",
+                      padding: "0.375rem 0",
                     }}
                   >
-                    <span
-                      style={{
-                        fontFamily: "var(--font-mono)",
-                        fontSize: 12,
-                        letterSpacing: "0.15em",
-                        color: "var(--ink-30)",
-                      }}
-                    >
+                    <span style={{ fontSize: "var(--text-xs)", color: "var(--ink-30)", textTransform: "capitalize" }}>
                       {key}
                     </span>
                     <span
                       style={{
                         fontFamily: "var(--font-mono)",
-                        fontSize: 13,
+                        fontSize: "var(--text-sm)",
+                        fontWeight: 500,
                         color: key === "overmind" ? "var(--terra)" : "var(--ink)",
                       }}
                     >
@@ -552,34 +595,31 @@ export default function PageClient({ userId }: { userId: string }) {
       {/* ── FOOTER ── */}
       <footer
         style={{
-          padding: "32px 7vw",
+          padding: "1.5rem 5vw",
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          borderTop: "1px solid var(--ink-10)",
-          marginTop: 40,
+          borderTop: "1px solid var(--ink-08)",
+          marginTop: "2.5rem",
         }}
       >
         <span
           style={{
-            fontFamily: "var(--font-body)",
-            fontWeight: 700,
-            fontSize: 11,
-            letterSpacing: "0.25em",
-            textTransform: "uppercase" as const,
+            fontFamily: "var(--font-display)",
+            fontSize: "1rem",
+            fontStyle: "italic",
             color: "var(--ink-30)",
           }}
         >
           911stock
         </span>
-        <div style={{ display: "flex", gap: "2rem" }}>
-          {["bland ai", "ghost db", "auth0 ciba", "overmind"].map((t) => (
+        <div style={{ display: "flex", gap: "1.5rem" }}>
+          {["Bland AI", "Ghost DB", "Auth0 CIBA", "Overmind"].map((t) => (
             <span
               key={t}
               style={{
                 fontFamily: "var(--font-mono)",
-                fontSize: 10,
-                letterSpacing: "0.2em",
+                fontSize: "var(--text-xs)",
                 color: "var(--ink-30)",
               }}
             >

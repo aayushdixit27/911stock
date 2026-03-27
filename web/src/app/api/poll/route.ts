@@ -1,4 +1,4 @@
-import { type NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { fetchLatestSignal } from "@/lib/edgar";
 import { fetchNewsSentiment } from "@/lib/news";
 import { scoreSignal, getHistoricalPattern, getWatchlist } from "@/lib/signals";
@@ -15,7 +15,7 @@ import {
 import { setLastSignal } from "@/lib/state";
 import type { Signal } from "@/lib/edgar";
 
-export async function POST(_req: NextRequest): Promise<NextResponse> {
+export async function POST(): Promise<NextResponse> {
   try {
     // 1. Get watched tickers from watchlist
     const watchlist = getWatchlist();
