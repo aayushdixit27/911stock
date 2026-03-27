@@ -1,0 +1,104 @@
+[
+  {
+    "input": {
+      "signal": {
+        "ticker": "SMCI",
+        "companyName": "Super Micro Computer",
+        "insider": "Charles Liang",
+        "role": "CEO",
+        "action": "SELL",
+        "shares": 50000,
+        "total_value": 2125000,
+        "scheduled_10b5_1": false,
+        "last_transaction_months_ago": 14,
+        "position_reduced_pct": 18
+      },
+      "pattern": {
+        "occurrences": [
+          { "date": "2025-08-12", "insider": "CFO", "subsequent_30d_drop_pct": 15.2 },
+          { "date": "2024-11-03", "insider": "CEO", "subsequent_30d_drop_pct": 9.1 },
+          { "date": "2024-03-22", "insider": "VP Sales", "subsequent_30d_drop_pct": 11.8 }
+        ],
+        "avg_30d_drop_pct": 12.0,
+        "confidence": "high"
+      }
+    },
+    "expected_output": {
+      "explanation": "A response that: (1) says CEO sold $2.1M without jargon, (2) mentions 14 months since last sale, (3) says the sale wasn't planned/scheduled, (4) cites the ~12% average historical drop, (5) tells the SMCI holder why this matters to them"
+    }
+  },
+  {
+    "input": {
+      "signal": {
+        "ticker": "NVDA",
+        "companyName": "NVIDIA Corporation",
+        "insider": "Colette Kress",
+        "role": "CFO",
+        "action": "SELL",
+        "shares": 84723,
+        "total_value": 12084081,
+        "scheduled_10b5_1": false,
+        "last_transaction_months_ago": 22,
+        "position_reduced_pct": 40
+      },
+      "pattern": {
+        "occurrences": [
+          { "date": "2025-06-15", "insider": "CFO", "subsequent_30d_drop_pct": 8.7 }
+        ],
+        "avg_30d_drop_pct": 8.7,
+        "confidence": "medium"
+      }
+    },
+    "expected_output": {
+      "explanation": "A response that: (1) mentions $12M sale without jargon, (2) emphasizes 22 months since last transaction (nearly 2 years), (3) notes 40% position reduction, (4) cites 8.7% historical drop, (5) clearly addresses an NVDA holder"
+    }
+  },
+  {
+    "input": {
+      "signal": {
+        "ticker": "TSLA",
+        "companyName": "Tesla Inc",
+        "insider": "Elon Musk",
+        "role": "CEO",
+        "action": "SELL",
+        "shares": 10000000,
+        "total_value": 350000000,
+        "scheduled_10b5_1": true,
+        "last_transaction_months_ago": 3,
+        "position_reduced_pct": 2
+      },
+      "pattern": null
+    },
+    "expected_output": {
+      "explanation": "A response that: (1) notes this was a scheduled/planned sale (not alarming), (2) contextualizes the large dollar amount against small position reduction (2%), (3) does NOT catastrophize since it's routine, (4) is calm and reassuring to a TSLA holder"
+    }
+  },
+  {
+    "input": {
+      "signal": {
+        "ticker": "SMCI",
+        "companyName": "Super Micro Computer",
+        "insider": "David Weigand",
+        "role": "CFO",
+        "action": "SELL",
+        "shares": 15000,
+        "total_value": 637500,
+        "scheduled_10b5_1": false,
+        "last_transaction_months_ago": 8,
+        "position_reduced_pct": 25
+      },
+      "pattern": {
+        "occurrences": [
+          { "date": "2025-08-12", "insider": "CFO", "subsequent_30d_drop_pct": 15.2 },
+          { "date": "2024-11-03", "insider": "CEO", "subsequent_30d_drop_pct": 9.1 },
+          { "date": "2024-03-22", "insider": "VP Sales", "subsequent_30d_drop_pct": 11.8 }
+        ],
+        "avg_30d_drop_pct": 12.0,
+        "confidence": "high"
+      }
+    },
+    "expected_output": {
+      "explanation": "A response that: (1) notes CFO sold $637K, (2) flags 25% position reduction as significant, (3) mentions 8 months since last sale, (4) connects to same ~12% historical pattern as CEO sale, (5) signals this is a second insider selling (more concerning)"
+    }
+  }
+]

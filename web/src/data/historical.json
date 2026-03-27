@@ -1,0 +1,24 @@
+{
+  "patterns": [
+    {
+      "ticker": "SMCI",
+      "event_type": "unscheduled_insider_sell",
+      "occurrences": [
+        { "date": "2025-08-12", "insider": "CFO", "subsequent_30d_drop_pct": 15.2 },
+        { "date": "2024-11-03", "insider": "CEO", "subsequent_30d_drop_pct": 9.1 },
+        { "date": "2024-03-22", "insider": "VP Sales", "subsequent_30d_drop_pct": 11.8 }
+      ],
+      "avg_30d_drop_pct": 12.0,
+      "confidence": "high"
+    },
+    {
+      "ticker": "NVDA",
+      "event_type": "unscheduled_insider_sell",
+      "occurrences": [
+        { "date": "2025-06-15", "insider": "CFO", "subsequent_30d_drop_pct": 8.7 }
+      ],
+      "avg_30d_drop_pct": 8.7,
+      "confidence": "medium"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "signals": [
+    {
+      "id": "smci-ceo-sell-20260319",
+      "ticker": "SMCI",
+      "companyName": "Super Micro Computer",
+      "insider": "Charles Liang",
+      "role": "CEO",
+      "action": "SELL",
+      "shares": 50000,
+      "price_per_share": 42.50,
+      "total_value": 2125000,
+      "date": "2026-03-19",
+      "filed": "2026-03-19T16:30:00Z",
+      "scheduled_10b5_1": false,
+      "last_transaction_months_ago": 14,
+      "position_reduced_pct": 18,
+      "source": "SEC Form 4"
+    }
+  ]
+}

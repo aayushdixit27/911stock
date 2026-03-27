@@ -1,0 +1,8 @@
+{
+  "user": {
+    "name": "Demo User",
+    "phone": "+1XXXXXXXXXX",
+    "stocks": ["SMCI", "TSLA", "NVDA"],
+    "sensitivity": "major_events_only"
+  }
+}
