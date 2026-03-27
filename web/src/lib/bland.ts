@@ -12,7 +12,8 @@ export async function makeOutboundCall(
     last_transaction_months_ago: number;
   }
 ): Promise<{ callId: string }> {
-  const appUrl = process.env.NEXT_PUBLIC_URL || "http://localhost:3000";
+  const appUrl = process.env.NEXT_PUBLIC_URL || "";
+  const isPublicUrl = appUrl.startsWith("https://");
 
   const task = `You are 911Stock, a portfolio monitoring AI. Be conversational, direct, and concise.
 
@@ -49,26 +50,28 @@ If they ask questions:
       wait_for_greeting: true,
       record: true,
       max_duration: 5,
-      tools: [
-        {
-          name: "request_approval",
-          description: "Call this tool when the user says yes and wants to approve the trade",
-          url: `${appUrl}/api/bland-webhook`,
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: {
-            approved: true,
-            ticker: signal.ticker,
-          },
-          response_data: [
-            {
-              name: "status",
-              data: "$.status",
-              context: "Whether the approval request was sent successfully",
+      ...(isPublicUrl && {
+        tools: [
+          {
+            name: "request_approval",
+            description: "Call this tool when the user says yes and wants to approve the trade",
+            url: `${appUrl}/api/bland-webhook`,
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: {
+              approved: true,
+              ticker: signal.ticker,
             },
-          ],
-        },
-      ],
+            response_data: [
+              {
+                name: "status",
+                data: "$.status",
+                context: "Whether the approval request was sent successfully",
+              },
+            ],
+          },
+        ],
+      }),
     }),
   });
 

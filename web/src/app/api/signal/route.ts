@@ -1,4 +1,5 @@
 import { NextRequest } from "next/server";
+import { getLastSignal } from "@/lib/state";
 
 // SSE endpoint — streams pipeline status to the dashboard
 export async function GET(_req: NextRequest) {
@@ -14,12 +15,20 @@ export async function GET(_req: NextRequest) {
       await delay(400);
       send({ step: "scanning", status: "done" });
 
-      // Step 2
+      // Step 2 — use real signal from state if available, else SMCI fallback
       await delay(800);
+      const lastSignal = getLastSignal();
       send({
         step: "signal_detected",
         status: "done",
-        data: { ticker: "SMCI", insider: "Charles Liang", role: "CEO", total_value: 2125000 },
+        data: lastSignal
+          ? {
+              ticker: lastSignal.ticker,
+              insider: lastSignal.insider,
+              role: lastSignal.role,
+              total_value: lastSignal.total_value,
+            }
+          : { ticker: "SMCI", insider: "Charles Liang", role: "CEO", total_value: 2125000 },
       });
 
       // Step 3

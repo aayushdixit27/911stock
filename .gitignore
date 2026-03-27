@@ -2,6 +2,7 @@
 .obsidian/
 *.m4a
 .env
+.env.local
 node_modules/
 __pycache__/
 *.pyc

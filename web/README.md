@@ -1,5 +1,13 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Database (Ghost)
+
+This repo can use [Ghost](https://ghost.build) (Postgres for agents). The CLI is installed with:
+
+`curl -fsSL https://install.ghost.build | sh`
+
+Workflow: `ghost login` → `ghost create` → `ghost connect <id>` → set `DATABASE_URL` in `.env.local` (see `.env.example`). The Ghost MCP server is available in Cursor as `ghost` after `ghost mcp install cursor` (restart Cursor).
+
 ## Getting Started
 
 First, run the development server:

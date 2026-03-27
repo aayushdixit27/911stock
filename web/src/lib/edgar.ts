@@ -159,7 +159,7 @@ function parseForm4Xml(
       price_per_share,
       total_value,
       date,
-      filed: new Date(filingDate).toISOString(),
+      filed: (() => { try { const d = new Date(filingDate); return isNaN(d.getTime()) ? new Date().toISOString() : d.toISOString(); } catch { return new Date().toISOString(); } })(),
       scheduled_10b5_1,
       last_transaction_months_ago: 12,  // fallback — not in Form 4
       position_reduced_pct: 10,         // fallback
