@@ -20,6 +20,7 @@
 | Voice | Bland AI | Outbound calls (hero moment) + inbound calls (judge interaction) |
 | Auth | Auth0 (CIBA flow) | Agent asks user approval before executing trades |
 | Database | Ghost (ghost.build) | Agent's own Postgres DB — watchlists, signals, patterns, learnings |
+| Monitoring | Overmind | Agent supervision, traces, policy compliance |
 | Deploy | Vercel (or localhost for demo) | One-command deploy |
 
 ### Key Change: Ghost DB replaces both Aerospike AND Ghost CMS
@@ -67,13 +68,16 @@ ghost mcp install  # → MCP tools available to Claude Code
 │       │   └── route.ts        # POST: triggers Bland outbound call
 │       ├── inbound-context/
 │       │   └── route.ts        # GET: serves watchlist context for Bland inbound agent
-│       └── approve/
-│           └── route.ts        # POST: Auth0 CIBA approval endpoint
+│       ├── approve/
+│       │   └── route.ts        # POST: Auth0 CIBA approval endpoint
+│       └── overmind/
+│           └── route.ts        # POST: logs agent decision to Overmind
 ├── lib/
 │   ├── bland.ts                # Bland AI client (outbound + inbound setup)
 │   ├── claude.ts               # Anthropic client for signal analysis
 │   ├── auth0-ciba.ts           # Auth0 CIBA flow helpers
 │   ├── ghost-db.ts             # Ghost DB client (pg connection, queries)
+│   ├── overmind.ts             # Overmind SDK client (agent traces + policy)
 │   └── signals.ts              # Signal detection logic + scoring
 ├── data/
 │   └── seed.sql                # SQL to seed Ghost DB with watchlist + historical patterns
@@ -223,6 +227,10 @@ POST /api/trigger
         ├──▶ Ghost DB: INSERT INTO signals (...) + INSERT INTO agent_learnings (...)
         │    Agent stores its analysis + learning for future reference
         │
+        ├──▶ POST /api/overmind (log decision)
+        │    → "Signal: HIGH significance. Action: alert user + suggest trade."
+        │    → Overmind validates against safety policy
+        │
         ├──▶ POST /api/call (Bland outbound)
         │    Phone rings. AI reads the explanation.
         │    "Want me to reduce your SMCI position by 50%?"
@@ -310,6 +318,7 @@ POST /api/trigger
 │  └─────────────────────────────────────┘    │
 │                                              │
 │  Ghost DB: signal stored, learning logged ✓  │
+│  Overmind: 3 decisions, all within policy ✓  │
 │  Agent memory: pattern + outcome saved       │
 │                                              │
 │  Still watching: TSLA, NVDA (no signals)     │
@@ -451,7 +460,16 @@ POST /api/trigger
   ```
 - [ ] Test with 3 questions: "What's happening with SMCI?" / "Should I sell?" / "Any news on Tesla?"
 
-### Chunk B6: Ghost DB Self-Improvement Demo (15 min)
+### Chunk B6: Overmind Agent Supervision (15 min) — FIRST TO CUT
+- [ ] Create `lib/overmind.ts` — Overmind SDK client (see overmindlab.ai/hackathon)
+- [ ] Build `app/api/overmind/route.ts` — logs agent decisions
+- [ ] Log 3 decisions during pipeline:
+  1. "Signal detected: HIGH significance (SMCI CEO sell)"
+  2. "Recommendation: Alert user + suggest position reduction"
+  3. "Trade executed: SMCI -50% (user approved via CIBA)"
+- [ ] If SDK doesn't work after 15 min → screenshot their hosted dashboard, show as image in resolution screen
+
+### Chunk B7: Ghost DB Self-Improvement Demo (15 min)
 - [ ] After signal is processed, INSERT into `agent_learnings`:
   - pattern_match_count, avg_historical_drop, action_taken, user_approved
 - [ ] Before calling, agent does: `SELECT COUNT(*) FROM signals WHERE ticker = 'SMCI'`
@@ -459,7 +477,7 @@ POST /api/trigger
   - This IS the self-improvement moment judges will see
 - [ ] Optional: `ghost fork <id>` before experimental analysis, show in demo as safety measure
 
-### Chunk B7: Wire Together + Test (15 min)
+### Chunk B8: Wire Together + Test (15 min)
 - [ ] End-to-end smoke test: button → dashboard → call → resolution
 - [ ] Verify Ghost DB has new rows after pipeline runs
 - [ ] Fix any integration bugs
@@ -507,9 +525,9 @@ POST /api/trigger
            Fix any blockers from end-to-end test
 
 ~1:45 PM   Person A: Chunk A5 (CIBA UX) → A6 (polish)
-           Person B: Chunk B5 (inbound agent) → B6 (Ghost self-improvement)
+           Person B: Chunk B5 (inbound agent) → B6 (Overmind) → B7 (Ghost self-improvement)
 
-~2:30 PM   Person B: Chunk B7 (wire + test)
+~2:30 PM   Person B: Chunk B8 (wire + test)
            Person A: Start demo prep
 
 ~3:00 PM   DEMO REHEARSALS (both): Chunk S2
@@ -531,8 +549,9 @@ POST /api/trigger
 | Inbound call gives bad answer | During rehearsal | Pre-rehearse 3 safe questions, avoid open-ended |
 | Dashboard SSE doesn't stream | After 15 min of effort | Hardcode timed sequence with setInterval |
 | Claude API rate limited | If it happens | Pre-generate the explanation, hardcode as fallback |
+| Overmind SDK fails | After 15 min of effort | Screenshot their hosted dashboard, show as image |
 
-**Cut order (if running out of time):** Auth0 CIBA → Inbound call → Ghost self-improvement demo → Dashboard streaming. NEVER cut: outbound phone call, plain-English explanation, watchlist screen, Ghost DB (it's our biggest prize track).
+**Cut order (if running out of time):** Overmind → Auth0 CIBA → Inbound call → Ghost self-improvement demo → Dashboard streaming. NEVER cut: outbound phone call, plain-English explanation, watchlist screen, Ghost DB (it's our biggest prize track).
 
 ---
 
@@ -575,13 +594,13 @@ POST /api/trigger
            [Resolution screen appears]
 
 2:10-2:40  DEPTH
-           [Show resolution screen]
-           "4 sponsor tools working together. Bland AI for the call.
+           [Show resolution screen + Overmind trace]
+           "5 sponsor tools working together. Bland AI for the call.
            Auth0 CIBA for trade approval — the agent can't act
-           without my permission. And Ghost — the agent's own
-           database. It queried historical patterns, stored this
-           signal, and logged what it learned. Next time it sees
-           an SMCI insider sale, it already knows the context.
+           without my permission. Ghost — the agent's own database.
+           It queried historical patterns, stored this signal, and
+           logged what it learned. And Overmind supervising every
+           decision — 3 actions, all within policy.
            The agent gets smarter every time."
 
 2:40-3:00  CLOSE
@@ -619,13 +638,12 @@ AUTH0_CLIENT_SECRET=...               # Auth0 app client secret
 | **Bland AI** | Outbound call + inbound agent | — | $500 |
 | **Auth0** | CIBA approval flow (or WoZ) | Login screen | $1,750 |
 | **Ghost** | Real Postgres DB: watchlists, signals, patterns, learnings, alerts | — | $1,998 + $500/member |
+| **Overmind** | Agent supervision, traces, policy compliance (or screenshot fallback) | — | $651 |
 | **Airbyte** | — | Narrative only ("data pipeline for SEC data") | $1,000 |
 
-**Total potential: up to $5,248+**
+**Total potential: up to $5,899+**
 
 **Why we dropped Aerospike:** Ghost DB covers everything Aerospike was doing (storage, patterns, dedup) plus gives us forking, SQL, and the biggest single cash prize. One real integration beats two fake ones.
-
-**Why we dropped Overmind:** Focus on fewer, deeper integrations. The plan said "FIRST TO CUT" for Overmind anyway.
 
 ---
 
@@ -642,4 +660,5 @@ AUTH0_CLIENT_SECRET=...               # Auth0 app client secret
 - Real Bland AI outbound + inbound phone calls
 - Real Claude analysis with plain-English generation
 - Auth0 CIBA (real if time allows, WoZ if not)
+- Overmind agent supervision traces (real if time allows, screenshot fallback)
 - Real SSE streaming dashboard
