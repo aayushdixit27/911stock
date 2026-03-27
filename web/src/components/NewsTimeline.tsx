@@ -43,10 +43,9 @@ export function NewsTimeline({
   const [currentDay, setCurrentDay] = useState(0);
   const [revealedEvents, setRevealedEvents] = useState(0);
   const [revealing, setRevealing] = useState(false);
+  const [started, setStarted] = useState(false);
   const hasTriggered = useRef(false);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
-  const revealedRef = useRef(revealedEvents);
-  revealedRef.current = revealedEvents;
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const day = timeline[currentDay];
   const totalEvents = day.events.length;
@@ -54,32 +53,15 @@ export function NewsTimeline({
   const isLastDay = currentDay >= timeline.length - 1;
   const isMar19 = day.date === "2026-03-19";
 
-  // Clear timer
-  const clearTimer = useCallback(() => {
+  function stopTimer() {
     if (timerRef.current) {
       clearInterval(timerRef.current);
       timerRef.current = null;
     }
-  }, []);
+  }
 
-  // Reveal events one by one within current day
-  const startRevealing = useCallback(() => {
-    setRevealing(true);
-    setRevealedEvents(0);
-
-    timerRef.current = setInterval(() => {
-      setRevealedEvents((prev) => {
-        const next = prev + 1;
-        const total = timeline[currentDay]?.events.length ?? 0;
-        if (next >= total) {
-          clearTimer();
-          setRevealing(false);
-          return total;
-        }
-        return next;
-      });
-    }, 1500);
-  }, [currentDay, clearTimer]);
+  // Cleanup
+  useEffect(() => () => stopTimer(), []);
 
   // Update prices when day changes
   useEffect(() => {
@@ -89,93 +71,93 @@ export function NewsTimeline({
     }
   }, [currentDay, onPriceUpdate]);
 
-  // Detect when all Mar 19 events are revealed — fire the call
+  // Fire signal when all Mar 19 events revealed
   useEffect(() => {
-    if (
-      !hasTriggered.current &&
-      isMar19 &&
-      allRevealed &&
-      onSignalDetected
-    ) {
-      // Short delay so user sees the last event before call fires
+    if (!hasTriggered.current && isMar19 && allRevealed && !revealing && onSignalDetected) {
       const t = setTimeout(() => {
         hasTriggered.current = true;
         onSignalDetected();
       }, 2000);
       return () => clearTimeout(t);
     }
-  }, [isMar19, allRevealed, onSignalDetected]);
+  }, [isMar19, allRevealed, revealing, onSignalDetected]);
 
-  // Cleanup on unmount
-  useEffect(() => clearTimer, [clearTimer]);
+  function revealEventsForDay(dayIndex: number) {
+    stopTimer();
+    const events = timeline[dayIndex].events;
+    let count = 0;
+    setRevealedEvents(0);
+    setRevealing(true);
 
-  function handleNextDay() {
-    clearTimer();
-    setRevealing(false);
+    timerRef.current = setInterval(() => {
+      count++;
+      setRevealedEvents(count);
+      if (count >= events.length) {
+        stopTimer();
+        setRevealing(false);
+      }
+    }, 1500);
+  }
 
-    if (currentDay === 0 && revealedEvents === 0) {
-      // First click — start revealing Mar 18 events
-      startRevealing();
+  function handleButton() {
+    if (!started) {
+      // First click — start Mar 18
+      setStarted(true);
+      revealEventsForDay(0);
       return;
     }
 
-    if (!allRevealed) {
-      // Still revealing — skip to all revealed
-      clearTimer();
+    if (revealing) {
+      // Skip to end of current day
+      stopTimer();
       setRevealedEvents(totalEvents);
       setRevealing(false);
       return;
     }
 
-    // Move to next day and start revealing
-    if (!isLastDay) {
+    if (allRevealed && !isLastDay) {
+      // Advance to next day
       const next = currentDay + 1;
       setCurrentDay(next);
-      setRevealedEvents(0);
-      // Start revealing after a beat
-      setTimeout(() => {
-        setRevealing(true);
-        let count = 0;
-        timerRef.current = setInterval(() => {
-          count++;
-          const total = timeline[next]?.events.length ?? 0;
-          if (count >= total) {
-            clearTimer();
-            setRevealing(false);
-          }
-          setRevealedEvents(count);
-        }, 1500);
-      }, 500);
+      setTimeout(() => revealEventsForDay(next), 300);
     }
   }
 
   function goToDay(idx: number) {
-    clearTimer();
+    stopTimer();
     setRevealing(false);
+    setStarted(true);
     setCurrentDay(idx);
     setRevealedEvents(timeline[idx].events.length);
   }
 
-  // Button label logic
-  let buttonLabel = "Start — Mar 18";
-  let buttonIcon = "play";
-  if (currentDay === 0 && revealedEvents === 0) {
+  // Button label
+  let buttonLabel: string;
+  let buttonIcon: string;
+  const triggered = isMar19 && hasTriggered.current;
+
+  if (!started) {
     buttonLabel = "Start — Mar 18";
     buttonIcon = "play";
   } else if (revealing) {
-    buttonLabel = "Skip to end of day";
+    buttonLabel = "Skip to end";
     buttonIcon = "skip";
-  } else if (allRevealed && isMar19 && hasTriggered.current) {
+  } else if (triggered) {
     buttonLabel = "Agent calling...";
     buttonIcon = "phone";
   } else if (allRevealed && !isLastDay) {
-    const nextLabel = timeline[currentDay + 1]?.label ?? "Next";
-    buttonLabel = `Next Day — ${nextLabel}`;
+    buttonLabel = `Next Day — ${timeline[currentDay + 1]?.label}`;
     buttonIcon = "arrow";
   } else if (allRevealed && isLastDay) {
     buttonLabel = "Timeline complete";
     buttonIcon = "check";
+  } else {
+    buttonLabel = "Next";
+    buttonIcon = "arrow";
   }
+
+  const isFireButton = isMar19 && allRevealed && !triggered;
+  const isDisabled = (allRevealed && isLastDay) || triggered;
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
@@ -216,44 +198,31 @@ export function NewsTimeline({
             >
               {d.label}
               {hasHigh && isPast && !isActive && (
-                <span style={{
-                  display: "inline-block",
-                  width: 4,
-                  height: 4,
-                  borderRadius: "50%",
-                  background: "var(--orange)",
-                  marginLeft: "0.25rem",
-                  verticalAlign: "middle"
-                }} />
+                <span style={{ display: "inline-block", width: 4, height: 4, borderRadius: "50%", background: "var(--orange)", marginLeft: "0.25rem", verticalAlign: "middle" }} />
               )}
             </button>
           );
         })}
       </div>
 
-      {/* Next Day button — the main control */}
+      {/* Main button */}
       <div style={{ marginBottom: "1rem" }}>
         <button
-          onClick={handleNextDay}
-          disabled={(allRevealed && isLastDay) || (isMar19 && hasTriggered.current)}
-          className={isMar19 && allRevealed && !hasTriggered.current ? "mark-fire" : ""}
+          onClick={handleButton}
+          disabled={isDisabled}
+          className={isFireButton ? "mark-fire" : ""}
           style={{
             width: "100%",
-            border: isMar19 && allRevealed ? "none" : "1px solid var(--ink-08)",
-            background: isMar19 && allRevealed
-              ? undefined // mark-fire handles it
-              : revealing
-                ? "var(--paper)"
-                : "var(--white)",
-            color: isMar19 && allRevealed ? "var(--white)" : "var(--ink)",
+            border: isFireButton ? "none" : "1px solid var(--ink-08)",
+            background: isFireButton ? undefined : revealing ? "var(--paper)" : "var(--white)",
+            color: isFireButton ? "var(--white)" : "var(--ink)",
             fontFamily: "var(--font-body)",
             fontWeight: 600,
             fontSize: "var(--text-sm)",
-            letterSpacing: "0.02em",
             padding: "0.75rem 1.25rem",
             borderRadius: "6px",
-            cursor: (allRevealed && isLastDay) || (isMar19 && hasTriggered.current) ? "default" : "pointer",
-            opacity: (allRevealed && isLastDay) || (isMar19 && hasTriggered.current) ? 0.5 : 1,
+            cursor: isDisabled ? "default" : "pointer",
+            opacity: isDisabled ? 0.5 : 1,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -264,28 +233,19 @@ export function NewsTimeline({
           }}
         >
           {buttonIcon === "play" && (
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
-              <polygon points="3,1 12,7 3,13" />
-            </svg>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><polygon points="3,1 12,7 3,13" /></svg>
           )}
           {buttonIcon === "arrow" && (
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-              <path d="M3 7h8M8 3l4 4-4 4" />
-            </svg>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M3 7h8M8 3l4 4-4 4" /></svg>
           )}
           {buttonIcon === "skip" && (
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
-              <polygon points="1,1 7,7 1,13" />
-              <polygon points="7,1 13,7 7,13" />
-            </svg>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><polygon points="1,1 7,7 1,13" /><polygon points="7,1 13,7 7,13" /></svg>
           )}
           {buttonIcon === "phone" && (
             <span className="mark-spinner" style={{ width: 14, height: 14, borderWidth: 2 }} />
           )}
           {buttonIcon === "check" && (
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-              <path d="M3 7l3 3 5-6" />
-            </svg>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M3 7l3 3 5-6" /></svg>
           )}
           {buttonLabel}
         </button>
@@ -309,80 +269,39 @@ export function NewsTimeline({
                 <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.375rem" }}>
                   <div
                     style={{
-                      width: 6,
-                      height: 6,
-                      borderRadius: "50%",
+                      width: 6, height: 6, borderRadius: "50%",
                       background: sigColor[event.significance] || "var(--ink-30)",
                       flexShrink: 0,
-                      animation: event.significance === "high" && isVisible
-                        ? "joint-pulse 1.5s ease-in-out infinite"
-                        : "none",
+                      animation: event.significance === "high" && isVisible ? "joint-pulse 1.5s ease-in-out infinite" : "none",
                     }}
                   />
-                  <span
-                    style={{
-                      fontFamily: "var(--font-mono)",
-                      fontSize: "var(--text-xs)",
-                      fontWeight: 500,
-                      color: sigColor[event.significance] || "var(--ink-30)",
-                    }}
-                  >
+                  <span style={{ fontFamily: "var(--font-mono)", fontSize: "var(--text-xs)", fontWeight: 500, color: sigColor[event.significance] || "var(--ink-30)" }}>
                     {event.source}
                   </span>
                   <span
                     style={{
-                      fontFamily: "var(--font-body)",
-                      fontSize: "var(--text-xs)",
-                      fontWeight: 500,
+                      fontFamily: "var(--font-body)", fontSize: "var(--text-xs)", fontWeight: 500,
                       color: event.sentiment === "negative" ? "var(--orange)" : "var(--ink-30)",
                       marginLeft: "auto",
                       background: event.sentiment === "negative" ? "rgba(234,76,0,0.08)" : "var(--ink-08)",
-                      padding: "0.125rem 0.5rem",
-                      borderRadius: "4px",
+                      padding: "0.125rem 0.5rem", borderRadius: "4px",
                     }}
                   >
                     {event.sentiment === "negative" ? "Bearish" : "Neutral"}
                   </span>
                 </div>
-
-                <p
-                  style={{
-                    fontWeight: 600,
-                    fontSize: "var(--text-sm)",
-                    color: "var(--ink)",
-                    lineHeight: 1.5,
-                    paddingLeft: "0.75rem",
-                    marginBottom: "0.25rem",
-                  }}
-                >
+                <p style={{ fontWeight: 600, fontSize: "var(--text-sm)", color: "var(--ink)", lineHeight: 1.5, paddingLeft: "0.75rem", marginBottom: "0.25rem" }}>
                   {event.url ? (
-                    <a
-                      href={event.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{ color: "inherit", textDecoration: "none", borderBottom: "1px solid var(--ink-15)" }}
-                    >
+                    <a href={event.url} target="_blank" rel="noopener noreferrer" style={{ color: "inherit", textDecoration: "none", borderBottom: "1px solid var(--ink-15)" }}>
                       {event.headline}
                     </a>
-                  ) : (
-                    event.headline
-                  )}
+                  ) : event.headline}
                 </p>
-
-                <p
-                  style={{
-                    fontSize: "var(--text-xs)",
-                    color: "var(--ink-50)",
-                    lineHeight: 1.6,
-                    paddingLeft: "0.75rem",
-                  }}
-                >
+                <p style={{ fontSize: "var(--text-xs)", color: "var(--ink-50)", lineHeight: 1.6, paddingLeft: "0.75rem" }}>
                   {event.summary}
                 </p>
               </div>
-              {i < day.events.length - 1 && (
-                <div style={{ height: "1px", background: "var(--ink-08)" }} />
-              )}
+              {i < day.events.length - 1 && <div style={{ height: "1px", background: "var(--ink-08)" }} />}
             </div>
           );
         })}
