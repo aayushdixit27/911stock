@@ -109,11 +109,31 @@ export default function PageClient({ userId }: { userId: string }) {
     }
   }, [router, userId]);
 
-  function addTicker() {
+  async function addTicker() {
     const t = input.trim().toUpperCase();
     if (t && !watchlist.find((w) => w.ticker === t)) {
       setWatchlist([...watchlist, { ticker: t, sensitivity: "major_only" }]);
       setInput("");
+      
+      // Fetch price for the new ticker
+      try {
+        const res = await fetch(`/api/stock-quote?ticker=${t}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.price) {
+            setLivePrices((prev) => ({
+              ...prev,
+              [t]: {
+                price: data.price,
+                change: data.change,
+                changePct: data.changePct,
+              },
+            }));
+          }
+        }
+      } catch (err) {
+        console.error(`Failed to fetch price for ${t}:`, err);
+      }
     }
   }
 

@@ -2,6 +2,24 @@ import { analyzeSignal } from "@/lib/gemini";
 import { detectSignal, getHistoricalPattern } from "@/lib/signals";
 import { getLastSignal } from "@/lib/state";
 
+const OVERCLAW_URL = `http://localhost:${process.env.OVERCLAW_PORT ?? "8001"}/analyze`;
+
+async function analyzeViaOverclaw(
+  signal: ReturnType<typeof detectSignal>,
+  pattern: ReturnType<typeof getHistoricalPattern>
+): Promise<string> {
+  const res = await fetch(OVERCLAW_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ signal, pattern }),
+    signal: AbortSignal.timeout(15_000),
+  });
+  if (!res.ok) throw new Error(`Overclaw ${res.status}`);
+  const data = (await res.json()) as { explanation?: string; error?: string };
+  if (!data.explanation) throw new Error(data.error ?? "No explanation");
+  return data.explanation;
+}
+
 // SSE endpoint — streams pipeline status to the dashboard
 export async function GET() {
   const encoder = new TextEncoder();
@@ -48,7 +66,13 @@ export async function GET() {
         const signal = detectSignal();
         if (signal) {
           const pattern = getHistoricalPattern(signal.ticker);
-          const explanation = await analyzeSignal(signal, pattern);
+          let explanation: string;
+          try {
+            explanation = await analyzeViaOverclaw(signal, pattern);
+            console.log("[signal] used overclaw agent");
+          } catch {
+            explanation = await analyzeSignal(signal, pattern);
+          }
           send({ step: "explanation_ready", status: "done", text: explanation });
         } else {
           send({ step: "explanation_ready", status: "done", text: fallback });
