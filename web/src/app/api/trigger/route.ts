@@ -10,13 +10,25 @@ import {
 } from "@/lib/signals";
 import { fetchLatestSignal } from "@/lib/edgar";
 import { fetchNewsSentiment } from "@/lib/news";
-import { setLastSignal } from "@/lib/state";
+import { setLastSignal, setLastUserId } from "@/lib/state";
 import { insertSignal, getLatestSignal, type DBSignal } from "@/lib/db";
 
 export async function POST(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
     const isLive = searchParams.get("mode") === "live";
+
+    // Extract userId from request body if present
+    let userId: string | null = null;
+    try {
+      const body = await req.json() as { userId?: string };
+      if (body.userId) {
+        userId = body.userId;
+        setLastUserId(userId);
+      }
+    } catch {
+      // body may be empty — that's fine
+    }
 
     const user = getWatchlist();
 
@@ -109,6 +121,7 @@ export async function POST(req: NextRequest) {
       callId,
       callTriggered: !!callId,
       mode: isLive ? "live" : "demo",
+      userId,
     });
   } catch (err) {
     console.error("Trigger error:", err);

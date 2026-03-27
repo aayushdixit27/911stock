@@ -9,3 +9,7 @@ export function setLastSignal(signal: Signal): void {
 export function getLastSignal(): Signal | null {
   return _lastSignal;
 }
+
+let _lastUserId: string | null = null;
+export function setLastUserId(id: string): void { _lastUserId = id; }
+export function getLastUserId(): string | null { return _lastUserId; }
