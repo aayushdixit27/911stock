@@ -1,0 +1,138 @@
+{
+  "timeline": [
+    {
+      "date": "2026-03-18",
+      "label": "Mar 18",
+      "events": [
+        {
+          "source": "MarketWatch",
+          "headline": "Super Micro, Dell and HPE have been red-hot stocks this week",
+          "summary": "AI server makers rally on continued data center demand. SMCI up 4.2% on the day.",
+          "significance": "low",
+          "sentiment": "positive"
+        },
+        {
+          "source": "Nvidia GTC",
+          "headline": "Jensen Huang shakes hands with SMCI CEO Charles Liang at GTC booth",
+          "summary": "Photo posted by Super Micro on X shows co-founder Wally Liaw standing nearby during the meeting.",
+          "significance": "low",
+          "sentiment": "positive"
+        }
+      ]
+    },
+    {
+      "date": "2026-03-19",
+      "label": "Mar 19",
+      "events": [
+        {
+          "source": "DOJ Press Release",
+          "headline": "Three charged with conspiring to unlawfully divert cutting-edge U.S. AI technology to China",
+          "summary": "DOJ unseals indictment: co-founder Wally Liaw, sales manager Steven Chang, and contractor Willy Sun charged with smuggling $2.5B of AI servers to China via dummy servers and false documents.",
+          "significance": "high",
+          "sentiment": "negative"
+        },
+        {
+          "source": "Reuters",
+          "headline": "US charges 3 tied to Super Micro Computer with helping smuggle billions of dollars of AI chips to China",
+          "summary": "Liaw arrested in Northern District of California. Chang remains a fugitive in Taiwan. SMCI stock falls 8% after hours.",
+          "significance": "high",
+          "sentiment": "negative"
+        },
+        {
+          "source": "Super Micro IR",
+          "headline": "Super Micro Computer issues statement on action by U.S. Attorney's Office",
+          "summary": "Company not named as defendant. Liaw and Chang placed on administrative leave. Contractor Sun terminated. Company cooperating with investigation.",
+          "significance": "high",
+          "sentiment": "negative"
+        }
+      ]
+    },
+    {
+      "date": "2026-03-20",
+      "label": "Mar 20",
+      "events": [
+        {
+          "source": "Bloomberg",
+          "headline": "Super Micro co-founder charged with smuggling, departs board",
+          "summary": "Wally Liaw removed from board of directors. Scheme involved $510M of servers diverted to China in a single month (Apr-May 2025).",
+          "significance": "high",
+          "sentiment": "negative"
+        },
+        {
+          "source": "Yahoo Finance",
+          "headline": "Supermicro stock plunges 33% after US charges co-founder with conspiracy to smuggle Nvidia chips to China",
+          "summary": "SMCI shares crater from $42.50 to $28.48 in two days of trading. Largest single-week decline since 2024 accounting scandal.",
+          "significance": "high",
+          "sentiment": "negative"
+        },
+        {
+          "source": "Nvidia",
+          "headline": "Nvidia emphasizes strict compliance with export laws",
+          "summary": "\"Unlawful diversion of controlled U.S. computers to China is a losing proposition. Nvidia does not provide any service or support for such systems.\"",
+          "significance": "medium",
+          "sentiment": "negative"
+        }
+      ]
+    },
+    {
+      "date": "2026-03-25",
+      "label": "Mar 25",
+      "events": [
+        {
+          "source": "Reuters",
+          "headline": "Super Micro sued by shareholders over China-related criminal case against co-founder",
+          "summary": "Securities fraud class action filed. Shareholders allege company failed to disclose material risks related to export control violations.",
+          "significance": "high",
+          "sentiment": "negative"
+        },
+        {
+          "source": "GuruFocus",
+          "headline": "Why Super Micro stock popped on Wednesday",
+          "summary": "Brief relief rally of 6% on bargain hunting before lawsuit news emerged. Gains reversed by close.",
+          "significance": "low",
+          "sentiment": "positive"
+        }
+      ]
+    },
+    {
+      "date": "2026-03-26",
+      "label": "Mar 26",
+      "events": [
+        {
+          "source": "Bloomberg",
+          "headline": "Chip Security Bill advances in House after Super Micro case",
+          "summary": "Bipartisan legislation to strengthen AI chip export controls fast-tracked following SMCI indictment. New compliance requirements for server manufacturers.",
+          "significance": "medium",
+          "sentiment": "negative"
+        },
+        {
+          "source": "Barron's",
+          "headline": "Super Micro faces a securities fraud lawsuit. The stock is falling.",
+          "summary": "SMCI down another 5.3% as class action lawsuit details emerge. Analysts downgrade price targets.",
+          "significance": "high",
+          "sentiment": "negative"
+        },
+        {
+          "source": "Schaeffer's Research",
+          "headline": "AI stock suffers more losses as legal woes resume",
+          "summary": "Options market pricing in continued downside. Put/call ratio at 2.1, highest since November 2024.",
+          "significance": "medium",
+          "sentiment": "negative"
+        }
+      ]
+    },
+    {
+      "date": "2026-03-27",
+      "label": "Mar 27",
+      "events": [
+        {
+          "source": "Reuters",
+          "headline": "Chinese universities with military links bought Super Micro servers with restricted AI chips",
+          "summary": "Investigation reveals scope of diversion extended to Chinese military-affiliated institutions. DOJ considering additional charges.",
+          "significance": "high",
+          "sentiment": "negative"
+        }
+      ]
+    }
+  ]
+}

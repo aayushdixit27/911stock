@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import { NewsTimeline } from "@/components/NewsTimeline";
 
 type Sensitivity = "major_only" | "all_news" | "act_auto";
 
@@ -79,6 +80,12 @@ export default function Home() {
   const [selectedSignal, setSelectedSignal] = useState<Signal | null>(SEED_SIGNALS[0]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [signalDetected, setSignalDetected] = useState(false);
+
+  const handleSignalDetected = useCallback(() => {
+    setSignalDetected(true);
+    setSelectedSignal(SEED_SIGNALS[0]);
+  }, []);
 
   function addTicker() {
     const t = input.trim().toUpperCase();
@@ -331,124 +338,12 @@ export default function Home() {
             </div>
           </div>
 
-          {/* RIGHT: Signal Feed */}
+          {/* RIGHT: News Timeline */}
           <div style={{ background: "var(--paper)", padding: "32px 28px" }}>
             <div className="mark-eyebrow" style={{ marginBottom: 28 }}>
-              signal feed
+              news timeline
             </div>
-
-            {signals.map((sig, i) => {
-              const isSelected = selectedSignal?.ticker === sig.ticker && selectedSignal?.headline === sig.headline;
-              return (
-                <div key={i}>
-                  <div
-                    onClick={() => setSelectedSignal(sig)}
-                    style={{
-                      padding: "16px 0",
-                      cursor: "pointer",
-                      transition: "opacity 0.2s",
-                      opacity: isSelected ? 1 : 0.6,
-                    }}
-                  >
-                    <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 6 }}>
-                      {/* Significance dot */}
-                      <div
-                        style={{
-                          width: 8,
-                          height: 8,
-                          borderRadius: "50%",
-                          background: sigColor[sig.significance],
-                          flexShrink: 0,
-                          animation: sig.significance === "high" ? "joint-pulse 1.5s ease-in-out infinite" : "none",
-                        }}
-                      />
-                      <span
-                        style={{
-                          fontFamily: "var(--font-display)",
-                          fontSize: 18,
-                          letterSpacing: "-0.02em",
-                          color: "var(--ink)",
-                        }}
-                      >
-                        {sig.ticker}
-                      </span>
-                      <span
-                        style={{
-                          fontFamily: "var(--font-mono)",
-                          fontSize: 11,
-                          letterSpacing: "0.15em",
-                          color: "var(--ink-30)",
-                          marginLeft: "auto",
-                        }}
-                      >
-                        {sig.date}
-                      </span>
-                    </div>
-                    <p
-                      style={{
-                        fontFamily: "var(--font-body)",
-                        fontWeight: 400,
-                        fontSize: 14,
-                        color: "var(--ink-60)",
-                        lineHeight: 1.6,
-                        paddingLeft: 18,
-                      }}
-                    >
-                      {sig.headline}
-                    </p>
-                    <span
-                      style={{
-                        fontFamily: "var(--font-mono)",
-                        fontSize: 10,
-                        letterSpacing: "0.25em",
-                        textTransform: "uppercase" as const,
-                        color: sigColor[sig.significance],
-                        paddingLeft: 18,
-                        display: "block",
-                        marginTop: 4,
-                      }}
-                    >
-                      {sig.significance}
-                    </span>
-                  </div>
-                  {i < signals.length - 1 && (
-                    <div style={{ height: 1, background: "var(--ink-10)" }} />
-                  )}
-                </div>
-              );
-            })}
-
-            {/* No signals for TSLA */}
-            {watchlist.some((w) => !signals.find((s) => s.ticker === w.ticker)) && (
-              <div style={{ padding: "16px 0", opacity: 0.35 }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                  <div
-                    style={{ width: 8, height: 8, borderRadius: "50%", background: "var(--ink-10)" }}
-                  />
-                  <span
-                    style={{
-                      fontFamily: "var(--font-display)",
-                      fontSize: 18,
-                      letterSpacing: "-0.02em",
-                      color: "var(--ink)",
-                    }}
-                  >
-                    {watchlist.filter((w) => !signals.find((s) => s.ticker === w.ticker)).map((w) => w.ticker).join(", ")}
-                  </span>
-                </div>
-                <p
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: 12,
-                    color: "var(--ink-30)",
-                    paddingLeft: 18,
-                    marginTop: 4,
-                  }}
-                >
-                  no recent signals
-                </p>
-              </div>
-            )}
+            <NewsTimeline onSignalDetected={handleSignalDetected} />
           </div>
         </div>
 
@@ -456,7 +351,7 @@ export default function Home() {
         <div style={{ marginBottom: 1 }}>
           <button
             onClick={handleCallAI}
-            disabled={loading || !selectedSignal}
+            disabled={loading || !signalDetected}
             className="mark-fire"
             style={{
               width: "100%",
@@ -469,8 +364,8 @@ export default function Home() {
               textTransform: "uppercase" as const,
               padding: "28px 0",
               borderRadius: 0,
-              cursor: loading || !selectedSignal ? "not-allowed" : "pointer",
-              opacity: loading || !selectedSignal ? 0.5 : 1,
+              cursor: loading || !signalDetected ? "not-allowed" : "pointer",
+              opacity: loading || !signalDetected ? 0.5 : 1,
               transition: "opacity 0.3s",
               position: "relative",
               zIndex: 1,
@@ -481,9 +376,9 @@ export default function Home() {
                 <span className="mark-spinner" />
                 connecting to agent...
               </span>
-            ) : selectedSignal
+            ) : signalDetected && selectedSignal
               ? `call ai — discuss ${selectedSignal.ticker} signal`
-              : "select a signal above"}
+              : "play timeline to detect signals"}
           </button>
           {error && (
             <p
