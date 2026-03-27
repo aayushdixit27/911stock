@@ -185,8 +185,9 @@ insider_df = ticker.insider_transactions  # Done. DataFrame.
 | **Ghost** | Real Postgres DB: watchlists, signals, patterns, learnings, alerts | — | $1,998 + $500/member |
 | **Overmind** | Agent supervision, traces, policy compliance (or screenshot) | — | $651 |
 | **Airbyte** | — | Narrative only ("data pipeline") | $1,000 |
+| **TrueFoundry** | Agent audit trail (or screenshot) | — | $600 |
 
-**Key change:** Ghost DB (ghost.build) replaces both Aerospike AND Ghost CMS. One real Postgres DB instead of two fakes. Biggest single cash prize.
+**Key change:** Ghost DB (ghost.build) replaces both Aerospike AND Ghost CMS. One real Postgres DB instead of two fakes. Biggest single cash prize. TrueFoundry added as 6th sponsor per judge request.
 
 ### Prize Tracks
 - Ghost ($1,998 + $500/member Visa gift card) — **biggest cash prize, real integration**
@@ -196,7 +197,7 @@ insider_df = ticker.insider_transactions  # Done. DataFrame.
 - Bland ($500 "Most Ab-Norm-al")
 - **Total potential: up to $5,899+**
 
-### Build Status (as of ~1:30 PM)
+### Build Status (as of ~4:00 PM)
 
 | Chunk | Status | What Was Built |
 |---|---|---|
@@ -209,8 +210,26 @@ insider_df = ticker.insider_transactions  # Done. DataFrame.
 | NEW: News Timeline | DONE | 6 days of real SMCI news (DOJ, Reuters, Bloomberg), play/pause slideshow, auto-trigger on signal |
 | NEW: Trade Execution | DONE | Portfolio positions, /api/execute-trade, live trade confirmation on resolution page |
 | NEW: Live Prices | DONE | Stock prices update per day as timeline plays (SMCI $42.50→$28.48→$24.10) |
+| NEW: Verified Sources | DONE | Ink panel with SEC Form 4, DOJ press release, Reuters — clickable links, preemptive trust |
+| NEW: Smart Call Agent | DONE | Bland cites sources ("According to DOJ..."), personal position ($42,500), handles "hold on" gracefully |
+| NEW: Auth0 Login | DONE | Auth0 middleware + login flow, CIBA Guardian push notifications |
+| NEW: Ghost DB (real) | DONE | Real Postgres via TigerData — DATABASE_URL connected, portfolio + trades + signals tables |
+| NEW: Custom Voice | DONE | Custom Bland voice ID for 911Stock agent |
+| FIX: Mar 19 skip | DONE | Timeline was skipping Mar 19 due to stale closure — rewrote with refs |
+| FIX: Tailwind/CSS | DONE | Removed duplicate CSS classes, fixed Turbopack resolution |
+| FIX: Auth0 middleware | DONE | proxy.ts + middleware.ts at project root for Auth0 SDK v4 |
 
-**Design:** MARK philosophy — Inter + JetBrains Mono + DM Serif Display, fire gradient, ink/paper ground, terracotta accents
+**Design:** MARK → Crimson Pro + Inter + IBM Plex Mono, fire gradient, ink/paper ground, terracotta accents
+
+**Judge Feedback Applied:**
+- "How do you know?" → Agent cites DOJ, Reuters, SEC Form 4 before being asked
+- "Sounds like a scam" → Auth0 CIBA human-in-the-loop, sources panel on dashboard
+- "I'd want to verify" → Agent handles "hold on" gracefully, stays on line
+- "What about my specific holdings?" → Call references your exact position and dollar amount
+- "Tiered pricing" → Free until first call, then monthly (narrative)
+- "Social proof" → TrueFoundry audit trail for transparency
+
+**Env vars configured:** Bland, Auth0 (domain, client, secret, audience, user sub), Overmind, TrueFoundry, Gemini, Ghost DB (DATABASE_URL + ID), AUTH0_SECRET, APP_BASE_URL
 
 ### Build Plan (2-person split — see plan.md for full chunk details)
 
