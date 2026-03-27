@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
 
     const { authReqId } = await initiateCIBA(
       userId,
-      `Approve: reduce ${ticker} position by 50%`
+      `Approve: reduce ${ticker} position by half`
     );
 
     setCIBAReqId(authReqId);
