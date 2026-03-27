@@ -173,7 +173,50 @@ CREATE TABLE alerts (
   plain_english TEXT,
   delivered_at TIMESTAMPTZ DEFAULT NOW()
 );
+
+-- Portfolio positions (agent reads AND writes this — trade execution demo)
+CREATE TABLE portfolio (
+  id SERIAL PRIMARY KEY,
+  user_name TEXT NOT NULL,
+  ticker TEXT NOT NULL,
+  shares INT NOT NULL,
+  avg_cost FLOAT NOT NULL,
+  current_price FLOAT,
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+INSERT INTO portfolio (user_name, ticker, shares, avg_cost, current_price) VALUES
+  ('Demo User', 'SMCI', 1000, 38.20, 42.50),
+  ('Demo User', 'TSLA', 200, 245.00, 285.20),
+  ('Demo User', 'NVDA', 500, 128.50, 142.80);
+
+-- Trade history (agent logs every trade it executes)
+CREATE TABLE trades (
+  id SERIAL PRIMARY KEY,
+  user_name TEXT NOT NULL,
+  ticker TEXT NOT NULL,
+  action TEXT NOT NULL, -- 'SELL' or 'BUY'
+  shares INT NOT NULL,
+  price FLOAT NOT NULL,
+  total_value FLOAT NOT NULL,
+  reason TEXT,
+  signal_id INT,
+  approved_via TEXT, -- 'auth0_ciba', 'manual', 'auto'
+  executed_at TIMESTAMPTZ DEFAULT NOW()
+);
 ```
+
+### Trade Execution Flow (Option 3 — Ghost DB writes)
+
+When the user approves via Auth0 CIBA:
+1. Agent queries `portfolio` table: `SELECT * FROM portfolio WHERE ticker = 'SMCI'`
+2. Calculates 50% reduction: 1,000 → 500 shares
+3. Writes trade: `INSERT INTO trades (user_name, ticker, action, shares, price, total_value, reason, approved_via)`
+4. Updates position: `UPDATE portfolio SET shares = 500, updated_at = NOW() WHERE ticker = 'SMCI'`
+5. Resolution page queries Ghost DB live: shows before/after position, trade confirmation, order ID
+
+This is **real** in the context engineering sense — the agent modifies its own database.
+No external brokerage API needed. Ghost DB IS the source of truth.
 
 ---
 

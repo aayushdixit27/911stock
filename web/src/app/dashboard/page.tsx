@@ -57,6 +57,21 @@ export default function Dashboard() {
                 : s
             )
           );
+          // Execute trade before redirecting
+          try {
+            await fetch("/api/execute-trade", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                ticker: "SMCI",
+                reductionPct: 50,
+                reason: "CEO unscheduled insider sale — HIGH significance",
+                approvedVia: "auth0_ciba",
+              }),
+            });
+          } catch {
+            // Trade execution is best-effort, redirect anyway
+          }
           setTimeout(() => router.push("/resolution"), 1200);
         } else if (data.status === "denied") {
           clearInterval(pollRef.current!);

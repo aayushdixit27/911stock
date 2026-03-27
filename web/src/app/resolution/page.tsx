@@ -1,14 +1,29 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-const TRADE_DETAILS = [
-  { label: "trigger", value: "CEO sold $2.1M (Mar 19)" },
-  { label: "pattern", value: "3 similar events — avg −12%" },
-  { label: "action", value: "Sold 500 shares @ $42.50" },
-  { label: "approval", value: "Auth0 CIBA", highlight: true },
-];
+type Trade = {
+  id: string;
+  ticker: string;
+  action: string;
+  shares: number;
+  price: number;
+  totalValue: number;
+  reason: string;
+  approvedVia: string;
+  executedAt: string;
+  beforeShares: number;
+  afterShares: number;
+};
+
+type Position = {
+  ticker: string;
+  companyName: string;
+  shares: number;
+  avgCost: number;
+  currentPrice: number;
+};
 
 const OVERMIND_TRACE = [
   "Signal detected: HIGH significance (SMCI CEO sell)",
@@ -20,6 +35,18 @@ export default function Resolution() {
   const router = useRouter();
   const [calling, setCalling] = useState(false);
   const [callStatus, setCallStatus] = useState<"idle" | "calling" | "done" | "error">("idle");
+  const [trade, setTrade] = useState<Trade | null>(null);
+  const [positions, setPositions] = useState<Position[]>([]);
+
+  useEffect(() => {
+    fetch("/api/portfolio")
+      .then((r) => r.json())
+      .then((data) => {
+        setTrade(data.lastTrade);
+        setPositions(data.positions);
+      })
+      .catch(() => {});
+  }, []);
 
   async function handleCallMe() {
     setCalling(true);
@@ -34,6 +61,10 @@ export default function Resolution() {
       setCalling(false);
     }
   }
+
+  const estSavings = trade
+    ? (trade.shares * trade.price * 0.12).toFixed(0)
+    : "2,550";
 
   return (
     <main style={{ minHeight: "100vh", background: "var(--white)" }}>
@@ -75,7 +106,7 @@ export default function Resolution() {
             color: "var(--ink-30)",
           }}
         >
-          action taken
+          trade executed
         </span>
       </nav>
 
@@ -89,7 +120,6 @@ export default function Resolution() {
           overflow: "hidden",
         }}
       >
-        {/* Fire glow */}
         <div
           style={{
             position: "absolute",
@@ -136,7 +166,7 @@ export default function Resolution() {
             marginBottom: 20,
           }}
         >
-          SMCI position{" "}
+          {trade ? `${trade.ticker} position` : "SMCI position"}{" "}
           <span style={{ color: "var(--orange)" }}>reduced by 50%</span>
         </h1>
 
@@ -151,7 +181,7 @@ export default function Resolution() {
             position: "relative",
           }}
         >
-          Est. savings: ~$2,550
+          Est. savings: ~${estSavings}
         </p>
 
         <p
@@ -168,7 +198,7 @@ export default function Resolution() {
         </p>
       </section>
 
-      {/* ── TWO-COLUMN: Trade Details + Overmind Trace ── */}
+      {/* ── TRADE CONFIRMATION + OVERMIND ── */}
       <div
         className="mark-grid-2"
         style={{
@@ -178,50 +208,90 @@ export default function Resolution() {
           background: "var(--ink-10)",
         }}
       >
-        {/* LEFT: Trade Details */}
+        {/* LEFT: Trade Confirmation */}
         <div style={{ background: "var(--white)", padding: "36px 28px" }}>
           <div className="mark-eyebrow" style={{ marginBottom: 28 }}>
-            trade details
+            trade confirmation
           </div>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
-            {TRADE_DETAILS.map((item, i) => (
-              <div key={i}>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "baseline",
-                    padding: "14px 0",
-                  }}
-                >
-                  <span
+          {trade ? (
+            <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
+              {[
+                { label: "order id", value: trade.id },
+                { label: "action", value: `${trade.action} ${trade.shares} shares` },
+                { label: "price", value: `$${trade.price.toFixed(2)} / share` },
+                { label: "total", value: `$${trade.totalValue.toLocaleString()}`, highlight: true },
+                { label: "before", value: `${trade.beforeShares} shares` },
+                { label: "after", value: `${trade.afterShares} shares` },
+                { label: "approval", value: trade.approvedVia === "auth0_ciba" ? "Auth0 CIBA" : trade.approvedVia },
+                { label: "executed", value: new Date(trade.executedAt).toLocaleTimeString() },
+              ].map((row, i, arr) => (
+                <div key={row.label}>
+                  <div
                     style={{
-                      fontFamily: "var(--font-mono)",
-                      fontSize: 12,
-                      letterSpacing: "0.15em",
-                      color: "var(--ink-30)",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "baseline",
+                      padding: "12px 0",
                     }}
                   >
-                    {item.label}
-                  </span>
-                  <span
-                    style={{
-                      fontFamily: "var(--font-body)",
-                      fontWeight: 500,
-                      fontSize: 14,
-                      color: item.highlight ? "var(--terra)" : "var(--ink)",
-                    }}
-                  >
-                    {item.value}
-                  </span>
+                    <span
+                      style={{
+                        fontFamily: "var(--font-mono)",
+                        fontSize: 12,
+                        letterSpacing: "0.15em",
+                        color: "var(--ink-30)",
+                      }}
+                    >
+                      {row.label}
+                    </span>
+                    <span
+                      style={{
+                        fontFamily: "var(--font-body)",
+                        fontWeight: row.highlight ? 600 : 500,
+                        fontSize: row.highlight ? 16 : 14,
+                        color: row.highlight ? "var(--orange)" : row.label === "approval" ? "var(--terra)" : "var(--ink)",
+                      }}
+                    >
+                      {row.value}
+                    </span>
+                  </div>
+                  {i < arr.length - 1 && (
+                    <div style={{ height: 1, background: "var(--ink-10)" }} />
+                  )}
                 </div>
-                {i < TRADE_DETAILS.length - 1 && (
-                  <div style={{ height: 1, background: "var(--ink-10)" }} />
-                )}
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : (
+            /* Fallback if no trade data */
+            <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
+              {[
+                { label: "trigger", value: "CEO sold $2.1M (Mar 19)" },
+                { label: "pattern", value: "3 similar events — avg −12%" },
+                { label: "action", value: "Sold 500 shares @ $42.50" },
+                { label: "approval", value: "Auth0 CIBA", highlight: true },
+              ].map((item, i, arr) => (
+                <div key={i}>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "baseline",
+                      padding: "12px 0",
+                    }}
+                  >
+                    <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, letterSpacing: "0.15em", color: "var(--ink-30)" }}>
+                      {item.label}
+                    </span>
+                    <span style={{ fontFamily: "var(--font-body)", fontWeight: 500, fontSize: 14, color: item.highlight ? "var(--terra)" : "var(--ink)" }}>
+                      {item.value}
+                    </span>
+                  </div>
+                  {i < arr.length - 1 && <div style={{ height: 1, background: "var(--ink-10)" }} />}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* RIGHT: Overmind Trace */}
@@ -233,7 +303,6 @@ export default function Resolution() {
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             {OVERMIND_TRACE.map((line, i) => (
               <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 12 }}>
-                {/* Ink dot — done state */}
                 <div
                   style={{
                     width: 8,
@@ -269,22 +338,8 @@ export default function Resolution() {
               gap: 8,
             }}
           >
-            <div
-              style={{
-                width: 6,
-                height: 6,
-                borderRadius: "50%",
-                background: "var(--terra)",
-              }}
-            />
-            <span
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: 12,
-                letterSpacing: "0.15em",
-                color: "var(--terra)",
-              }}
-            >
+            <div style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--terra)" }} />
+            <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, letterSpacing: "0.15em", color: "var(--terra)" }}>
               3 decisions — all within policy
             </span>
           </div>
@@ -310,26 +365,13 @@ export default function Resolution() {
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
             {[
               "Signal stored in signals table",
+              "Trade logged in trades table",
+              "Portfolio position updated",
               "Learning logged in agent_learnings",
-              "Alert recorded in alerts table",
             ].map((line, i) => (
               <div key={i} style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                <div
-                  style={{
-                    width: 6,
-                    height: 6,
-                    borderRadius: "50%",
-                    background: "var(--ink)",
-                    flexShrink: 0,
-                  }}
-                />
-                <span
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: 13,
-                    color: "var(--ink-60)",
-                  }}
-                >
+                <div style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--ink)", flexShrink: 0 }} />
+                <span style={{ fontFamily: "var(--font-mono)", fontSize: 13, color: "var(--ink-60)" }}>
                   {line}
                 </span>
               </div>
@@ -343,47 +385,43 @@ export default function Resolution() {
             still watching
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-            {[
-              { ticker: "TSLA", status: "no signals" },
-              { ticker: "NVDA", status: "no signals" },
-            ].map((item) => (
-              <div key={item.ticker} style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                <div
-                  style={{
-                    width: 5,
-                    height: 5,
-                    borderRadius: "50%",
-                    background: "var(--terra)",
-                    animation: "joint-pulse 2.5s ease-in-out infinite",
-                  }}
-                />
-                <span
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    fontSize: 18,
-                    letterSpacing: "-0.02em",
-                    color: "var(--ink)",
-                  }}
-                >
-                  {item.ticker}
-                </span>
-                <span
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: 12,
-                    color: "var(--ink-30)",
-                    marginLeft: "auto",
-                  }}
-                >
-                  {item.status}
-                </span>
-              </div>
-            ))}
+            {positions
+              .filter((p) => p.ticker !== "SMCI")
+              .map((p) => (
+                <div key={p.ticker} style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <div
+                    style={{
+                      width: 5,
+                      height: 5,
+                      borderRadius: "50%",
+                      background: "var(--terra)",
+                      animation: "joint-pulse 2.5s ease-in-out infinite",
+                    }}
+                  />
+                  <span style={{ fontFamily: "var(--font-display)", fontSize: 18, letterSpacing: "-0.02em", color: "var(--ink)" }}>
+                    {p.ticker}
+                  </span>
+                  <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--ink-30)", marginLeft: "auto" }}>
+                    {p.shares} shares — no signals
+                  </span>
+                </div>
+              ))}
+            {positions.length === 0 && (
+              <>
+                {["TSLA", "NVDA"].map((t) => (
+                  <div key={t} style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                    <div style={{ width: 5, height: 5, borderRadius: "50%", background: "var(--terra)", animation: "joint-pulse 2.5s ease-in-out infinite" }} />
+                    <span style={{ fontFamily: "var(--font-display)", fontSize: 18, letterSpacing: "-0.02em", color: "var(--ink)" }}>{t}</span>
+                    <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--ink-30)", marginLeft: "auto" }}>no signals</span>
+                  </div>
+                ))}
+              </>
+            )}
           </div>
         </div>
       </div>
 
-      {/* ── CALL 911STOCK — full width ── */}
+      {/* ── CALL 911STOCK ── */}
       <div style={{ padding: "48px 7vw", background: "var(--white)", borderTop: "1px solid var(--ink-10)" }}>
         <div className="mark-eyebrow" style={{ marginBottom: 20 }}>
           call 911stock — ask anything
@@ -451,14 +489,7 @@ export default function Resolution() {
           </button>
         </div>
 
-        <p
-          style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: 12,
-            color: "var(--ink-30)",
-            marginTop: 12,
-          }}
-        >
+        <p style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--ink-30)", marginTop: 12 }}>
           The agent will call your phone and answer questions about your stocks.
         </p>
       </div>
@@ -473,29 +504,12 @@ export default function Resolution() {
           borderTop: "1px solid var(--ink-10)",
         }}
       >
-        <span
-          style={{
-            fontFamily: "var(--font-body)",
-            fontWeight: 700,
-            fontSize: 11,
-            letterSpacing: "0.18em",
-            textTransform: "uppercase" as const,
-            color: "var(--ink-30)",
-          }}
-        >
+        <span style={{ fontFamily: "var(--font-body)", fontWeight: 700, fontSize: 11, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: "var(--ink-30)" }}>
           911stock
         </span>
         <div style={{ display: "flex", gap: "2rem" }}>
           {["bland ai", "ghost db", "auth0 ciba", "overmind"].map((t) => (
-            <span
-              key={t}
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: 10,
-                letterSpacing: "0.2em",
-                color: "var(--ink-30)",
-              }}
-            >
+            <span key={t} style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.2em", color: "var(--ink-30)" }}>
               {t}
             </span>
           ))}

@@ -1,0 +1,25 @@
+{
+  "positions": [
+    {
+      "ticker": "SMCI",
+      "companyName": "Super Micro Computer",
+      "shares": 1000,
+      "avgCost": 38.20,
+      "currentPrice": 42.50
+    },
+    {
+      "ticker": "TSLA",
+      "companyName": "Tesla",
+      "shares": 200,
+      "avgCost": 245.00,
+      "currentPrice": 285.20
+    },
+    {
+      "ticker": "NVDA",
+      "companyName": "NVIDIA",
+      "shares": 500,
+      "avgCost": 128.50,
+      "currentPrice": 142.80
+    }
+  ]
+}
