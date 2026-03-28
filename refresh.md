@@ -197,39 +197,53 @@ insider_df = ticker.insider_transactions  # Done. DataFrame.
 - Bland ($500 "Most Ab-Norm-al")
 - **Total potential: up to $5,899+**
 
-### Build Status (as of ~4:00 PM)
+### Build Status (as of ~5:00 PM)
 
 | Chunk | Status | What Was Built |
 |---|---|---|
 | A1: Setup | DONE | CTO scaffolded Next.js app |
 | A2: Watchlist | DONE | Two-column dashboard: watchlist + news timeline, add/remove stocks, sensitivity dropdowns |
 | A3: Dashboard | DONE | Pipeline steps, ink takeover agent analysis, phone ringing, Auth0 Guardian polling |
-| A4: Resolution | DONE | Ink hero, trade confirmation with live order ID, Overmind trace, Ghost DB status, still watching |
-| A5: Auth0 CIBA UX | DONE | Trade details card, shield icon, Guardian push notification flow |
+| A4: Resolution | DONE | Compact layout: trade confirmation + Overmind/Ghost merged, still watching inline |
+| A5: Auth0 CIBA UX | DONE | Trade details card, CIBA Guardian push, Vercel Edge middleware fix |
 | A6: Polish | DONE | Page transitions, loading spinners, focus states, responsive grids, hover states |
-| NEW: News Timeline | DONE | 6 days of real SMCI news (DOJ, Reuters, Bloomberg), play/pause slideshow, auto-trigger on signal |
+| NEW: News Timeline | DONE | Manual Next Day button, 6 days real SMCI news, auto-trigger call on Mar 19 |
 | NEW: Trade Execution | DONE | Portfolio positions, /api/execute-trade, live trade confirmation on resolution page |
 | NEW: Live Prices | DONE | Stock prices update per day as timeline plays (SMCI $42.50→$28.48→$24.10) |
-| NEW: Verified Sources | DONE | Ink panel with SEC Form 4, DOJ press release, Reuters — clickable links, preemptive trust |
-| NEW: Smart Call Agent | DONE | Bland cites sources ("According to DOJ..."), personal position ($42,500), handles "hold on" gracefully |
-| NEW: Auth0 Login | DONE | Auth0 middleware + login flow, CIBA Guardian push notifications |
-| NEW: Ghost DB (real) | DONE | Real Postgres via TigerData — DATABASE_URL connected, portfolio + trades + signals tables |
-| NEW: Custom Voice | DONE | Custom Bland voice ID for 911Stock agent |
-| FIX: Mar 19 skip | DONE | Timeline was skipping Mar 19 due to stale closure — rewrote with refs |
-| FIX: Tailwind/CSS | DONE | Removed duplicate CSS classes, fixed Turbopack resolution |
-| FIX: Auth0 middleware | DONE | proxy.ts + middleware.ts at project root for Auth0 SDK v4 |
+| NEW: Verified Sources | DONE | Ink panel with SEC Form 4, DOJ press release, Reuters — clickable links |
+| NEW: Smart Call Agent | DONE | Cites sources, personal position ($42,500), handles "hold on", custom voice |
+| NEW: Auth0 Login | DONE | Auth0 server-side session, CIBA Guardian push notifications |
+| NEW: Ghost DB (real) | DONE | Real Postgres via TigerData — DATABASE_URL connected |
+| NEW: Settings Page | DONE | CTO added /settings page |
+| NEW: EDGAR Integration | DONE | CTO built real SEC EDGAR Form 4 parsing in lib/edgar.ts |
+| NEW: DB Migrations | DONE | CTO added /api/migrate for Ghost DB schema |
+| FIX: Timeline skip | DONE | Rewrote reveal logic — plain setInterval, no stale closures |
+| FIX: Tailwind/CSS | DONE | Removed duplicate classes, fixed Turbopack resolution |
+| FIX: Vercel deploy | DONE | Auth0 can't run in Edge — middleware now passthrough, auth server-side |
+| FIX: Resolution layout | DONE | Tightened spacing, merged Overmind+Ghost, inline still watching |
 
 **Design:** MARK → Crimson Pro + Inter + IBM Plex Mono, fire gradient, ink/paper ground, terracotta accents
 
+**Demo Flow:**
+1. Show dashboard with SMCI, TSLA, NVDA watchlist
+2. Click "Start — Mar 18" → calm news, SMCI +4.2%
+3. Click "Next Day — Mar 19" → DOJ indictment, Reuters, Super Micro IR reveal
+4. All events shown → 2s pause → agent auto-calls CTO's phone
+5. Phone on speaker → agent cites DOJ, references your $42,500 position
+6. Say "Yes" → Auth0 CIBA → trade executes → resolution screen
+
 **Judge Feedback Applied:**
-- "How do you know?" → Agent cites DOJ, Reuters, SEC Form 4 before being asked
-- "Sounds like a scam" → Auth0 CIBA human-in-the-loop, sources panel on dashboard
+- "How do you know?" → Agent cites DOJ, Reuters, SEC Form 4 proactively + verified sources panel
+- "Sounds like a scam" → Auth0 CIBA human-in-the-loop, sources on dashboard
 - "I'd want to verify" → Agent handles "hold on" gracefully, stays on line
-- "What about my specific holdings?" → Call references your exact position and dollar amount
+- "What about my specific holdings?" → Call says "You hold 1,000 shares worth $42,500"
 - "Tiered pricing" → Free until first call, then monthly (narrative)
 - "Social proof" → TrueFoundry audit trail for transparency
+- "You should make a product" → Multiple judges gave green flags
 
-**Env vars configured:** Bland, Auth0 (domain, client, secret, audience, user sub), Overmind, TrueFoundry, Gemini, Ghost DB (DATABASE_URL + ID), AUTH0_SECRET, APP_BASE_URL
+**Next: Real-Time Mode** — polling SEC EDGAR + news APIs to detect signals live (not just simulated timeline)
+
+**Env vars configured:** Bland, Auth0 (domain, client, secret, audience, user sub, secret), Overmind, TrueFoundry, Gemini, Ghost DB (DATABASE_URL + ID), APP_BASE_URL
 
 ### Build Plan (2-person split — see plan.md for full chunk details)
 
