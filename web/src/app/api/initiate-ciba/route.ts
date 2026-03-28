@@ -1,27 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 import { initiateCIBA } from "@/lib/auth0-ciba";
 import { setCIBAReqId, setCIBAStatus } from "@/lib/state";
-import { auth0 } from "@/lib/auth0";
 
 // Called by the dashboard when entering the "awaiting approval" state.
-// Works even on localhost (no public webhook URL required).
+// Always targets AUTH0_USER_SUB — the Auth0 native user with Guardian enrolled.
+// Social logins (google-oauth2|...) cannot use Guardian push.
 export async function POST(req: NextRequest) {
   const body = await req.json().catch(() => ({}));
   const ticker = (body.ticker as string) ?? "SMCI";
 
   if (!process.env.AUTH0_DOMAIN || !process.env.AUTH0_CLIENT_ID) {
-    setCIBAStatus("approved");
-    return NextResponse.json({ status: "approved", mode: "woz" });
+    return NextResponse.json({ status: "no-config" });
   }
 
-  // Prefer logged-in session sub (from /settings login), fall back to env
-  const session = await auth0.getSession();
-  const userId = session?.user?.sub ?? process.env.AUTH0_USER_SUB;
-
-  if (!userId) {
-    setCIBAStatus("approved");
-    return NextResponse.json({ status: "approved", mode: "woz-no-sub" });
-  }
+  const userId = process.env.AUTH0_USER_SUB ?? "auth0|69c6e9fa2af7e5ac2f091ea3";
 
   console.log("CIBA: sending push to", userId);
 
@@ -36,7 +28,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ status: "pending", authReqId });
   } catch (err) {
     console.error("initiate-ciba error:", err);
-    setCIBAStatus("approved");
-    return NextResponse.json({ status: "approved", mode: "fallback", error: String(err) });
+    // Don't auto-approve — let the dashboard Approve button handle it
+    return NextResponse.json({ status: "no-guardian", error: String(err) });
   }
 }

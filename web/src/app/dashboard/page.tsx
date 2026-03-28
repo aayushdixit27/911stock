@@ -35,6 +35,8 @@ export default function Dashboard() {
   const [explanation, setExplanation] = useState<string | null>(null);
   const [callActive, setCallActive] = useState(false);
   const [awaitingApproval, setAwaitingApproval] = useState(false);
+  const [approved, setApproved] = useState(false);
+  const [approving, setApproving] = useState(false);
   const pollRef = useRef<NodeJS.Timeout | null>(null);
 
   async function startCIBAPolling() {
@@ -68,22 +70,8 @@ export default function Dashboard() {
                 : s
             )
           );
-          // Execute trade before redirecting
-          try {
-            await fetch("/api/execute-trade", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                ticker: "SMCI",
-                reductionPct: 50,
-                reason: "CEO unscheduled insider sale — HIGH significance",
-                approvedVia: "auth0_ciba",
-              }),
-            });
-          } catch {
-            // Trade execution is best-effort, redirect anyway
-          }
-          setTimeout(() => router.push("/resolution"), 1200);
+          setAwaitingApproval(false);
+          setApproved(true);
         } else if (data.status === "denied") {
           clearInterval(pollRef.current!);
           setAwaitingApproval(false);
@@ -316,18 +304,19 @@ export default function Dashboard() {
         {callActive && <PhoneRinging />}
 
         {/* ── AUTH0 CIBA — trade approval ── */}
-        {awaitingApproval && (
+        {(awaitingApproval || approved) && (
           <div style={{ marginBottom: "2rem" }}>
             <div className="mark-eyebrow" style={{ marginBottom: "1rem" }}>
-              Auth0 CIBA — Trade Approval Required
+              Auth0 CIBA — Trade Approval
             </div>
 
             <div className="mark-card" style={{ overflow: "hidden" }}>
-              {/* Terracotta accent line */}
               <div
                 style={{
                   height: "3px",
-                  background: "linear-gradient(to right, var(--terra), var(--terra-lt))",
+                  background: approved
+                    ? "linear-gradient(to right, #22c55e, #16a34a)"
+                    : "linear-gradient(to right, var(--terra), var(--terra-lt))",
                 }}
               />
 
@@ -346,13 +335,13 @@ export default function Dashboard() {
                     width: 10,
                     height: 10,
                     borderRadius: "50%",
-                    background: "var(--terra)",
-                    animation: "joint-pulse 1.5s ease-in-out infinite",
+                    background: approved ? "#22c55e" : "var(--terra)",
                     flexShrink: 0,
+                    ...(approved ? {} : { animation: "joint-pulse 1.5s ease-in-out infinite" }),
                   }}
                 />
                 <span style={{ fontWeight: 600, fontSize: "var(--text-base)", color: "var(--ink)" }}>
-                  Agent is requesting authorization
+                  {approved ? "Trade approved" : "Agent is requesting authorization"}
                 </span>
               </div>
 
@@ -385,14 +374,94 @@ export default function Dashboard() {
                 </div>
               </div>
 
-              {/* Status */}
+              {/* Status / Approve button */}
               <div style={{ padding: "1rem 1.5rem", display: "flex", alignItems: "center", gap: "0.75rem" }}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--terra)" strokeWidth="2">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                </svg>
-                <span style={{ fontSize: "var(--text-sm)", color: "var(--ink-50)", lineHeight: 1.5 }}>
-                  Push notification sent via Auth0 Guardian. Open the app and tap <strong style={{ fontWeight: 600, color: "var(--ink)" }}>Approve</strong>.
-                </span>
+                {approved ? (
+                  <>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2.5">
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                    <span style={{ fontSize: "var(--text-sm)", color: "var(--ink-50)", lineHeight: 1.5 }}>
+                      Approved via Auth0 Guardian. Executing trade.
+                    </span>
+                    <button
+                      onClick={() => router.push("/resolution")}
+                      style={{
+                        marginLeft: "auto",
+                        fontFamily: "var(--font-body)",
+                        fontWeight: 600,
+                        fontSize: "var(--text-xs)",
+                        letterSpacing: "0.06em",
+                        textTransform: "uppercase" as const,
+                        color: "var(--white)",
+                        background: "var(--ink)",
+                        border: "none",
+                        borderRadius: "4px",
+                        padding: "0.5rem 1rem",
+                        cursor: "pointer",
+                        flexShrink: 0,
+                      }}
+                    >
+                      View result →
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--terra)" strokeWidth="2">
+                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                    </svg>
+                    <span style={{ fontSize: "var(--text-sm)", color: "var(--ink-50)", lineHeight: 1.5, flex: 1 }}>
+                      Push sent via Auth0 Guardian — or approve here:
+                    </span>
+                    <button
+                      disabled={approving}
+                      onClick={async () => {
+                        setApproving(true);
+                        try {
+                          await fetch("/api/execute-trade", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({
+                              ticker: "SMCI",
+                              reductionPct: 50,
+                              reason: "CEO unscheduled insider sale — HIGH significance",
+                              approvedVia: "web_button",
+                            }),
+                          });
+                          setApproved(true);
+                          setAwaitingApproval(false);
+                          if (pollRef.current) clearInterval(pollRef.current);
+                          setSteps((prev) =>
+                            prev.map((s) =>
+                              s.key === "awaiting_ciba"
+                                ? { ...s, status: "done", detail: "Approved via web" }
+                                : s
+                            )
+                          );
+                        } finally {
+                          setApproving(false);
+                        }
+                      }}
+                      style={{
+                        fontFamily: "var(--font-body)",
+                        fontWeight: 700,
+                        fontSize: "var(--text-xs)",
+                        letterSpacing: "0.06em",
+                        textTransform: "uppercase" as const,
+                        color: "var(--white)",
+                        background: approving ? "var(--ink-30)" : "var(--orange)",
+                        border: "none",
+                        borderRadius: "4px",
+                        padding: "0.625rem 1.25rem",
+                        cursor: approving ? "not-allowed" : "pointer",
+                        flexShrink: 0,
+                        transition: "background 0.15s",
+                      }}
+                    >
+                      {approving ? "Approving..." : "Approve"}
+                    </button>
+                  </>
+                )}
               </div>
             </div>
           </div>

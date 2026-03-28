@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import timelineData from "@/data/news-timeline.json";
 
 type NewsEvent = {
@@ -36,9 +36,11 @@ const sigColor: Record<string, string> = {
 export function NewsTimeline({
   onSignalDetected,
   onPriceUpdate,
+  onDayChange,
 }: {
   onSignalDetected?: () => void;
   onPriceUpdate?: (prices: Record<string, PriceData>) => void;
+  onDayChange?: (dayIndex: number) => void;
 }) {
   const [currentDay, setCurrentDay] = useState(0);
   const [revealedEvents, setRevealedEvents] = useState(0);
@@ -69,7 +71,10 @@ export function NewsTimeline({
     if (d.prices && onPriceUpdate) {
       onPriceUpdate(d.prices);
     }
-  }, [currentDay, onPriceUpdate]);
+    if (onDayChange) {
+      onDayChange(currentDay);
+    }
+  }, [currentDay, onPriceUpdate, onDayChange]);
 
   // Fire signal when all Mar 19 events revealed
   useEffect(() => {

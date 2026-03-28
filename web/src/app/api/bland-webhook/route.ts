@@ -19,11 +19,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ status: "approved", mode: "woz" });
     }
 
-    const userId = process.env.AUTH0_USER_SUB!;
-    if (!userId) {
-      setCIBAStatus("approved");
-      return NextResponse.json({ status: "approved", mode: "woz-no-sub" });
-    }
+    const userId = process.env.AUTH0_USER_SUB ?? "auth0|69c6e9fa2af7e5ac2f091ea3";
 
     const { authReqId } = await initiateCIBA(
       userId,

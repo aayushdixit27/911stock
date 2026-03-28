@@ -86,10 +86,49 @@ export default function PageClient({ userId }: { userId: string }) {
     setLivePrices((prev) => ({ ...prev, ...prices }));
   }, []);
 
+  // Fetch prices for all watchlist tickers when day changes
+  const handleDayChange = useCallback(async (dayIndex: number) => {
+    // Fetch prices for all tickers in watchlist
+    const tickers = watchlist.map((w) => w.ticker);
+    const results = await Promise.all(
+      tickers.map(async (ticker) => {
+        try {
+          const res = await fetch(`/api/stock-quote?ticker=${ticker}`);
+          if (res.ok) {
+            const data = await res.json();
+            if (data.price) {
+              return {
+                ticker,
+                price: data.price,
+                change: data.change,
+                changePct: data.changePct,
+              };
+            }
+          }
+        } catch (err) {
+          console.error(`Failed to fetch price for ${ticker}:`, err);
+        }
+        return null;
+      })
+    );
+
+    // Update prices for successfully fetched tickers
+    const newPrices: Record<string, { price: number; change: number; changePct: number }> = {};
+    for (const result of results) {
+      if (result) {
+        newPrices[result.ticker] = {
+          price: result.price,
+          change: result.change,
+          changePct: result.changePct,
+        };
+      }
+    }
+    setLivePrices((prev) => ({ ...prev, ...newPrices }));
+  }, [watchlist]);
+
   const handleSignalDetected = useCallback(async () => {
     setSignalDetected(true);
     setSelectedSignal(SEED_SIGNALS[0]);
-    // Auto-trigger the pipeline — no button click needed
     setLoading(true);
     setError(null);
     try {
@@ -433,7 +472,7 @@ export default function PageClient({ userId }: { userId: string }) {
             <div className="mark-eyebrow" style={{ marginBottom: "1.25rem" }}>
               News Timeline
             </div>
-            <NewsTimeline onSignalDetected={handleSignalDetected} onPriceUpdate={handlePriceUpdate} />
+            <NewsTimeline onSignalDetected={handleSignalDetected} onPriceUpdate={handlePriceUpdate} onDayChange={handleDayChange} />
           </div>
         </div>
 
