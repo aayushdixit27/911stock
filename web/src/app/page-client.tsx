@@ -2,8 +2,8 @@
 
 import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { signOut } from "next-auth/react";
 import { NewsTimeline } from "@/components/NewsTimeline";
+import Nav from "@/components/Nav";
 
 type Sensitivity = "major_only" | "all_news" | "act_auto";
 
@@ -212,10 +212,6 @@ export default function PageClient({ user }: { user: User }) {
     }
   }
 
-  async function handleLogout() {
-    await signOut({ callbackUrl: "/auth/login" });
-  }
-
   const sigColor: Record<Signal["significance"], string> = {
     high: "var(--orange)",
     medium: "var(--terra)",
@@ -225,96 +221,7 @@ export default function PageClient({ user }: { user: User }) {
   return (
     <main style={{ minHeight: "100vh", background: "var(--white)" }}>
       {/* ── NAV ── */}
-      <nav
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          right: 0,
-          zIndex: 500,
-          padding: "1rem 5vw",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          background: "rgba(255,255,255,0.95)",
-          backdropFilter: "blur(12px)",
-          borderBottom: "1px solid var(--ink-08)",
-        }}
-      >
-        <span
-          style={{
-            fontFamily: "var(--font-display)",
-            fontWeight: 500,
-            fontSize: "1.25rem",
-            fontStyle: "italic",
-            color: "var(--orange)",
-          }}
-        >
-          911stock
-        </span>
-        <span style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
-          {/* User Email */}
-          <span
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: "var(--text-sm)",
-              color: "var(--ink-50)",
-              maxWidth: "200px",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-            }}
-          >
-            {user.email}
-          </span>
-          
-          <span
-            style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: "var(--text-xs)",
-              fontWeight: 500,
-              letterSpacing: "0.05em",
-              color: "var(--ink-30)",
-              padding: "0.375rem 0.75rem",
-              background: "var(--paper)",
-              borderRadius: "4px",
-            }}
-          >
-            Deep Agents Hackathon 2026
-          </span>
-          <a
-            href="/settings"
-            style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: "var(--text-xs)",
-              fontWeight: 500,
-              color: "var(--ink-30)",
-              padding: "0.375rem 0.75rem",
-              border: "1px solid var(--ink-08)",
-              borderRadius: "4px",
-              textDecoration: "none",
-            }}
-          >
-            Settings
-          </a>
-          <button
-            onClick={handleLogout}
-            style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: "var(--text-xs)",
-              fontWeight: 500,
-              color: "var(--orange)",
-              padding: "0.375rem 0.75rem",
-              border: "1px solid var(--orange-lt)",
-              borderRadius: "4px",
-              background: "transparent",
-              cursor: "pointer",
-            }}
-          >
-            Logout
-          </button>
-        </span>
-      </nav>
+      <Nav user={user} />
 
       {/* ── DASHBOARD BODY ── */}
       <div style={{ padding: "5rem 5vw 2.5rem" }}>
