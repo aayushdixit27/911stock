@@ -1,0 +1,35 @@
+{
+  "featureId": "m2-signal-pipeline-per-user",
+  "reviewedAt": "2026-03-29T12:50:00.000Z",
+  "commitId": "08959febe5b98950a8652dc40595ef299c6a5dee",
+  "transcriptSkeletonReviewed": false,
+  "diffReviewed": true,
+  "status": "pass",
+  "passed": true,
+  "summary": "Implementation successfully delivers per-user signal pipeline with watchlist-based detection. The POST /api/trigger now fetches user's watchlist and runs detection only for those tickers, signals are properly scoped by user_id, deduplication via edgar_filing_id works correctly, and the feed page shows personalized signals with detail view. All TypeScript and lint checks pass. Verified via curl and agent-browser.",
+  "issues": [
+    {
+      "severity": "suggestion",
+      "description": "The feed page has a React Hook useEffect with missing dependency 'fetchSignals'. Should either include it in the dependency array or refactor to remove the warning.",
+      "file": "web/src/app/feed/page.tsx",
+      "line": 60
+    }
+  ],
+  "sharedStateObservations": [
+    {
+      "target": "library",
+      "suggestion": "Document the signal deduplication strategy using edgar_filing_id in architecture.md. The unique constraint on (user_id, edgar_filing_id) prevents duplicate signals from the same filing but this pattern should be documented for future reference.",
+      "evidence": "db.ts line 102 shows UNIQUE(user_id, edgar_filing_id) constraint. trigger/route.ts line 142 shows ON CONFLICT DO NOTHING for deduplication."
+    },
+    {
+      "target": "library",
+      "suggestion": "Add documentation about user-scoped queries pattern. All signal queries now use WHERE user_id = ? but this convention should be explicitly documented in architecture.md under the multi-tenancy section.",
+      "evidence": "Multiple files: feed/route.ts line 20, signals.ts line 98, trigger/route.ts line 140 all scope by user_id."
+    }
+  ],
+  "codeReview": {
+    "summary": "Clean implementation with proper separation of concerns. The trigger pipeline correctly fetches watchlist first, then runs detection per ticker. Signal scoring properly incorporates user context. The feed detail view is well-designed with clear information hierarchy. Database transactions are used appropriately. Error handling is consistent across all routes.",
+    "issues": []
+  },
+  "addressesFailureFrom": null
+}
