@@ -94,9 +94,101 @@ export async function migrate(): Promise<void> {
   if (!sql) throw new Error("DATABASE_URL not set");
   if (_migrated) return;
 
+  // ── Auth Tables (for NextAuth.js) ───────────────────────────────────────────
+
+  // Users table - core user data
+  await sql`
+    CREATE TABLE IF NOT EXISTS users (
+      id              TEXT PRIMARY KEY,
+      name            TEXT,
+      email           TEXT UNIQUE,
+      email_verified  TIMESTAMPTZ,
+      image           TEXT,
+      password_hash   TEXT,
+      tier            TEXT NOT NULL DEFAULT 'free',
+      created_at      TIMESTAMPTZ NOT NULL DEFAULT now()
+    )
+  `;
+
+  // Accounts table - for OAuth providers
+  await sql`
+    CREATE TABLE IF NOT EXISTS accounts (
+      id                    TEXT PRIMARY KEY,
+      user_id               TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      type                  TEXT NOT NULL,
+      provider              TEXT NOT NULL,
+      provider_account_id   TEXT NOT NULL,
+      refresh_token         TEXT,
+      access_token          TEXT,
+      expires_at            BIGINT,
+      id_token              TEXT,
+      scope                 TEXT,
+      session_state         TEXT,
+      token_type            TEXT
+    )
+  `;
+
+  await sql`
+    CREATE UNIQUE INDEX IF NOT EXISTS accounts_provider_account_idx 
+    ON accounts(provider, provider_account_id)
+  `;
+
+  // Sessions table - for database session strategy
+  await sql`
+    CREATE TABLE IF NOT EXISTS sessions (
+      id            TEXT PRIMARY KEY,
+      user_id       TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      session_token TEXT NOT NULL UNIQUE,
+      expires       TIMESTAMPTZ NOT NULL
+    )
+  `;
+
+  // Verification tokens table - for email verification
+  await sql`
+    CREATE TABLE IF NOT EXISTS verification_tokens (
+      identifier  TEXT NOT NULL,
+      token       TEXT NOT NULL,
+      expires     TIMESTAMPTZ NOT NULL,
+      PRIMARY KEY (identifier, token)
+    )
+  `;
+
+  // ── Application Tables ─────────────────────────────────────────────────────
+
+  // Add user_id columns to existing tables (migration for multi-tenancy)
+  await sql`
+    ALTER TABLE signals ADD COLUMN IF NOT EXISTS user_id TEXT NOT NULL DEFAULT ''
+  `;
+
+  await sql`
+    ALTER TABLE alerts ADD COLUMN IF NOT EXISTS user_id TEXT NOT NULL DEFAULT ''
+  `;
+
+  await sql`
+    ALTER TABLE agent_learnings ADD COLUMN IF NOT EXISTS user_id TEXT NOT NULL DEFAULT ''
+  `;
+
+  await sql`
+    ALTER TABLE trades ADD COLUMN IF NOT EXISTS user_id TEXT NOT NULL DEFAULT ''
+  `;
+
+  await sql`
+    ALTER TABLE portfolio ADD COLUMN IF NOT EXISTS user_id TEXT NOT NULL DEFAULT ''
+  `;
+
+  // Change portfolio primary key to include user_id
+  await sql`
+    ALTER TABLE portfolio DROP CONSTRAINT IF EXISTS portfolio_pkey
+  `;
+  
+  await sql`
+    ALTER TABLE portfolio ADD PRIMARY KEY (user_id, ticker)
+  `;
+
   await sql`
     CREATE TABLE IF NOT EXISTS signals (
       id                          TEXT PRIMARY KEY,
+      user_id                     TEXT NOT NULL DEFAULT '',
       ticker                      TEXT NOT NULL,
       company_name                TEXT NOT NULL,
       insider                     TEXT NOT NULL,
@@ -118,8 +210,13 @@ export async function migrate(): Promise<void> {
   `;
 
   await sql`
+    CREATE INDEX IF NOT EXISTS signals_user_id_idx ON signals(user_id)
+  `;
+
+  await sql`
     CREATE TABLE IF NOT EXISTS alerts (
       id          TEXT PRIMARY KEY,
+      user_id     TEXT NOT NULL DEFAULT '',
       signal_id   TEXT NOT NULL REFERENCES signals(id),
       ticker      TEXT NOT NULL,
       call_id     TEXT,
@@ -129,8 +226,13 @@ export async function migrate(): Promise<void> {
   `;
 
   await sql`
+    CREATE INDEX IF NOT EXISTS alerts_user_id_idx ON alerts(user_id)
+  `;
+
+  await sql`
     CREATE TABLE IF NOT EXISTS agent_learnings (
       id                   TEXT PRIMARY KEY,
+      user_id              TEXT NOT NULL DEFAULT '',
       signal_id            TEXT NOT NULL REFERENCES signals(id),
       ticker               TEXT NOT NULL,
       pattern_match_count  INTEGER NOT NULL DEFAULT 0,
@@ -143,8 +245,13 @@ export async function migrate(): Promise<void> {
   `;
 
   await sql`
+    CREATE INDEX IF NOT EXISTS agent_learnings_user_id_idx ON agent_learnings(user_id)
+  `;
+
+  await sql`
     CREATE TABLE IF NOT EXISTS trades (
       id               TEXT PRIMARY KEY,
+      user_id          TEXT NOT NULL DEFAULT '',
       signal_id        TEXT REFERENCES signals(id),
       ticker           TEXT NOT NULL,
       action           TEXT NOT NULL,
@@ -161,6 +268,10 @@ export async function migrate(): Promise<void> {
   `;
 
   await sql`
+    CREATE INDEX IF NOT EXISTS trades_user_id_idx ON trades(user_id)
+  `;
+
+  await sql`
     CREATE UNIQUE INDEX IF NOT EXISTS trades_signal_id_unique
     ON trades(signal_id)
     WHERE signal_id IS NOT NULL
@@ -168,22 +279,28 @@ export async function migrate(): Promise<void> {
 
   await sql`
     CREATE TABLE IF NOT EXISTS portfolio (
-      ticker      TEXT PRIMARY KEY,
+      user_id     TEXT NOT NULL DEFAULT '',
+      ticker      TEXT NOT NULL,
       shares      INTEGER NOT NULL,
       avg_cost    NUMERIC NOT NULL DEFAULT 0,
-      updated_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+      updated_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
+      PRIMARY KEY (user_id, ticker)
     )
   `;
 
-  // Seed the SMCI demo signal
+  await sql`
+    CREATE INDEX IF NOT EXISTS portfolio_user_id_idx ON portfolio(user_id)
+  `;
+
+  // Seed the SMCI demo signal (with empty user_id for backward compatibility)
   await sql`
     INSERT INTO signals
-      (id, ticker, company_name, insider, role, action, shares,
+      (id, user_id, ticker, company_name, insider, role, action, shares,
        price_per_share, total_value, date, filed_at,
        scheduled_10b5_1, last_transaction_months_ago,
        position_reduced_pct, score, explanation, alerted)
     VALUES
-      ('smci-ceo-sell-20260319', 'SMCI', 'Super Micro Computer',
+      ('smci-ceo-sell-20260319', '', 'SMCI', 'Super Micro Computer',
        'Charles Liang', 'CEO', 'SELL', 50000, 42.50, 2125000,
        '2026-03-19', '2026-03-19T16:30:00Z',
        false, 14, 18, 10, null, false)
@@ -191,12 +308,12 @@ export async function migrate(): Promise<void> {
   `;
 
   await sql`
-    INSERT INTO portfolio (ticker, shares, avg_cost)
+    INSERT INTO portfolio (user_id, ticker, shares, avg_cost)
     VALUES
-      ('SMCI', 1000, 42.50),
-      ('TSLA', 500, 285.20),
-      ('NVDA', 200, 142.80)
-    ON CONFLICT (ticker) DO NOTHING
+      ('', 'SMCI', 1000, 42.50),
+      ('', 'TSLA', 500, 285.20),
+      ('', 'NVDA', 200, 142.80)
+    ON CONFLICT (user_id, ticker) DO NOTHING
   `;
 
   _migrated = true;

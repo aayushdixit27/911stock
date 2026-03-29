@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@ai-sdk/google": "^3.0.53",
+    "@auth/pg-adapter": "^1.11.1",
     "@auth0/ai": "^6.0.0",
     "@auth0/ai-vercel": "^5.1.0",
     "@auth0/nextjs-auth0": "^4.16.1",
@@ -17,7 +18,10 @@
     "aerospike": "^6.6.1",
     "ai": "^6.0.141",
     "axios": "^1.14.0",
+    "bcrypt": "^6.0.0",
+    "bcryptjs": "^3.0.3",
     "next": "16.2.1",
+    "next-auth": "^5.0.0-beta.30",
     "node-cron": "^4.2.1",
     "openai": "^6.33.0",
     "postgres": "^3.4.8",
@@ -28,6 +32,8 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@types/bcrypt": "^6.0.0",
+    "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20",
     "@types/node-cron": "^3.0.11",
     "@types/qrcode": "^1.5.6",
