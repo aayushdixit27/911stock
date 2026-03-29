@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { auth } from "@/lib/auth";
 import { analyzeSignal } from "@/lib/gemini";
 import { makeOutboundCall } from "@/lib/bland";
 import {
@@ -15,20 +16,17 @@ import { insertSignal, getLatestSignal, type DBSignal } from "@/lib/db";
 
 export async function POST(req: NextRequest) {
   try {
+    // Check authentication
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    const userId = session.user.id;
+
     const { searchParams } = new URL(req.url);
     const isLive = searchParams.get("mode") === "live";
 
-    // Extract userId from request body if present
-    let userId: string | null = null;
-    try {
-      const body = await req.json() as { userId?: string };
-      if (body.userId) {
-        userId = body.userId;
-        setLastUserId(userId);
-      }
-    } catch {
-      // body may be empty — that's fine
-    }
+    setLastUserId(userId);
 
     const user = getWatchlist();
 
@@ -58,7 +56,7 @@ export async function POST(req: NextRequest) {
 
     // Check DB for a more recent explanation for this signal
     try {
-      const existingDbSignal = await getLatestSignal(signal.ticker);
+      const existingDbSignal = await getLatestSignal(userId, signal.ticker);
       if (existingDbSignal?.explanation) {
         // DB has a richer explanation — surface it but continue with fresh scoring
         console.log(`DB hit for ${signal.ticker}: using stored explanation`);
@@ -99,7 +97,7 @@ export async function POST(req: NextRequest) {
       explanation,
       alerted: false,
     };
-    insertSignal(dbSignal).catch((err) =>
+    insertSignal(dbSignal, userId).catch((err) =>
       console.error("Trigger: failed to save signal to DB", err)
     );
 

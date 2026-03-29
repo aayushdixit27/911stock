@@ -1,4 +1,5 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { auth } from "@/lib/auth";
 import { analyzeSignal } from "@/lib/gemini";
 import { detectSignal, getHistoricalPattern } from "@/lib/signals";
 
@@ -25,8 +26,14 @@ async function analyzeViaOverclaw(
   return data.explanation;
 }
 
-export async function POST() {
+export async function POST(req: NextRequest) {
   try {
+    // Check authentication
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const signal = detectSignal();
     if (!signal) {
       return NextResponse.json({ error: "No signal" }, { status: 404 });

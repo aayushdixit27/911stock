@@ -1,12 +1,13 @@
-import { auth0 } from "@/lib/auth0";
+import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
 import PageClient from "./page-client";
 
 export default async function Home() {
-  const session = await auth0.getSession();
+  const session = await auth();
 
-  // Use logged-in user's sub, or fall back to the configured admin sub from env
-  const userId =
-    session?.user?.sub ?? process.env.AUTH0_USER_SUB ?? "";
+  if (!session?.user?.id) {
+    redirect("/auth/login");
+  }
 
-  return <PageClient userId={userId} />;
+  return <PageClient user={session.user} />;
 }

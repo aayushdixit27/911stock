@@ -1,8 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
+import { auth } from "@/lib/auth";
 import { initiateCIBA } from "@/lib/auth0-ciba";
 import { setCIBAReqId, setCIBAStatus } from "@/lib/state";
 
 export async function POST(req: NextRequest) {
+  // Check authentication
+  const session = await auth();
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     const body = await req.json();
     console.log("Bland webhook received:", body);

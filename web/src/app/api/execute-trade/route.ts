@@ -1,30 +1,45 @@
 import { NextRequest, NextResponse } from "next/server";
-import { executeTrade, getPosition } from "@/lib/portfolio";
+import { auth } from "@/lib/auth";
+import { executeTrade } from "@/lib/db";
+import { getPosition } from "@/lib/portfolio";
 
 export async function POST(req: NextRequest) {
+  // Check authentication
+  const session = await auth();
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  const userId = session.user.id;
+
   try {
     const body = await req.json().catch(() => ({}));
     const {
+      signalId,
       ticker = "SMCI",
       reductionPct = 50,
-      reason = "CEO unscheduled insider sale — HIGH significance",
-      approvedVia = "auth0_ciba",
+      pricePerShare = 42.50,
+      approvalMethod = "manual",
     } = body;
 
-    const position = getPosition(ticker);
-    if (!position) {
+    if (!signalId) {
       return NextResponse.json(
-        { error: `No position found for ${ticker}` },
-        { status: 404 }
+        { error: "signalId is required" },
+        { status: 400 }
       );
     }
 
-    const trade = executeTrade(ticker, reductionPct, reason, approvedVia);
+    const trade = await executeTrade({
+      userId,
+      signalId,
+      ticker,
+      reductionPct,
+      pricePerShare,
+      approvalMethod,
+    });
 
     return NextResponse.json({
       success: true,
       trade,
-      position: getPosition(ticker),
     });
   } catch (err) {
     console.error("Trade execution error:", err);

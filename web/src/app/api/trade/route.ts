@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { auth } from "@/lib/auth";
 import { getLastSignal } from "@/lib/state";
 import { getHistoricalPattern } from "@/lib/signals";
 import {
@@ -17,6 +18,13 @@ interface TradeRequestBody {
 }
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
+  // Check authentication
+  const session = await auth();
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  const userId = session.user.id;
+
   let body: TradeRequestBody;
   try {
     body = (await req.json()) as TradeRequestBody;
@@ -49,7 +57,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   let dbError = false;
 
   try {
-    count = await getLearningCount(ticker);
+    count = await getLearningCount(userId, ticker);
   } catch {
     dbError = true;
   }
@@ -70,14 +78,14 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       action_taken: action,
       user_approved: action !== "hold",
       notes: learningNote,
-    });
+    }, userId);
   } catch {
     dbError = true;
   }
 
   // 6. Mark signal as alerted
   try {
-    await markSignalAlerted(signalId);
+    await markSignalAlerted(userId, signalId);
   } catch {
     dbError = true;
   }

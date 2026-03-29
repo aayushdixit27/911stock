@@ -1,8 +1,15 @@
 import { NextResponse } from "next/server";
+import { auth } from "@/lib/auth";
 import { pollCIBA } from "@/lib/auth0-ciba";
 import { getCIBAReqId, getCIBAStatus, setCIBAStatus } from "@/lib/state";
 
 export async function GET() {
+  // Check authentication
+  const session = await auth();
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   const cibaStatus = getCIBAStatus();
   const currentCIBAReqId = getCIBAReqId();
 

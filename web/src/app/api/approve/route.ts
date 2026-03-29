@@ -1,9 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
+import { auth } from "@/lib/auth";
 
 // This endpoint is kept for backward compatibility with the dashboard's
 // manual "Approve" button. The real CIBA flow runs through:
 //   Bland tool call → /api/bland-webhook → Auth0 CIBA → /api/ciba-status (polling)
 export async function POST(req: NextRequest) {
+  // Check authentication
+  const session = await auth();
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   const body = await req.json().catch(() => ({}));
   const { ticker = "SMCI" } = body;
 

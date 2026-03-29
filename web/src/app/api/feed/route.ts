@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { auth } from "@/lib/auth";
 import { getRecentSignals, type DBSignal } from "@/lib/db";
 
 const SEED: DBSignal[] = [
@@ -44,10 +45,17 @@ const SEED: DBSignal[] = [
 ];
 
 export async function GET() {
+  // Check authentication
+  const session = await auth();
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  const userId = session.user.id;
+
   // Try DB first
   if (process.env.DATABASE_URL?.trim()) {
     try {
-      const signals = await getRecentSignals(20);
+      const signals = await getRecentSignals(userId, 20);
       if (signals.length > 0) {
         return NextResponse.json({ signals, source: "db" });
       }

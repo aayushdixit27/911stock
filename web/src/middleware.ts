@@ -16,6 +16,12 @@ const PUBLIC_PATHS = [
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  // API routes are handled by individual route handlers - skip middleware redirect
+  // They will return 401 if auth is required
+  if (pathname.startsWith("/api/") && !pathname.startsWith("/api/auth/") && !pathname.startsWith("/api/stripe/webhook") && !pathname.startsWith("/api/migrate")) {
+    return NextResponse.next();
+  }
+
   // Check if path is public
   const isPublicPath = PUBLIC_PATHS.some((path) =>
     pathname === path ||

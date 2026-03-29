@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { auth } from "@/lib/auth";
 import { fetchLatestSignal } from "@/lib/edgar";
 import { fetchNewsSentiment } from "@/lib/news";
 import { scoreSignal, getHistoricalPattern, getWatchlist } from "@/lib/signals";
@@ -16,6 +17,13 @@ import { setLastSignal } from "@/lib/state";
 import type { Signal } from "@/lib/edgar";
 
 export async function POST(): Promise<NextResponse> {
+  // Check authentication
+  const session = await auth();
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  const userId = session.user.id;
+
   try {
     // 1. Get watched tickers from watchlist
     const watchlist = getWatchlist();
@@ -75,7 +83,7 @@ export async function POST(): Promise<NextResponse> {
     };
 
     try {
-      await insertSignal(dbSignal);
+      await insertSignal(dbSignal, userId);
     } catch (dbErr) {
       console.error("[poll] DB insertSignal failed — continuing:", dbErr);
     }
@@ -86,7 +94,7 @@ export async function POST(): Promise<NextResponse> {
     // 11. Check if already alerted
     let alreadyAlerted = false;
     try {
-      const existing = await getLatestSignal(signal.ticker);
+      const existing = await getLatestSignal(userId, signal.ticker);
       if (existing && existing.id === signal.id && existing.alerted) {
         alreadyAlerted = true;
       }
@@ -105,7 +113,7 @@ export async function POST(): Promise<NextResponse> {
         alerted = true;
 
         try {
-          await markSignalAlerted(signal.id);
+          await markSignalAlerted(userId, signal.id);
         } catch (dbErr) {
           console.error("[poll] DB markSignalAlerted failed:", dbErr);
         }
@@ -117,7 +125,7 @@ export async function POST(): Promise<NextResponse> {
             ticker: signal.ticker,
             call_id: callId,
             explanation,
-          });
+          }, userId);
         } catch (dbErr) {
           console.error("[poll] DB insertAlert failed:", dbErr);
         }

@@ -1,8 +1,8 @@
-import { auth0 } from "@/lib/auth0";
+import { auth } from "@/lib/auth";
 import { GuardianEnroll } from "@/components/GuardianEnroll";
 
 export default async function Settings() {
-  const session = await auth0.getSession();
+  const session = await auth();
 
   return (
     <main
@@ -51,7 +51,7 @@ export default async function Settings() {
             Auth0 Guardian
           </div>
 
-          {session ? (
+          {session?.user ? (
             <>
               <div
                 style={{
@@ -71,7 +71,7 @@ export default async function Settings() {
                   }}
                 />
                 <span style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", color: "var(--ink)", fontWeight: 600 }}>
-                  {session.user.email ?? session.user.sub}
+                  {session.user.email ?? session.user.name}
                 </span>
               </div>
 

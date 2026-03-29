@@ -356,15 +356,15 @@ function normalizePortfolioPosition(
 
 // ── Operations ───────────────────────────────────────────────────────────────
 
-export async function insertSignal(signal: DBSignal): Promise<void> {
+export async function insertSignal(signal: DBSignal, userId?: string): Promise<void> {
   await withDb((sql) => sql`
     INSERT INTO signals
-      (id, ticker, company_name, insider, role, action, shares,
+      (id, user_id, ticker, company_name, insider, role, action, shares,
        price_per_share, total_value, date, filed_at,
        scheduled_10b5_1, last_transaction_months_ago,
        position_reduced_pct, score, explanation, alerted)
     VALUES
-      (${signal.id}, ${signal.ticker}, ${signal.company_name},
+      (${signal.id}, ${userId ?? ''}, ${signal.ticker}, ${signal.company_name},
        ${signal.insider}, ${signal.role}, ${signal.action},
        ${signal.shares}, ${signal.price_per_share}, ${signal.total_value},
        ${signal.date}, ${signal.filed_at}, ${signal.scheduled_10b5_1},
@@ -374,73 +374,78 @@ export async function insertSignal(signal: DBSignal): Promise<void> {
   `);
 }
 
-export async function getLatestSignal(ticker?: string): Promise<DBSignal | null> {
+export async function getLatestSignal(userId: string, ticker?: string): Promise<DBSignal | null> {
   const rows = await withDb((sql) =>
     ticker
       ? sql<DBSignal[]>`
           SELECT * FROM signals
-          WHERE ticker = ${ticker}
+          WHERE user_id = ${userId} AND ticker = ${ticker}
           ORDER BY created_at DESC LIMIT 1`
       : sql<DBSignal[]>`
           SELECT * FROM signals
+          WHERE user_id = ${userId}
           ORDER BY score DESC, created_at DESC LIMIT 1`
   );
   return rows[0] ?? null;
 }
 
-export async function getSignalById(id: string): Promise<DBSignal | null> {
+export async function getSignalById(userId: string, id: string): Promise<DBSignal | null> {
   const rows = await withDb((sql) => sql<DBSignal[]>`
-    SELECT * FROM signals WHERE id = ${id} LIMIT 1
+    SELECT * FROM signals WHERE user_id = ${userId} AND id = ${id} LIMIT 1
   `);
   return rows[0] ?? null;
 }
 
-export async function getRecentSignals(limit = 20): Promise<DBSignal[]> {
+export async function getRecentSignals(userId: string, limit = 20): Promise<DBSignal[]> {
   return withDb((sql) => sql<DBSignal[]>`
     SELECT * FROM signals
-    WHERE created_at > now() - interval '7 days'
+    WHERE user_id = ${userId}
+    AND created_at > now() - interval '7 days'
     ORDER BY score DESC, created_at DESC
     LIMIT ${limit}
   `);
 }
 
-export async function markSignalAlerted(id: string): Promise<void> {
+export async function markSignalAlerted(userId: string, id: string): Promise<void> {
   await withDb((sql) => sql`
-    UPDATE signals SET alerted = true WHERE id = ${id}
+    UPDATE signals SET alerted = true WHERE user_id = ${userId} AND id = ${id}
   `);
 }
 
-export async function insertAlert(alert: DBAlert): Promise<void> {
+export async function insertAlert(alert: DBAlert, userId: string): Promise<void> {
   await withDb((sql) => sql`
-    INSERT INTO alerts (id, signal_id, ticker, call_id, explanation)
-    VALUES (${alert.id}, ${alert.signal_id}, ${alert.ticker},
+    INSERT INTO alerts (id, user_id, signal_id, ticker, call_id, explanation)
+    VALUES (${alert.id}, ${userId}, ${alert.signal_id}, ${alert.ticker},
             ${alert.call_id ?? null}, ${alert.explanation})
   `);
 }
 
-export async function getRecentAlerts(limit = 20): Promise<DBAlert[]> {
+export async function getRecentAlerts(userId: string, limit = 20): Promise<DBAlert[]> {
   return withDb((sql) => sql<DBAlert[]>`
-    SELECT * FROM alerts ORDER BY created_at DESC LIMIT ${limit}
+    SELECT * FROM alerts 
+    WHERE user_id = ${userId}
+    ORDER BY created_at DESC LIMIT ${limit}
   `);
 }
 
-export async function getTradeBySignalId(signalId: string): Promise<DBTrade | null> {
+export async function getTradeBySignalId(userId: string, signalId: string): Promise<DBTrade | null> {
   const rows = await withDb((sql) => sql<DBTrade[]>`
     SELECT * FROM trades
-    WHERE signal_id = ${signalId}
+    WHERE user_id = ${userId} AND signal_id = ${signalId}
     LIMIT 1
   `);
   return rows[0] ? normalizeTrade(rows[0]) : null;
 }
 
 export async function executeTrade(params: {
+  userId: string;
   signalId: string;
   ticker: string;
   reductionPct: number;
   pricePerShare: number;
   approvalMethod: string;
 }): Promise<DBTrade> {
-  const { signalId, ticker, reductionPct, pricePerShare, approvalMethod } = params;
+  const { userId, signalId, ticker, reductionPct, pricePerShare, approvalMethod } = params;
 
   return withDb((sql) =>
     sql.begin(async (tx) => {
@@ -448,14 +453,14 @@ export async function executeTrade(params: {
 
       const existing = await trx<DBTrade[]>`
         SELECT * FROM trades
-        WHERE signal_id = ${signalId}
+        WHERE user_id = ${userId} AND signal_id = ${signalId}
         LIMIT 1
       `;
       if (existing[0]) return normalizeTrade(existing[0]);
 
       const portfolioRows = await trx<DBPortfolioPosition[]>`
         SELECT * FROM portfolio
-        WHERE ticker = ${ticker}
+        WHERE user_id = ${userId} AND ticker = ${ticker}
         FOR UPDATE
       `;
       const position = portfolioRows[0];
@@ -463,7 +468,7 @@ export async function executeTrade(params: {
 
       const existingAfterLock = await trx<DBTrade[]>`
         SELECT * FROM trades
-        WHERE signal_id = ${signalId}
+        WHERE user_id = ${userId} AND signal_id = ${signalId}
         LIMIT 1
       `;
       if (existingAfterLock[0]) return normalizeTrade(existingAfterLock[0]);
@@ -477,6 +482,7 @@ export async function executeTrade(params: {
       const inserted = await trx<DBTrade[]>`
         INSERT INTO trades (
           id,
+          user_id,
           signal_id,
           ticker,
           action,
@@ -491,6 +497,7 @@ export async function executeTrade(params: {
         )
         VALUES (
           ${newId()},
+          ${userId},
           ${signalId},
           ${ticker},
           ${"SELL"},
@@ -509,7 +516,7 @@ export async function executeTrade(params: {
       await trx`
         UPDATE portfolio
         SET shares = ${sharesAfter}, updated_at = now()
-        WHERE ticker = ${ticker}
+        WHERE user_id = ${userId} AND ticker = ${ticker}
       `;
 
       return normalizeTrade(inserted[0]);
@@ -517,16 +524,17 @@ export async function executeTrade(params: {
   );
 }
 
-export async function getLatestTrade(): Promise<DBTrade | null> {
+export async function getLatestTrade(userId: string): Promise<DBTrade | null> {
   const rows = await withDb((sql) => sql<DBTrade[]>`
     SELECT * FROM trades
+    WHERE user_id = ${userId}
     ORDER BY approved_at DESC
     LIMIT 1
   `);
   return rows[0] ? normalizeTrade(rows[0]) : null;
 }
 
-export async function getPortfolio(): Promise<DBPortfolioWithLastTrade[]> {
+export async function getPortfolio(userId: string): Promise<DBPortfolioWithLastTrade[]> {
   const rows = await withDb((sql) => sql<Array<
     DBPortfolioPosition & {
       trade_id: string | null;
@@ -564,10 +572,11 @@ export async function getPortfolio(): Promise<DBPortfolioWithLastTrade[]> {
     LEFT JOIN LATERAL (
       SELECT *
       FROM trades t
-      WHERE t.ticker = p.ticker
+      WHERE t.user_id = p.user_id AND t.ticker = p.ticker
       ORDER BY t.approved_at DESC
       LIMIT 1
     ) t ON true
+    WHERE p.user_id = ${userId}
     ORDER BY p.ticker
   `);
 
@@ -593,13 +602,13 @@ export async function getPortfolio(): Promise<DBPortfolioWithLastTrade[]> {
   }));
 }
 
-export async function insertLearning(learning: DBLearning): Promise<void> {
+export async function insertLearning(learning: DBLearning, userId: string): Promise<void> {
   await withDb((sql) => sql`
     INSERT INTO agent_learnings
-      (id, signal_id, ticker, pattern_match_count, avg_historical_drop,
+      (id, user_id, signal_id, ticker, pattern_match_count, avg_historical_drop,
        action_taken, user_approved, notes)
     VALUES
-      (${learning.id}, ${learning.signal_id}, ${learning.ticker},
+      (${learning.id}, ${userId}, ${learning.signal_id}, ${learning.ticker},
        ${learning.pattern_match_count}, ${learning.avg_historical_drop},
        ${learning.action_taken}, ${learning.user_approved},
        ${learning.notes ?? null})
@@ -607,9 +616,10 @@ export async function insertLearning(learning: DBLearning): Promise<void> {
   `);
 }
 
-export async function getLearningCount(ticker: string): Promise<number> {
+export async function getLearningCount(userId: string, ticker: string): Promise<number> {
   const rows = await withDb((sql) => sql<{ count: string }[]>`
-    SELECT COUNT(*)::text AS count FROM agent_learnings WHERE ticker = ${ticker}
+    SELECT COUNT(*)::text AS count FROM agent_learnings 
+    WHERE user_id = ${userId} AND ticker = ${ticker}
   `);
   return parseInt(rows[0]?.count ?? "0", 10);
 }

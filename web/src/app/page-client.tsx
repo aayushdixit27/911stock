@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import { signOut } from "next-auth/react";
 import { NewsTimeline } from "@/components/NewsTimeline";
 
 type Sensitivity = "major_only" | "all_news" | "act_auto";
@@ -68,7 +69,14 @@ const SENSITIVITY_LABELS: Record<Sensitivity, string> = {
   act_auto: "act auto",
 };
 
-export default function PageClient({ userId }: { userId: string }) {
+interface User {
+  id: string;
+  name?: string | null;
+  email?: string | null;
+  image?: string | null;
+}
+
+export default function PageClient({ user }: { user: User }) {
   const router = useRouter();
   const [watchlist, setWatchlist] = useState<WatchItem[]>([
     { ticker: "SMCI", sensitivity: "major_only" },
@@ -135,7 +143,7 @@ export default function PageClient({ userId }: { userId: string }) {
       const res = await fetch("/api/trigger", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId }),
+        credentials: "include",
       });
       if (!res.ok) {
         const data = await res.json();
@@ -146,7 +154,7 @@ export default function PageClient({ userId }: { userId: string }) {
       setError(err instanceof Error ? err.message : "Something went wrong");
       setLoading(false);
     }
-  }, [router, userId]);
+  }, [router]);
 
   async function addTicker() {
     const t = input.trim().toUpperCase();
@@ -191,7 +199,7 @@ export default function PageClient({ userId }: { userId: string }) {
       const res = await fetch("/api/trigger", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId }),
+        credentials: "include",
       });
       if (!res.ok) {
         const data = await res.json();
@@ -202,6 +210,10 @@ export default function PageClient({ userId }: { userId: string }) {
       setError(err instanceof Error ? err.message : "Something went wrong");
       setLoading(false);
     }
+  }
+
+  async function handleLogout() {
+    await signOut({ callbackUrl: "/auth/login" });
   }
 
   const sigColor: Record<Signal["significance"], string> = {
@@ -241,6 +253,21 @@ export default function PageClient({ userId }: { userId: string }) {
           911stock
         </span>
         <span style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+          {/* User Email */}
+          <span
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: "var(--text-sm)",
+              color: "var(--ink-50)",
+              maxWidth: "200px",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {user.email}
+          </span>
+          
           <span
             style={{
               fontFamily: "var(--font-mono)",
@@ -270,6 +297,22 @@ export default function PageClient({ userId }: { userId: string }) {
           >
             Settings
           </a>
+          <button
+            onClick={handleLogout}
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: "var(--text-xs)",
+              fontWeight: 500,
+              color: "var(--orange)",
+              padding: "0.375rem 0.75rem",
+              border: "1px solid var(--orange-lt)",
+              borderRadius: "4px",
+              background: "transparent",
+              cursor: "pointer",
+            }}
+          >
+            Logout
+          </button>
         </span>
       </nav>
 

@@ -1,7 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
+import { auth } from "@/lib/auth";
 import { getPositions, getPosition, isAlpacaConfigured } from "@/lib/alpaca";
 
 export async function GET(req: NextRequest) {
+  // Check authentication
+  const session = await auth();
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   if (!isAlpacaConfigured()) {
     return NextResponse.json(
       { 
