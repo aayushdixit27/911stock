@@ -32,9 +32,15 @@ export default function Feed() {
   const [user, setUser] = useState<User | null>(null);
   const [signals, setSignals] = useState<DBSignal[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedSignal, setSelectedSignal] = useState<DBSignal | null>(null);
   const [emptyMessage, setEmptyMessage] = useState<string | null>(null);
+  const [pagination, setPagination] = useState({
+    page: 1,
+    limit: 20,
+    hasMore: false,
+  });
 
   useEffect(() => {
     // Fetch the current user session
@@ -50,13 +56,15 @@ export default function Feed() {
       });
 
     // Fetch signals from API
-    fetchSignals();
+    fetchSignals(1);
   }, []);
 
-  async function fetchSignals() {
+  async function fetchSignals(page: number, append = false) {
     try {
-      setLoading(true);
-      const res = await fetch("/api/feed");
+      if (page === 1) setLoading(true);
+      else setLoadingMore(true);
+      
+      const res = await fetch(`/api/feed?page=${page}&limit=${pagination.limit}`);
       if (!res.ok) {
         if (res.status === 401) {
           setError("Please log in to view your signals");
@@ -65,18 +73,34 @@ export default function Feed() {
         throw new Error(`Failed to fetch signals: ${res.status}`);
       }
       const data = await res.json();
-      if (data.empty) {
+      
+      if (data.empty && page === 1) {
         setSignals([]);
         setEmptyMessage(data.message ?? "No signals yet. Add tickers to your watchlist to get started.");
       } else {
-        setSignals(data.signals ?? []);
+        if (append) {
+          setSignals((prev) => [...prev, ...(data.signals ?? [])]);
+        } else {
+          setSignals(data.signals ?? []);
+        }
+        setPagination({
+          page,
+          limit: pagination.limit,
+          hasMore: data.pagination?.hasMore ?? false,
+        });
         setEmptyMessage(null);
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to load signals");
     } finally {
       setLoading(false);
+      setLoadingMore(false);
     }
+  }
+
+  async function handleLoadMore() {
+    if (loadingMore || !pagination.hasMore) return;
+    await fetchSignals(pagination.page + 1, true);
   }
 
   function formatDate(dateStr: string): string {
@@ -331,6 +355,53 @@ export default function Feed() {
                 </div>
               );
             })}
+
+            {/* Load More Button */}
+            {pagination.hasMore && (
+              <div style={{ display: "flex", justifyContent: "center", marginTop: "1.5rem" }}>
+                <button
+                  onClick={handleLoadMore}
+                  disabled={loadingMore}
+                  style={{
+                    padding: "0.75rem 2rem",
+                    background: loadingMore ? "var(--ink-30)" : "var(--orange)",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "6px",
+                    fontSize: "0.9375rem",
+                    fontWeight: 500,
+                    cursor: loadingMore ? "not-allowed" : "pointer",
+                    transition: "background 0.15s, transform 0.1s",
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!loadingMore) {
+                      e.currentTarget.style.background = "#d94300";
+                      e.currentTarget.style.transform = "translateY(-1px)";
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = loadingMore ? "var(--ink-30)" : "var(--orange)";
+                    e.currentTarget.style.transform = "translateY(0)";
+                  }}
+                >
+                  {loadingMore ? "Loading..." : "Load more"}
+                </button>
+              </div>
+            )}
+
+            {!pagination.hasMore && signals.length >= pagination.limit && (
+              <p
+                style={{
+                  textAlign: "center",
+                  fontSize: "0.875rem",
+                  color: "var(--ink-40)",
+                  marginTop: "1.5rem",
+                  paddingBottom: "1rem",
+                }}
+              >
+                You&apos;ve reached the end
+              </p>
+            )}
           </div>
         )}
       </div>

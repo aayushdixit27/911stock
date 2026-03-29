@@ -70,11 +70,16 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ signal });
   }
 
-  // Get user-scoped signals from DB
+  // Get user-scoped signals from DB with pagination
   if (process.env.DATABASE_URL?.trim()) {
     try {
-      const signals = await getRecentSignals(userId, limit);
-      if (signals.length > 0) {
+      const signals = await getRecentSignals(userId, limit, offset);
+      
+      // Check if there are more signals for pagination
+      const totalCheck = await getRecentSignals(userId, limit + 1, offset);
+      const hasMore = totalCheck.length > limit;
+      
+      if (signals.length > 0 || offset > 0) {
         return NextResponse.json({ 
           signals, 
           source: "db",
@@ -82,7 +87,8 @@ export async function GET(req: NextRequest) {
             page,
             limit,
             count: signals.length,
-            hasMore: signals.length === limit,
+            hasMore,
+            nextPage: hasMore ? page + 1 : null,
           }
         });
       }

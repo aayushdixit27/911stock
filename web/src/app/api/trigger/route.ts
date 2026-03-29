@@ -6,7 +6,19 @@ import { detectSignal, getHistoricalPattern, scoreSignal } from "@/lib/signals";
 import { fetchLatestSignal } from "@/lib/edgar";
 import { fetchNewsSentiment } from "@/lib/news";
 import { setLastSignal, setLastUserId } from "@/lib/state";
-import { insertSignal, getLatestSignal, getWatchlist, getPortfolio, type DBSignal } from "@/lib/db";
+import { insertSignal, getLatestSignal, getWatchlist, getPortfolio, insertNotification, getUserTier, type DBSignal } from "@/lib/db";
+
+// Calculate notification delivery time based on user tier
+// Premium users: immediate (now)
+// Free users: 15-minute delay
+function calculateDeliverAt(userTier: string): Date {
+  const now = new Date();
+  if (userTier === 'premium') {
+    return now; // Immediate for premium users
+  }
+  // Free users get 15-minute delay
+  return new Date(now.getTime() + 15 * 60 * 1000);
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -73,6 +85,10 @@ export async function POST(req: NextRequest) {
         { status: 404 }
       );
     }
+
+    // Get user's tier for staggered notification delivery
+    const userTier = await getUserTier(userId);
+    const deliverAt = calculateDeliverAt(userTier);
 
     // Process all signals for the user
     const results = [];
@@ -141,11 +157,32 @@ export async function POST(req: NextRequest) {
       };
 
       // Save signal to DB (ON CONFLICT DO NOTHING for deduplication)
+      let signalInserted = false;
       try {
         await insertSignal(dbSignal);
+        signalInserted = true;
         console.log(`[trigger] Saved signal ${dbSignal.id} for user ${userId}`);
       } catch (err) {
         console.error("[trigger] Failed to save signal to DB:", err);
+      }
+
+      // Create notification for this signal (with staggered delivery based on tier)
+      if (signalInserted) {
+        try {
+          const urgencyLabel = score >= 7 ? 'High urgency' : score >= 4 ? 'Medium urgency' : 'Low urgency';
+          await insertNotification({
+            user_id: userId,
+            signal_id: dbSignal.id,
+            type: 'signal',
+            title: `${signal.ticker} - ${urgencyLabel} insider signal`,
+            body: explanation.substring(0, 200) + (explanation.length > 200 ? '...' : ''),
+            read: false,
+            deliver_at: deliverAt,
+          });
+          console.log(`[trigger] Created notification for signal ${dbSignal.id}, deliver_at: ${deliverAt.toISOString()} (${userTier} tier)`);
+        } catch (err) {
+          console.error("[trigger] Failed to create notification:", err);
+        }
       }
 
       // Trigger outbound call if score is high enough
@@ -169,6 +206,8 @@ export async function POST(req: NextRequest) {
         explanation,
         callId,
         callTriggered: !!callId,
+        tier: userTier,
+        deliverAt: deliverAt.toISOString(),
       });
     }
 

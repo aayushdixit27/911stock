@@ -24,6 +24,27 @@ export type DBWatchlistItem = {
   added_at: Date;
 };
 
+export type DBNotification = {
+  id: string;
+  user_id: string;
+  signal_id: string | null;
+  type: string;
+  title: string;
+  body: string;
+  read: boolean;
+  deliver_at: Date;
+  created_at: Date;
+};
+
+export type DBUserSettings = {
+  user_id: string;
+  risk_tolerance: string;
+  notify_in_app: boolean;
+  notify_email: boolean;
+  notify_phone: boolean;
+  created_at: Date;
+};
+
 export type DBSignal = {
   id: string;
   user_id: string;
@@ -332,6 +353,46 @@ export async function migrate(): Promise<void> {
     CREATE INDEX IF NOT EXISTS watchlist_user_id_idx ON watchlist(user_id)
   `;
 
+  // Notifications table - in-app notifications with staggered delivery
+  await sql`
+    CREATE TABLE IF NOT EXISTS notifications (
+      id          TEXT PRIMARY KEY,
+      user_id     TEXT NOT NULL,
+      signal_id   TEXT REFERENCES signals(id),
+      type        TEXT NOT NULL,
+      title       TEXT NOT NULL,
+      body        TEXT NOT NULL,
+      read        BOOLEAN NOT NULL DEFAULT false,
+      deliver_at  TIMESTAMPTZ NOT NULL,
+      created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+    )
+  `;
+
+  await sql`
+    CREATE INDEX IF NOT EXISTS notifications_user_read_deliver_idx 
+    ON notifications(user_id, read, deliver_at)
+  `;
+
+  await sql`
+    CREATE INDEX IF NOT EXISTS notifications_user_id_idx ON notifications(user_id)
+  `;
+
+  // User settings table - notification preferences and risk tolerance
+  await sql`
+    CREATE TABLE IF NOT EXISTS user_settings (
+      user_id         TEXT PRIMARY KEY,
+      risk_tolerance  TEXT NOT NULL DEFAULT 'moderate',
+      notify_in_app   BOOLEAN NOT NULL DEFAULT true,
+      notify_email    BOOLEAN NOT NULL DEFAULT false,
+      notify_phone    BOOLEAN NOT NULL DEFAULT false,
+      created_at      TIMESTAMPTZ NOT NULL DEFAULT now()
+    )
+  `;
+
+  await sql`
+    CREATE INDEX IF NOT EXISTS user_settings_user_id_idx ON user_settings(user_id)
+  `;
+
   // Seed the SMCI demo signal (with empty user_id for backward compatibility)
   await sql`
     INSERT INTO signals
@@ -436,13 +497,13 @@ export async function getSignalById(userId: string, id: string): Promise<DBSigna
   return rows[0] ?? null;
 }
 
-export async function getRecentSignals(userId: string, limit = 20): Promise<DBSignal[]> {
+export async function getRecentSignals(userId: string, limit = 20, offset = 0): Promise<DBSignal[]> {
   return withDb((sql) => sql<DBSignal[]>`
     SELECT * FROM signals
     WHERE user_id = ${userId}
-    AND created_at > now() - interval '7 days'
     ORDER BY score DESC, created_at DESC
     LIMIT ${limit}
+    OFFSET ${offset}
   `);
 }
 
@@ -698,6 +759,118 @@ export async function getWatchlistCount(userId: string): Promise<number> {
     WHERE user_id = ${userId}
   `);
   return parseInt(rows[0]?.count ?? "0", 10);
+}
+
+// ── Notification Operations ─────────────────────────────────────────────────
+
+export async function insertNotification(notification: Omit<DBNotification, 'id' | 'created_at'>): Promise<DBNotification> {
+  const id = newId();
+  const rows = await withDb((sql) => sql<DBNotification[]>`
+    INSERT INTO notifications (id, user_id, signal_id, type, title, body, read, deliver_at)
+    VALUES (${id}, ${notification.user_id}, ${notification.signal_id ?? null}, 
+            ${notification.type}, ${notification.title}, ${notification.body}, 
+            ${notification.read}, ${notification.deliver_at})
+    RETURNING *
+  `);
+  return rows[0];
+}
+
+export async function getDeliveredNotifications(
+  userId: string, 
+  options?: { 
+    includeRead?: boolean; 
+    limit?: number; 
+    offset?: number;
+  }
+): Promise<DBNotification[]> {
+  const { includeRead = true, limit = 20, offset = 0 } = options ?? {};
+  const now = new Date();
+  
+  return withDb((sql) => sql<DBNotification[]>`
+    SELECT * FROM notifications
+    WHERE user_id = ${userId}
+      AND deliver_at <= ${now}
+      ${!includeRead ? sql`AND read = false` : sql``}
+    ORDER BY deliver_at DESC, created_at DESC
+    LIMIT ${limit}
+    OFFSET ${offset}
+  `);
+}
+
+export async function getUnreadNotificationCount(userId: string): Promise<number> {
+  const now = new Date();
+  const rows = await withDb((sql) => sql<{ count: string }[]>`
+    SELECT COUNT(*)::text AS count FROM notifications
+    WHERE user_id = ${userId}
+      AND read = false
+      AND deliver_at <= ${now}
+  `);
+  return parseInt(rows[0]?.count ?? "0", 10);
+}
+
+export async function markNotificationRead(userId: string, notificationId: string): Promise<boolean> {
+  const result = await withDb((sql) => sql`
+    UPDATE notifications 
+    SET read = true 
+    WHERE user_id = ${userId} AND id = ${notificationId}
+  `);
+  return result.count > 0;
+}
+
+export async function markAllNotificationsRead(userId: string): Promise<void> {
+  await withDb((sql) => sql`
+    UPDATE notifications 
+    SET read = true 
+    WHERE user_id = ${userId} AND read = false
+  `);
+}
+
+// ── User Settings Operations ────────────────────────────────────────────────
+
+export async function getUserSettings(userId: string): Promise<DBUserSettings | null> {
+  const rows = await withDb((sql) => sql<DBUserSettings[]>`
+    SELECT * FROM user_settings WHERE user_id = ${userId} LIMIT 1
+  `);
+  return rows[0] ?? null;
+}
+
+export async function upsertUserSettings(
+  userId: string, 
+  settings: Partial<Omit<DBUserSettings, 'user_id' | 'created_at'>>
+): Promise<DBUserSettings> {
+  const existing = await getUserSettings(userId);
+  
+  if (existing) {
+    const rows = await withDb((sql) => sql<DBUserSettings[]>`
+      UPDATE user_settings
+      SET 
+        risk_tolerance = COALESCE(${settings.risk_tolerance ?? existing.risk_tolerance}, risk_tolerance),
+        notify_in_app = COALESCE(${settings.notify_in_app ?? existing.notify_in_app}, notify_in_app),
+        notify_email = COALESCE(${settings.notify_email ?? existing.notify_email}, notify_email),
+        notify_phone = COALESCE(${settings.notify_phone ?? existing.notify_phone}, notify_phone)
+      WHERE user_id = ${userId}
+      RETURNING *
+    `);
+    return rows[0];
+  } else {
+    const rows = await withDb((sql) => sql<DBUserSettings[]>`
+      INSERT INTO user_settings (user_id, risk_tolerance, notify_in_app, notify_email, notify_phone)
+      VALUES (${userId}, ${settings.risk_tolerance ?? 'moderate'}, 
+              ${settings.notify_in_app ?? true}, ${settings.notify_email ?? false}, 
+              ${settings.notify_phone ?? false})
+      RETURNING *
+    `);
+    return rows[0];
+  }
+}
+
+// ── User Tier Helper ────────────────────────────────────────────────────────
+
+export async function getUserTier(userId: string): Promise<string> {
+  const rows = await withDb((sql) => sql<{ tier: string }[]>`
+    SELECT tier FROM users WHERE id = ${userId} LIMIT 1
+  `);
+  return rows[0]?.tier ?? 'free';
 }
 
 export function newId(): string {
