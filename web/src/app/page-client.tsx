@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { NewsTimeline } from "@/components/NewsTimeline";
 import Nav from "@/components/Nav";
@@ -22,46 +22,9 @@ type Signal = {
   context: Record<string, string>;
 };
 
-const DEFAULT_PRICES: Record<string, { price: number; change: number; changePct: number }> = {
-  SMCI: { price: 42.50, change: 1.72, changePct: 4.2 },
-  TSLA: { price: 285.20, change: 2.28, changePct: 0.8 },
-  NVDA: { price: 142.80, change: -0.14, changePct: -0.1 },
-};
+const DEFAULT_PRICES: Record<string, { price: number; change: number; changePct: number }> = {};
 
-const SEED_SIGNALS: Signal[] = [
-  {
-    ticker: "SMCI",
-    headline: "CEO sold $2.1M — unscheduled",
-    date: "Mar 19",
-    detail: "Charles Liang sold 50,000 shares outside 10b5-1 plan. First sale in 14 months.",
-    significance: "high",
-    reasons: [
-      "First unscheduled sale in 14 months",
-      "3 historical matches — avg 12% drop in 30 days",
-      "Outside 10b5-1 scheduled plan",
-    ],
-    context: {
-      "ghost db": "3 pattern matches",
-      "avg 30-day drop": "−12%",
-      "last similar event": "aug 2025",
-      "your position": "1,000 shares",
-      "current value": "$42,500",
-      "overmind": "within policy",
-    },
-  },
-  {
-    ticker: "NVDA",
-    headline: "CFO sold $890K — scheduled",
-    date: "Mar 21",
-    detail: "Routine 10b5-1 plan execution. No pattern deviation.",
-    significance: "low",
-    reasons: [],
-    context: {
-      "ghost db": "1 pattern match",
-      "classification": "routine 10b5-1",
-    },
-  },
-];
+const SEED_SIGNALS: Signal[] = [];
 
 const SENSITIVITY_LABELS: Record<Sensitivity, string> = {
   major_only: "major only",
@@ -78,17 +41,41 @@ interface User {
 
 export default function PageClient({ user }: { user: User }) {
   const router = useRouter();
-  const [watchlist, setWatchlist] = useState<WatchItem[]>([
-    { ticker: "SMCI", sensitivity: "major_only" },
-    { ticker: "TSLA", sensitivity: "major_only" },
-    { ticker: "NVDA", sensitivity: "all_news" },
-  ]);
+  const [watchlist, setWatchlist] = useState<WatchItem[]>([]);
+  const [isLoadingWatchlist, setIsLoadingWatchlist] = useState(true);
+  const [watchlistError, setWatchlistError] = useState<string | null>(null);
   const [input, setInput] = useState("");
-  const [selectedSignal, setSelectedSignal] = useState<Signal | null>(SEED_SIGNALS[0]);
+  const [selectedSignal, setSelectedSignal] = useState<Signal | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [signalDetected, setSignalDetected] = useState(false);
   const [livePrices, setLivePrices] = useState(DEFAULT_PRICES);
+
+  // Load watchlist from API on mount
+  useEffect(() => {
+    async function loadWatchlist() {
+      try {
+        const res = await fetch("/api/watchlist", {
+          credentials: "include",
+        });
+        if (!res.ok) {
+          throw new Error("Failed to load watchlist");
+        }
+        const data = await res.json();
+        const items: WatchItem[] = (data.watchlist || []).map((item: { ticker: string }) => ({
+          ticker: item.ticker,
+          sensitivity: "major_only" as Sensitivity,
+        }));
+        setWatchlist(items);
+      } catch (err) {
+        console.error("Failed to load watchlist:", err);
+        setWatchlistError("Failed to load watchlist");
+      } finally {
+        setIsLoadingWatchlist(false);
+      }
+    }
+    loadWatchlist();
+  }, []);
 
   const handlePriceUpdate = useCallback((prices: Record<string, { price: number; change: number; changePct: number }>) => {
     setLivePrices((prev) => ({ ...prev, ...prices }));
@@ -136,7 +123,7 @@ export default function PageClient({ user }: { user: User }) {
 
   const handleSignalDetected = useCallback(async () => {
     setSignalDetected(true);
-    setSelectedSignal(SEED_SIGNALS[0]);
+    setSelectedSignal(null);
     setLoading(true);
     setError(null);
     try {
@@ -158,15 +145,49 @@ export default function PageClient({ user }: { user: User }) {
 
   async function addTicker() {
     const t = input.trim().toUpperCase();
-    if (t && !watchlist.find((w) => w.ticker === t)) {
+    if (!t) return;
+
+    // Validate ticker format (1-5 uppercase letters)
+    if (!/^[A-Z]{1,5}$/.test(t)) {
+      setWatchlistError("Invalid ticker format. Must be 1-5 uppercase letters.");
+      return;
+    }
+
+    if (watchlist.find((w) => w.ticker === t)) {
+      setWatchlistError("Ticker already in watchlist");
+      return;
+    }
+
+    try {
+      const res = await fetch("/api/watchlist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ ticker: t }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        if (res.status === 409) {
+          setWatchlistError("Ticker already in watchlist");
+        } else if (res.status === 400) {
+          setWatchlistError(data.error || "Invalid request");
+        } else {
+          setWatchlistError("Failed to add ticker");
+        }
+        return;
+      }
+
+      // Success - add to local state
       setWatchlist([...watchlist, { ticker: t, sensitivity: "major_only" }]);
       setInput("");
-      
+      setWatchlistError(null);
+
       // Fetch price for the new ticker
       try {
-        const res = await fetch(`/api/stock-quote?ticker=${t}`);
-        if (res.ok) {
-          const data = await res.json();
+        const priceRes = await fetch(`/api/stock-quote?ticker=${t}`);
+        if (priceRes.ok) {
+          const data = await priceRes.json();
           if (data.price) {
             setLivePrices((prev) => ({
               ...prev,
@@ -181,11 +202,29 @@ export default function PageClient({ user }: { user: User }) {
       } catch (err) {
         console.error(`Failed to fetch price for ${t}:`, err);
       }
+    } catch (err) {
+      console.error("Failed to add ticker:", err);
+      setWatchlistError("Failed to add ticker");
     }
   }
 
-  function removeTicker(ticker: string) {
-    setWatchlist(watchlist.filter((w) => w.ticker !== ticker));
+  async function removeTicker(ticker: string) {
+    try {
+      const res = await fetch(`/api/watchlist/${ticker}`, {
+        method: "DELETE",
+        credentials: "include",
+      });
+
+      if (!res.ok) {
+        console.error("Failed to remove ticker:", await res.text());
+        return;
+      }
+
+      setWatchlist(watchlist.filter((w) => w.ticker !== ticker));
+      setWatchlistError(null);
+    } catch (err) {
+      console.error("Failed to remove ticker:", err);
+    }
   }
 
   function setSensitivity(ticker: string, s: Sensitivity) {
@@ -415,6 +454,16 @@ export default function PageClient({ user }: { user: User }) {
                 + Add
               </button>
             </div>
+            {watchlistError && (
+              <p style={{ color: "var(--orange)", fontSize: "var(--text-xs)", marginTop: "0.5rem" }}>
+                {watchlistError}
+              </p>
+            )}
+            {isLoadingWatchlist && (
+              <p style={{ color: "var(--ink-50)", fontSize: "var(--text-xs)", marginTop: "0.5rem" }}>
+                Loading watchlist...
+              </p>
+            )}
           </div>
 
           {/* RIGHT: News Timeline */}

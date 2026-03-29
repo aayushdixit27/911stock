@@ -17,6 +17,13 @@ export function getSql(): ReturnType<typeof postgres> | null {
 
 // ── Types ───────────────────────────────────────────────────────────────────
 
+export type DBWatchlistItem = {
+  id: string;
+  user_id: string;
+  ticker: string;
+  added_at: Date;
+};
+
 export type DBSignal = {
   id: string;
   ticker: string;
@@ -290,6 +297,21 @@ export async function migrate(): Promise<void> {
 
   await sql`
     CREATE INDEX IF NOT EXISTS portfolio_user_id_idx ON portfolio(user_id)
+  `;
+
+  // Watchlist table - per-user watchlist CRUD
+  await sql`
+    CREATE TABLE IF NOT EXISTS watchlist (
+      id        TEXT PRIMARY KEY,
+      user_id   TEXT NOT NULL,
+      ticker    TEXT NOT NULL,
+      added_at  TIMESTAMPTZ DEFAULT now(),
+      UNIQUE(user_id, ticker)
+    )
+  `;
+
+  await sql`
+    CREATE INDEX IF NOT EXISTS watchlist_user_id_idx ON watchlist(user_id)
   `;
 
   // Seed the SMCI demo signal (with empty user_id for backward compatibility)
@@ -620,6 +642,42 @@ export async function getLearningCount(userId: string, ticker: string): Promise<
   const rows = await withDb((sql) => sql<{ count: string }[]>`
     SELECT COUNT(*)::text AS count FROM agent_learnings 
     WHERE user_id = ${userId} AND ticker = ${ticker}
+  `);
+  return parseInt(rows[0]?.count ?? "0", 10);
+}
+
+// ── Watchlist Operations ────────────────────────────────────────────────────
+
+export async function getWatchlist(userId: string): Promise<DBWatchlistItem[]> {
+  return withDb((sql) => sql<DBWatchlistItem[]>`
+    SELECT * FROM watchlist
+    WHERE user_id = ${userId}
+    ORDER BY added_at DESC
+  `);
+}
+
+export async function addToWatchlist(userId: string, ticker: string): Promise<DBWatchlistItem> {
+  const id = newId();
+  const rows = await withDb((sql) => sql<DBWatchlistItem[]>`
+    INSERT INTO watchlist (id, user_id, ticker)
+    VALUES (${id}, ${userId}, ${ticker})
+    ON CONFLICT (user_id, ticker) DO UPDATE SET ticker = ${ticker}
+    RETURNING *
+  `);
+  return rows[0];
+}
+
+export async function removeFromWatchlist(userId: string, ticker: string): Promise<void> {
+  await withDb((sql) => sql`
+    DELETE FROM watchlist
+    WHERE user_id = ${userId} AND ticker = ${ticker}
+  `);
+}
+
+export async function getWatchlistCount(userId: string): Promise<number> {
+  const rows = await withDb((sql) => sql<{ count: string }[]>`
+    SELECT COUNT(*)::text AS count FROM watchlist
+    WHERE user_id = ${userId}
   `);
   return parseInt(rows[0]?.count ?? "0", 10);
 }
