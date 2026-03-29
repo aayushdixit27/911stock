@@ -21,22 +21,25 @@ export async function GET() {
       getUserTier(userId),
     ]);
 
-    // Get Stripe subscription details
+    // Get user info including Stripe and onboarding status
     let stripeSubscriptionStatus: string | null = null;
     let stripeCurrentPeriodEnd: string | null = null;
+    let onboardingCompleted = false;
 
     if (sql) {
       const userResult = await sql<{
         stripe_subscription_status: string | null;
         stripe_current_period_end: Date | null;
+        onboarding_completed: boolean;
       }[]>`
-        SELECT stripe_subscription_status, stripe_current_period_end 
+        SELECT stripe_subscription_status, stripe_current_period_end, onboarding_completed
         FROM users 
         WHERE id = ${userId}
       `;
       if (userResult[0]) {
         stripeSubscriptionStatus = userResult[0].stripe_subscription_status;
         stripeCurrentPeriodEnd = userResult[0].stripe_current_period_end?.toISOString() ?? null;
+        onboardingCompleted = userResult[0].onboarding_completed ?? false;
       }
     }
 
@@ -45,6 +48,7 @@ export async function GET() {
       isPremium: tier === "premium",
       stripeSubscriptionStatus,
       stripeCurrentPeriodEnd,
+      onboardingCompleted,
       riskTolerance: settings?.risk_tolerance ?? "moderate",
       notifyInApp: settings?.notify_in_app ?? true,
       notifyEmail: settings?.notify_email ?? false,

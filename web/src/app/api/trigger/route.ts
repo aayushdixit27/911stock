@@ -6,7 +6,7 @@ import { detectSignal, getHistoricalPattern, scoreSignal } from "@/lib/signals";
 import { fetchLatestSignal } from "@/lib/edgar";
 import { fetchNewsSentiment } from "@/lib/news";
 import { setLastSignal, setLastUserId } from "@/lib/state";
-import { insertSignal, getLatestSignal, getWatchlist, getPortfolio, insertNotification, getUserTier, insertSignalOutcome, type DBSignal } from "@/lib/db";
+import { insertSignal, getLatestSignal, getWatchlist, getPortfolio, insertNotification, getUserTier, insertSignalOutcome, getUserSettings, type DBSignal } from "@/lib/db";
 
 // Calculate notification delivery time based on user tier
 // Premium users: immediate (now)
@@ -86,9 +86,14 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Get user's tier for staggered notification delivery
+    // Get user's tier and settings for notification preferences
     const userTier = await getUserTier(userId);
+    const userSettings = await getUserSettings(userId);
     const deliverAt = calculateDeliverAt(userTier);
+
+    // Determine notification preferences
+    const notifyInApp = userSettings?.notify_in_app ?? true;
+    const notifyPhone = userSettings?.notify_phone ?? false;
 
     // Process all signals for the user
     const results = [];
@@ -100,13 +105,14 @@ export async function POST(req: NextRequest) {
 
       // Get user's position in this ticker for context-aware scoring
       const position = portfolio.find((p) => p.ticker === signal.ticker);
+      const riskTolerance = (userSettings?.risk_tolerance as "moderate" | "conservative" | "aggressive") ?? "moderate";
       const userContext = position ? {
         positionShares: position.shares,
         avgCost: position.avg_cost,
-        riskTolerance: "moderate" as const, // Default for now, will be user preference
+        riskTolerance,
       } : {
         positionShares: 0,
-        riskTolerance: "moderate" as const,
+        riskTolerance,
       };
 
       const pattern = getHistoricalPattern(signal.ticker);
@@ -196,8 +202,8 @@ export async function POST(req: NextRequest) {
         }
       }
 
-      // Create notification for this signal (with staggered delivery based on tier)
-      if (signalInserted) {
+      // Create notification for this signal (with staggered delivery based on tier and user preference)
+      if (signalInserted && notifyInApp) {
         try {
           const urgencyLabel = score >= 7 ? 'High urgency' : score >= 4 ? 'Medium urgency' : 'Low urgency';
           await insertNotification({
@@ -213,12 +219,17 @@ export async function POST(req: NextRequest) {
         } catch (err) {
           console.error("[trigger] Failed to create notification:", err);
         }
+      } else if (!notifyInApp) {
+        console.log(`[trigger] Skipped in-app notification for user ${userId} - notifications disabled`);
       }
 
-      // Trigger outbound call if score is high enough AND user is premium
+      // Trigger outbound call if:
+      // - Score is high enough
+      // - User is premium
+      // - User has phone notifications enabled
       let callId: string | null = null;
       let callTriggered = false;
-      if (score >= 7 && userTier === 'premium') {
+      if (score >= 7 && userTier === 'premium' && notifyPhone) {
         const phone = process.env.MY_PHONE_NUMBER;
         if (phone && phone !== "+1XXXXXXXXXX") {
           try {
@@ -229,8 +240,9 @@ export async function POST(req: NextRequest) {
             console.error("[trigger] Failed to make outbound call:", err);
           }
         }
+      } else if (score >= 7 && userTier === 'premium' && !notifyPhone) {
+        console.log(`[trigger] Skipped outbound call for signal ${dbSignal.id} - phone notifications disabled`);
       } else if (score >= 7 && userTier !== 'premium') {
-        // Log that we skipped the call due to tier restrictions
         console.log(`[trigger] Skipped outbound call for signal ${dbSignal.id} - user is on ${userTier} tier`);
       }
 

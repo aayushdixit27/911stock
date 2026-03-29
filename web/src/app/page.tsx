@@ -1,13 +1,29 @@
 import { auth } from "@/lib/auth";
-import { getAccuracyStats } from "@/lib/db";
+import { getAccuracyStats, getSql } from "@/lib/db";
 import Link from "next/link";
 import PageClient from "./page-client";
+import { redirect } from "next/navigation";
 
 export default async function Home() {
   const session = await auth();
 
-  // If authenticated, show the authenticated home/watchlist page
+  // If authenticated, check onboarding status
   if (session?.user?.id) {
+    const sql = getSql();
+    let onboardingCompleted = false;
+    
+    if (sql) {
+      const rows = await sql<{ onboarding_completed: boolean }[]>`
+        SELECT onboarding_completed FROM users WHERE id = ${session.user.id}
+      `;
+      onboardingCompleted = rows[0]?.onboarding_completed ?? false;
+    }
+    
+    // Redirect to onboarding if not completed
+    if (!onboardingCompleted) {
+      redirect("/onboarding");
+    }
+    
     return <PageClient user={session.user} />;
   }
 

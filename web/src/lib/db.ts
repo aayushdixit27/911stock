@@ -457,6 +457,12 @@ export async function migrate(): Promise<void> {
     CREATE INDEX IF NOT EXISTS alpaca_connections_user_id_idx ON alpaca_connections(user_id)
   `;
 
+  // Onboarding completion flag
+  await sql`
+    ALTER TABLE users 
+    ADD COLUMN IF NOT EXISTS onboarding_completed BOOLEAN DEFAULT false
+  `;
+
   // Stripe subscription columns - add to users table
   await sql`
     ALTER TABLE users 

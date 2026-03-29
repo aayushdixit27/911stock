@@ -27,13 +27,55 @@ interface BillingStatus {
   currentPeriodEnd: string | null;
 }
 
+interface UserSettings {
+  riskTolerance: string;
+  notifyInApp: boolean;
+  notifyEmail: boolean;
+  notifyPhone: boolean;
+}
+
+const RISK_LEVELS = [
+  {
+    value: "conservative",
+    label: "Conservative",
+    description: "Only high-confidence signals. Lower false positives, may miss some opportunities.",
+    icon: "🛡️",
+  },
+  {
+    value: "moderate",
+    label: "Moderate",
+    description: "Balanced approach. Medium-confidence signals included. Good for most investors.",
+    icon: "⚖️",
+  },
+  {
+    value: "aggressive",
+    label: "Aggressive",
+    description: "All signals, even speculative ones. More alerts, higher chance of early action.",
+    icon: "🚀",
+  },
+];
+
 export default function Settings() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  
+  // Settings state
+  const [settings, setSettings] = useState<UserSettings>({
+    riskTolerance: "moderate",
+    notifyInApp: true,
+    notifyEmail: false,
+    notifyPhone: false,
+  });
+  const [settingsLoading, setSettingsLoading] = useState(false);
+  const [settingsSaved, setSettingsSaved] = useState(false);
+  
+  // Alpaca state
   const [alpacaStatus, setAlpacaStatus] = useState<AlpacaStatus | null>(null);
   const [alpacaLoading, setAlpacaLoading] = useState(false);
   const [alpacaError, setAlpacaError] = useState<string | null>(null);
   const [alpacaSuccess, setAlpacaSuccess] = useState<string | null>(null);
+  
+  // Billing state
   const [billingStatus, setBillingStatus] = useState<BillingStatus | null>(null);
   const [billingLoading, setBillingLoading] = useState(false);
   const [billingError, setBillingError] = useState<string | null>(null);
@@ -54,11 +96,12 @@ export default function Settings() {
       });
   }, []);
 
-  // Fetch Alpaca status when user is loaded
+  // Fetch all settings when user is loaded
   useEffect(() => {
     if (user) {
       fetchAlpacaStatus();
       fetchBillingStatus();
+      fetchUserSettings();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
@@ -96,6 +139,23 @@ export default function Settings() {
     }
   }, []);
 
+  const fetchUserSettings = useCallback(async () => {
+    try {
+      const res = await fetch("/api/user/settings");
+      if (res.ok) {
+        const data = await res.json();
+        setSettings({
+          riskTolerance: data.riskTolerance || "moderate",
+          notifyInApp: data.notifyInApp ?? true,
+          notifyEmail: data.notifyEmail ?? false,
+          notifyPhone: data.notifyPhone ?? false,
+        });
+      }
+    } catch (err) {
+      console.error("Failed to fetch user settings:", err);
+    }
+  }, []);
+
   const fetchAlpacaStatus = useCallback(async () => {
     try {
       const res = await fetch("/api/alpaca/status");
@@ -125,6 +185,30 @@ export default function Settings() {
     }
   }, []);
 
+  async function saveSettings(updates: Partial<UserSettings>) {
+    setSettingsLoading(true);
+    setSettingsSaved(false);
+    try {
+      const res = await fetch("/api/user/settings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...settings,
+          ...updates,
+        }),
+      });
+      if (res.ok) {
+        setSettings((prev) => ({ ...prev, ...updates }));
+        setSettingsSaved(true);
+        setTimeout(() => setSettingsSaved(false), 3000);
+      }
+    } catch (err) {
+      console.error("Failed to save settings:", err);
+    } finally {
+      setSettingsLoading(false);
+    }
+  }
+
   async function handleLogout() {
     await signOut({ callbackUrl: "/" });
   }
@@ -133,14 +217,7 @@ export default function Settings() {
     setAlpacaLoading(true);
     setAlpacaError(null);
     setAlpacaSuccess(null);
-    
-    try {
-      // Initiate OAuth flow - this will redirect to Alpaca
-      window.location.href = "/api/alpaca/auth";
-    } catch (_err) {
-      setAlpacaLoading(false);
-      setAlpacaError("Failed to initiate connection. Please try again.");
-    }
+    window.location.href = "/api/alpaca/auth";
   }
 
   async function disconnectAlpaca() {
@@ -149,10 +226,7 @@ export default function Settings() {
     setAlpacaSuccess(null);
     
     try {
-      const res = await fetch("/api/alpaca/disconnect", {
-        method: "POST",
-      });
-      
+      const res = await fetch("/api/alpaca/disconnect", { method: "POST" });
       if (res.ok) {
         setAlpacaSuccess("Alpaca account disconnected successfully.");
         await fetchAlpacaStatus();
@@ -173,14 +247,10 @@ export default function Settings() {
     setBillingSuccess(null);
     
     try {
-      const res = await fetch("/api/stripe/checkout", {
-        method: "POST",
-      });
-      
+      const res = await fetch("/api/stripe/checkout", { method: "POST" });
       const data = await res.json();
       
       if (res.ok && data.url) {
-        // Redirect to Stripe Checkout
         window.location.href = data.url;
       } else {
         setBillingError(data.error || data.message || "Failed to start checkout.");
@@ -197,14 +267,10 @@ export default function Settings() {
     setBillingError(null);
     
     try {
-      const res = await fetch("/api/stripe/portal", {
-        method: "POST",
-      });
-      
+      const res = await fetch("/api/stripe/portal", { method: "POST" });
       const data = await res.json();
       
       if (res.ok && data.url) {
-        // Redirect to Stripe Customer Portal
         window.location.href = data.url;
       } else {
         setBillingError(data.error || data.message || "Failed to open portal.");
@@ -225,212 +291,188 @@ export default function Settings() {
           Settings
         </div>
 
+        {/* Profile Section */}
+        <div className="mark-card" style={{ padding: "1.5rem", overflow: "hidden", marginBottom: "1.5rem" }}>
+          <div style={{ height: "3px", background: "linear-gradient(to right, var(--orange), var(--ember))", margin: "-1.5rem -1.5rem 1.5rem" }} />
+          <div className="mark-eyebrow" style={{ marginBottom: "1rem" }}>Profile</div>
+          
+          {loading ? (
+            <p className="text-[var(--ink-50)] text-sm">Loading...</p>
+          ) : user ? (
+            <>
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-full bg-[var(--orange)] flex items-center justify-center text-white font-semibold">
+                  {user.email?.charAt(0).toUpperCase() || "U"}
+                </div>
+                <div>
+                  <div className="font-medium text-[var(--ink)]">{user.name || user.email?.split("@")[0]}</div>
+                  <div className="text-sm text-[var(--ink-50)]">{user.email}</div>
+                </div>
+              </div>
+            </>
+          ) : (
+            <Link href="/auth/login" className="text-[var(--terra)] hover:text-[var(--orange)]">Sign in</Link>
+          )}
+        </div>
+
+        {/* Notifications Section */}
+        <div className="mark-card" style={{ padding: "1.5rem", overflow: "hidden", marginBottom: "1.5rem" }}>
+          <div style={{ height: "3px", background: "linear-gradient(to right, var(--orange), var(--ember))", margin: "-1.5rem -1.5rem 1.5rem" }} />
+          <div className="mark-eyebrow" style={{ marginBottom: "1rem" }}>Notifications</div>
+          
+          {loading ? (
+            <p className="text-[var(--ink-50)] text-sm">Loading...</p>
+          ) : user ? (
+            <>
+              <div className="space-y-4">
+                {/* In-app */}
+                <div className="flex items-center justify-between p-3 border border-[var(--ink-08)] rounded-md">
+                  <div>
+                    <div className="font-medium text-[var(--ink)] text-sm">In-app notifications</div>
+                    <div className="text-xs text-[var(--ink-50)]">See alerts when you&apos;re using the app</div>
+                  </div>
+                  <button
+                    onClick={() => saveSettings({ notifyInApp: !settings.notifyInApp })}
+                    disabled={settingsLoading}
+                    className={`w-12 h-6 rounded-full transition-colors relative ${settings.notifyInApp ? "bg-[var(--orange)]" : "bg-[var(--ink-30)]"}`}
+                  >
+                    <span className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-transform ${settings.notifyInApp ? "translate-x-7" : "translate-x-1"}`} />
+                  </button>
+                </div>
+
+                {/* Email */}
+                <div className="flex items-center justify-between p-3 border border-[var(--ink-08)] rounded-md">
+                  <div>
+                    <div className="font-medium text-[var(--ink)] text-sm">Email notifications</div>
+                    <div className="text-xs text-[var(--ink-50)]">Get alerts sent to your inbox</div>
+                  </div>
+                  <button
+                    onClick={() => saveSettings({ notifyEmail: !settings.notifyEmail })}
+                    disabled={settingsLoading}
+                    className={`w-12 h-6 rounded-full transition-colors relative ${settings.notifyEmail ? "bg-[var(--orange)]" : "bg-[var(--ink-30)]"}`}
+                  >
+                    <span className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-transform ${settings.notifyEmail ? "translate-x-7" : "translate-x-1"}`} />
+                  </button>
+                </div>
+
+                {/* Phone */}
+                <div className="flex items-center justify-between p-3 border border-[var(--ink-08)] rounded-md">
+                  <div>
+                    <div className="font-medium text-[var(--ink)] text-sm flex items-center gap-2">
+                      Phone call alerts
+                      {billingStatus?.isPremium === false && (
+                        <span className="px-2 py-0.5 bg-[var(--orange)] text-white text-xs rounded-full">Premium</span>
+                      )}
+                    </div>
+                    <div className="text-xs text-[var(--ink-50)]">
+                      {billingStatus?.isPremium 
+                        ? "Receive AI-powered phone calls for high-priority signals"
+                        : "Upgrade to Premium for phone call alerts"}
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => billingStatus?.isPremium && saveSettings({ notifyPhone: !settings.notifyPhone })}
+                    disabled={settingsLoading || !billingStatus?.isPremium}
+                    className={`w-12 h-6 rounded-full transition-colors relative ${settings.notifyPhone && billingStatus?.isPremium ? "bg-[var(--orange)]" : "bg-[var(--ink-30)]"} ${!billingStatus?.isPremium ? "opacity-50" : ""}`}
+                  >
+                    <span className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-transform ${settings.notifyPhone && billingStatus?.isPremium ? "translate-x-7" : "translate-x-1"}`} />
+                  </button>
+                </div>
+              </div>
+
+              {settingsSaved && (
+                <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-md text-green-600 text-sm">
+                  Settings saved successfully!
+                </div>
+              )}
+            </>
+          ) : (
+            <Link href="/auth/login" className="text-[var(--terra)] hover:text-[var(--orange)]">Sign in</Link>
+          )}
+        </div>
+
+        {/* Risk Tolerance Section */}
+        <div className="mark-card" style={{ padding: "1.5rem", overflow: "hidden", marginBottom: "1.5rem" }}>
+          <div style={{ height: "3px", background: "linear-gradient(to right, var(--orange), var(--ember))", margin: "-1.5rem -1.5rem 1.5rem" }} />
+          <div className="mark-eyebrow" style={{ marginBottom: "1rem" }}>Risk Tolerance</div>
+          
+          {loading ? (
+            <p className="text-[var(--ink-50)] text-sm">Loading...</p>
+          ) : user ? (
+            <>
+              <p className="text-sm text-[var(--ink-50)] mb-4">
+                This affects how we score and filter signals for your portfolio.
+              </p>
+
+              <div className="space-y-3">
+                {RISK_LEVELS.map((level) => (
+                  <button
+                    key={level.value}
+                    onClick={() => saveSettings({ riskTolerance: level.value })}
+                    disabled={settingsLoading}
+                    className={`w-full p-4 border rounded-md text-left transition-all ${
+                      settings.riskTolerance === level.value
+                        ? "border-[var(--orange)] bg-[var(--orange-lt)]"
+                        : "border-[var(--ink-08)] hover:border-[var(--terra)] hover:bg-[var(--paper)]"
+                    }`}
+                  >
+                    <div className="flex items-start gap-3">
+                      <span className="text-xl">{level.icon}</span>
+                      <div className="flex-1">
+                        <div className="font-medium text-[var(--ink)]">{level.label}</div>
+                        <div className="text-xs text-[var(--ink-50)]">{level.description}</div>
+                      </div>
+                      {settings.riskTolerance === level.value && (
+                        <span className="text-[var(--orange)]">✓</span>
+                      )}
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </>
+          ) : (
+            <Link href="/auth/login" className="text-[var(--terra)] hover:text-[var(--orange)]">Sign in</Link>
+          )}
+        </div>
+
         {/* Billing Section */}
         <div className="mark-card" style={{ padding: "1.5rem", overflow: "hidden", marginBottom: "1.5rem" }}>
           <div style={{ height: "3px", background: "linear-gradient(to right, var(--orange), var(--ember))", margin: "-1.5rem -1.5rem 1.5rem" }} />
-
-          <div className="mark-eyebrow" style={{ marginBottom: "1rem" }}>
-            Plan & Billing
-          </div>
-
+          <div className="mark-eyebrow" style={{ marginBottom: "1rem" }}>Plan & Billing</div>
+          
+          {billingError && (
+            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md text-red-600 text-sm">
+              {billingError}
+            </div>
+          )}
+          {billingSuccess && (
+            <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-md text-green-600 text-sm">
+              {billingSuccess}
+            </div>
+          )}
+          
           {loading ? (
-            <p style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", color: "var(--ink-50)" }}>
-              Loading...
-            </p>
+            <p className="text-[var(--ink-50)] text-sm">Loading...</p>
           ) : user ? (
             <>
-              {/* Current Plan Display */}
-              <div style={{ marginBottom: "1.5rem" }}>
-                <div style={{ 
-                  display: "flex", 
-                  alignItems: "center", 
-                  justifyContent: "space-between",
-                  marginBottom: "0.75rem"
-                }}>
-                  <span style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", color: "var(--ink-50)" }}>
-                    Current Plan
-                  </span>
-                  <span style={{ 
-                    fontFamily: "var(--font-body)", 
-                    fontSize: "var(--text-sm)", 
-                    fontWeight: 600,
-                    color: billingStatus?.isPremium ? "#16a34a" : "var(--ink)",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.5rem"
-                  }}>
-                    {billingStatus?.isPremium ? (
-                      <>
-                        <span style={{ 
-                          width: 8, 
-                          height: 8, 
-                          borderRadius: "50%", 
-                          background: "#16a34a" 
-                        }} />
-                        Premium
-                      </>
-                    ) : (
-                      <>
-                        <span style={{ 
-                          width: 8, 
-                          height: 8, 
-                          borderRadius: "50%", 
-                          background: "var(--ink-30)" 
-                        }} />
-                        Free
-                      </>
-                    )}
-                  </span>
-                </div>
-
-                {billingStatus?.isPremium && billingStatus.currentPeriodEnd && (
-                  <p style={{ 
-                    fontFamily: "var(--font-body)", 
-                    fontSize: "var(--text-xs)", 
-                    color: "var(--ink-50)",
-                    marginBottom: "0.5rem"
-                  }}>
-                    Renews on {new Date(billingStatus.currentPeriodEnd).toLocaleDateString()}
-                  </p>
-                )}
-
-                {billingStatus?.subscriptionStatus && billingStatus.subscriptionStatus !== "active" && (
-                  <p style={{ 
-                    fontFamily: "var(--font-body)", 
-                    fontSize: "var(--text-xs)", 
-                    color: "#dc2626",
-                    marginBottom: "0.5rem"
-                  }}>
-                    Status: {billingStatus.subscriptionStatus}
-                  </p>
-                )}
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-sm text-[var(--ink-50)]">Current Plan</span>
+                <span className={`font-semibold text-sm ${billingStatus?.isPremium ? "text-green-600" : "text-[var(--ink)]"}`}>
+                  {billingStatus?.isPremium ? "Premium" : "Free"}
+                </span>
               </div>
-
-              {/* Billing Error/Success Messages */}
-              {billingError && (
-                <div style={{ 
-                  padding: "0.75rem 1rem", 
-                  background: "#fef2f2", 
-                  borderRadius: "4px",
-                  border: "1px solid #fecaca",
-                  marginBottom: "1rem"
-                }}>
-                  <p style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", color: "#dc2626" }}>
-                    {billingError}
-                  </p>
-                </div>
+              
+              {billingStatus?.isPremium && billingStatus.currentPeriodEnd && (
+                <p className="text-xs text-[var(--ink-50)] mb-4">
+                  Renews on {new Date(billingStatus.currentPeriodEnd).toLocaleDateString()}
+                </p>
               )}
 
-              {billingSuccess && (
-                <div style={{ 
-                  padding: "0.75rem 1rem", 
-                  background: "#f0fdf4", 
-                  borderRadius: "4px",
-                  border: "1px solid #bbf7d0",
-                  marginBottom: "1rem"
-                }}>
-                  <p style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", color: "#16a34a" }}>
-                    {billingSuccess}
-                  </p>
-                </div>
-              )}
-
-              {/* Plan Features Comparison */}
-              <div style={{ 
-                padding: "1rem", 
-                background: "var(--ink-05)", 
-                borderRadius: "4px",
-                marginBottom: "1.5rem"
-              }}>
-                <h4 style={{ 
-                  fontFamily: "var(--font-body)", 
-                  fontSize: "var(--text-sm)", 
-                  fontWeight: 600,
-                  color: "var(--ink)",
-                  marginBottom: "0.75rem"
-                }}>
-                  Plan Features
-                </h4>
-                <div style={{ display: "grid", gap: "0.5rem" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                    <span style={{ color: "#16a34a" }}>✓</span>
-                    <span style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", color: "var(--ink)" }}>
-                      Watchlist & Signal Feed
-                    </span>
-                    <span style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-xs)", color: "var(--ink-50)", marginLeft: "auto" }}>
-                      Free
-                    </span>
-                  </div>
-                  <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                    <span style={{ color: billingStatus?.isPremium ? "#16a34a" : "var(--ink-30)" }}>
-                      {billingStatus?.isPremium ? "✓" : "○"}
-                    </span>
-                    <span style={{ 
-                      fontFamily: "var(--font-body)", 
-                      fontSize: "var(--text-sm)", 
-                      color: billingStatus?.isPremium ? "var(--ink)" : "var(--ink-50)" 
-                    }}>
-                      Real-time Signals
-                    </span>
-                    <span style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-xs)", color: "var(--ink-50)", marginLeft: "auto" }}>
-                      Premium
-                    </span>
-                  </div>
-                  <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                    <span style={{ color: billingStatus?.isPremium ? "#16a34a" : "var(--ink-30)" }}>
-                      {billingStatus?.isPremium ? "✓" : "○"}
-                    </span>
-                    <span style={{ 
-                      fontFamily: "var(--font-body)", 
-                      fontSize: "var(--text-sm)", 
-                      color: billingStatus?.isPremium ? "var(--ink)" : "var(--ink-50)" 
-                    }}>
-                      Phone Call Alerts
-                    </span>
-                    <span style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-xs)", color: "var(--ink-50)", marginLeft: "auto" }}>
-                      Premium
-                    </span>
-                  </div>
-                  <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                    <span style={{ color: billingStatus?.isPremium ? "#16a34a" : "var(--ink-30)" }}>
-                      {billingStatus?.isPremium ? "✓" : "○"}
-                    </span>
-                    <span style={{ 
-                      fontFamily: "var(--font-body)", 
-                      fontSize: "var(--text-sm)", 
-                      color: billingStatus?.isPremium ? "var(--ink)" : "var(--ink-50)" 
-                    }}>
-                      Alpaca Trading Integration
-                    </span>
-                    <span style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-xs)", color: "var(--ink-50)", marginLeft: "auto" }}>
-                      Premium
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Action Button */}
               {billingStatus?.isPremium ? (
                 <button
                   onClick={manageSubscription}
                   disabled={billingLoading}
-                  style={{
-                    display: "block",
-                    width: "100%",
-                    textAlign: "center",
-                    fontFamily: "var(--font-body)",
-                    fontWeight: 700,
-                    fontSize: "var(--text-xs)",
-                    letterSpacing: "0.08em",
-                    textTransform: "uppercase",
-                    color: "var(--ink)",
-                    background: "transparent",
-                    border: "1px solid var(--ink-08)",
-                    borderRadius: "4px",
-                    padding: "0.875rem 1rem",
-                    cursor: billingLoading ? "not-allowed" : "pointer",
-                    opacity: billingLoading ? 0.6 : 1,
-                  }}
+                  className="w-full py-2.5 border border-[var(--ink-08)] rounded-md text-sm font-semibold uppercase tracking-wider hover:bg-[var(--paper)] transition-colors disabled:opacity-50"
                 >
                   {billingLoading ? "Loading..." : "Manage Subscription"}
                 </button>
@@ -438,196 +480,51 @@ export default function Settings() {
                 <button
                   onClick={upgradeToPremium}
                   disabled={billingLoading}
-                  style={{
-                    display: "block",
-                    width: "100%",
-                    textAlign: "center",
-                    fontFamily: "var(--font-body)",
-                    fontWeight: 700,
-                    fontSize: "var(--text-xs)",
-                    letterSpacing: "0.08em",
-                    textTransform: "uppercase",
-                    color: "var(--white)",
-                    background: "var(--orange)",
-                    borderRadius: "4px",
-                    padding: "0.875rem 1rem",
-                    border: "none",
-                    cursor: billingLoading ? "not-allowed" : "pointer",
-                    opacity: billingLoading ? 0.6 : 1,
-                  }}
+                  className="w-full py-2.5 bg-[var(--orange)] text-white rounded-md text-sm font-semibold uppercase tracking-wider hover:bg-[var(--orange-dk)] transition-colors disabled:opacity-50"
                 >
                   {billingLoading ? "Loading..." : "Upgrade to Premium"}
                 </button>
               )}
             </>
           ) : (
-            <>
-              <p style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", color: "var(--ink-50)", marginBottom: "0.75rem", lineHeight: 1.6 }}>
-                Sign in to view your plan and billing information.
-              </p>
-              <Link
-                href="/auth/login"
-                style={{
-                  display: "block",
-                  textAlign: "center",
-                  fontFamily: "var(--font-body)",
-                  fontWeight: 700,
-                  fontSize: "var(--text-sm)",
-                  letterSpacing: "0.08em",
-                  textTransform: "uppercase",
-                  color: "var(--white)",
-                  background: "var(--ink)",
-                  borderRadius: "4px",
-                  padding: "0.875rem 1rem",
-                  textDecoration: "none",
-                }}
-              >
-                Sign in
-              </Link>
-            </>
+            <Link href="/auth/login" className="text-[var(--terra)] hover:text-[var(--orange)]">Sign in</Link>
           )}
         </div>
 
-        {/* Alpaca Integration Section */}
+        {/* Alpaca Section */}
         <div className="mark-card" style={{ padding: "1.5rem", overflow: "hidden", marginBottom: "1.5rem" }}>
           <div style={{ height: "3px", background: "linear-gradient(to right, var(--orange), var(--ember))", margin: "-1.5rem -1.5rem 1.5rem" }} />
-
-          <div className="mark-eyebrow" style={{ marginBottom: "1rem" }}>
-            Alpaca Trading
-          </div>
-
+          <div className="mark-eyebrow" style={{ marginBottom: "1rem" }}>Alpaca Trading</div>
+          
+          {alpacaError && (
+            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md text-red-600 text-sm">
+              {alpacaError}
+            </div>
+          )}
+          {alpacaSuccess && (
+            <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-md text-green-600 text-sm">
+              {alpacaSuccess}
+            </div>
+          )}
+          
           {loading ? (
-            <p style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", color: "var(--ink-50)" }}>
-              Loading...
-            </p>
+            <p className="text-[var(--ink-50)] text-sm">Loading...</p>
           ) : user ? (
             <>
-              {/* Alpaca Connection Status */}
-              {alpacaStatus && (
-                <div style={{ marginBottom: "1rem" }}>
-                  {alpacaStatus.isPremium ? (
-                    alpacaStatus.alpacaConnected ? (
-                      <div style={{ display: "flex", alignItems: "center", gap: "0.625rem" }}>
-                        <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#22c55e", flexShrink: 0 }} />
-                        <span style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", color: "var(--ink)", fontWeight: 600 }}>
-                          Connected to Alpaca
-                        </span>
-                        {alpacaStatus.connectedAt && (
-                          <span style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-xs)", color: "var(--ink-50)" }}>
-                            (since {new Date(alpacaStatus.connectedAt).toLocaleDateString()})
-                          </span>
-                        )}
-                      </div>
-                    ) : (
-                      <div style={{ display: "flex", alignItems: "center", gap: "0.625rem" }}>
-                        <div style={{ width: 8, height: 8, borderRadius: "50%", background: "var(--ink-30)", flexShrink: 0 }} />
-                        <span style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", color: "var(--ink-50)", fontWeight: 600 }}>
-                          Not connected
-                        </span>
-                      </div>
-                    )
-                  ) : (
-                    <div style={{ 
-                      padding: "1rem", 
-                      background: "var(--ink-05)", 
-                      borderRadius: "4px",
-                      border: "1px solid var(--ink-08)"
-                    }}>
-                      <p style={{ 
-                        fontFamily: "var(--font-body)", 
-                        fontSize: "var(--text-sm)", 
-                        color: "var(--ink)",
-                        marginBottom: "0.75rem",
-                        fontWeight: 600
-                      }}>
-                        Premium Feature
-                      </p>
-                      <p style={{ 
-                        fontFamily: "var(--font-body)", 
-                        fontSize: "var(--text-sm)", 
-                        color: "var(--ink-50)",
-                        marginBottom: "0.75rem",
-                        lineHeight: 1.6
-                      }}>
-                        Alpaca integration is available for premium subscribers only. 
-                        Connect your Alpaca paper trading account to execute trades directly from the app.
-                      </p>
-                      <Link
-                        href="/upgrade"
-                        style={{
-                          display: "inline-block",
-                          fontFamily: "var(--font-body)",
-                          fontWeight: 700,
-                          fontSize: "var(--text-xs)",
-                          letterSpacing: "0.08em",
-                          textTransform: "uppercase",
-                          color: "var(--white)",
-                          background: "var(--orange)",
-                          borderRadius: "4px",
-                          padding: "0.625rem 1rem",
-                          textDecoration: "none",
-                        }}
-                      >
-                        Upgrade to Premium
-                      </Link>
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {/* Error/Success Messages */}
-              {alpacaError && (
-                <div style={{ 
-                  padding: "0.75rem 1rem", 
-                  background: "#fef2f2", 
-                  borderRadius: "4px",
-                  border: "1px solid #fecaca",
-                  marginBottom: "1rem"
-                }}>
-                  <p style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", color: "#dc2626" }}>
-                    {alpacaError}
-                  </p>
-                </div>
-              )}
-
-              {alpacaSuccess && (
-                <div style={{ 
-                  padding: "0.75rem 1rem", 
-                  background: "#f0fdf4", 
-                  borderRadius: "4px",
-                  border: "1px solid #bbf7d0",
-                  marginBottom: "1rem"
-                }}>
-                  <p style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", color: "#16a34a" }}>
-                    {alpacaSuccess}
-                  </p>
-                </div>
-              )}
-
-              {/* Connect/Disconnect Button */}
-              {alpacaStatus?.isPremium && (
+              {alpacaStatus?.isPremium ? (
                 <>
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className={`w-2 h-2 rounded-full ${alpacaStatus.alpacaConnected ? "bg-green-500" : "bg-[var(--ink-30)]"}`} />
+                    <span className="text-sm text-[var(--ink)]">
+                      {alpacaStatus.alpacaConnected ? "Connected" : "Not connected"}
+                    </span>
+                  </div>
+                  
                   {alpacaStatus.alpacaConnected ? (
                     <button
                       onClick={disconnectAlpaca}
                       disabled={alpacaLoading}
-                      style={{
-                        display: "block",
-                        width: "100%",
-                        textAlign: "center",
-                        fontFamily: "var(--font-body)",
-                        fontWeight: 700,
-                        fontSize: "var(--text-xs)",
-                        letterSpacing: "0.08em",
-                        textTransform: "uppercase",
-                        color: "var(--white)",
-                        background: "#dc2626",
-                        borderRadius: "4px",
-                        padding: "0.875rem 1rem",
-                        border: "none",
-                        cursor: alpacaLoading ? "not-allowed" : "pointer",
-                        opacity: alpacaLoading ? 0.6 : 1,
-                      }}
+                      className="w-full py-2.5 bg-red-600 text-white rounded-md text-sm font-semibold uppercase tracking-wider hover:bg-red-700 transition-colors disabled:opacity-50"
                     >
                       {alpacaLoading ? "Disconnecting..." : "Disconnect Alpaca"}
                     </button>
@@ -635,134 +532,41 @@ export default function Settings() {
                     <button
                       onClick={connectAlpaca}
                       disabled={alpacaLoading}
-                      style={{
-                        display: "block",
-                        width: "100%",
-                        textAlign: "center",
-                        fontFamily: "var(--font-body)",
-                        fontWeight: 700,
-                        fontSize: "var(--text-xs)",
-                        letterSpacing: "0.08em",
-                        textTransform: "uppercase",
-                        color: "var(--white)",
-                        background: "var(--orange)",
-                        borderRadius: "4px",
-                        padding: "0.875rem 1rem",
-                        border: "none",
-                        cursor: alpacaLoading ? "not-allowed" : "pointer",
-                        opacity: alpacaLoading ? 0.6 : 1,
-                      }}
+                      className="w-full py-2.5 bg-[var(--orange)] text-white rounded-md text-sm font-semibold uppercase tracking-wider hover:bg-[var(--orange-dk)] transition-colors disabled:opacity-50"
                     >
                       {alpacaLoading ? "Connecting..." : "Connect Alpaca Account"}
                     </button>
                   )}
                 </>
+              ) : (
+                <div className="p-4 bg-[var(--ink-05)] rounded-md">
+                  <p className="text-sm text-[var(--ink)] font-semibold mb-2">Premium Feature</p>
+                  <p className="text-xs text-[var(--ink-50)] mb-3">
+                    Alpaca integration is available for premium subscribers only.
+                  </p>
+                  <Link href="/settings" className="text-[var(--orange)] text-sm font-medium hover:underline">
+                    Upgrade to Premium →
+                  </Link>
+                </div>
               )}
             </>
           ) : (
-            <>
-              <p style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", color: "var(--ink-50)", marginBottom: "0.75rem", lineHeight: 1.6 }}>
-                Sign in to connect your Alpaca paper trading account.
-              </p>
-              <Link
-                href="/auth/login"
-                style={{
-                  display: "block",
-                  textAlign: "center",
-                  fontFamily: "var(--font-body)",
-                  fontWeight: 700,
-                  fontSize: "var(--text-sm)",
-                  letterSpacing: "0.08em",
-                  textTransform: "uppercase",
-                  color: "var(--white)",
-                  background: "var(--ink)",
-                  borderRadius: "4px",
-                  padding: "0.875rem 1rem",
-                  textDecoration: "none",
-                }}
-              >
-                Sign in
-              </Link>
-            </>
+            <Link href="/auth/login" className="text-[var(--terra)] hover:text-[var(--orange)]">Sign in</Link>
           )}
         </div>
 
-        {/* Auth0 Guardian Section */}
-        <div className="mark-card" style={{ padding: "1.5rem", overflow: "hidden" }}>
-          <div style={{ height: "3px", background: "linear-gradient(to right, var(--orange), var(--ember))", margin: "-1.5rem -1.5rem 1.5rem" }} />
-
-          <div className="mark-eyebrow" style={{ marginBottom: "1rem" }}>
-            Auth0 Guardian
+        {/* Sign Out */}
+        {user && (
+          <div className="mark-card" style={{ padding: "1.5rem", overflow: "hidden" }}>
+            <button
+              onClick={handleLogout}
+              className="w-full py-2.5 border border-[var(--ink-08)] rounded-md text-sm font-semibold uppercase tracking-wider text-[var(--ink-50)] hover:bg-[var(--paper)] transition-colors"
+            >
+              Sign out
+            </button>
           </div>
-
-          {loading ? (
-            <p style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", color: "var(--ink-50)" }}>
-              Loading...
-            </p>
-          ) : user ? (
-            <>
-              <div style={{ display: "flex", alignItems: "center", gap: "0.625rem", marginBottom: "1rem" }}>
-                <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#22c55e", flexShrink: 0 }} />
-                <span style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", color: "var(--ink)", fontWeight: 600 }}>
-                  {user.email ?? user.name}
-                </span>
-              </div>
-
-              <GuardianEnroll />
-
-              <div style={{ height: "1px", background: "var(--ink-08)", margin: "1.25rem 0" }} />
-
-              <button
-                onClick={handleLogout}
-                style={{
-                  display: "block",
-                  width: "100%",
-                  textAlign: "center",
-                  fontFamily: "var(--font-body)",
-                  fontWeight: 600,
-                  fontSize: "var(--text-xs)",
-                  letterSpacing: "0.08em",
-                  textTransform: "uppercase",
-                  color: "var(--ink-30)",
-                  border: "1px solid var(--ink-08)",
-                  borderRadius: "4px",
-                  padding: "0.75rem 1rem",
-                  background: "transparent",
-                  cursor: "pointer",
-                }}
-              >
-                Sign out
-              </button>
-            </>
-          ) : (
-            <>
-              <p style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", color: "var(--ink-50)", marginBottom: "0.75rem", lineHeight: 1.6 }}>
-                Sign in to enable Guardian push notifications for CIBA trade approvals.
-              </p>
-              <Link
-                href="/auth/login"
-                style={{
-                  display: "block",
-                  textAlign: "center",
-                  fontFamily: "var(--font-body)",
-                  fontWeight: 700,
-                  fontSize: "var(--text-sm)",
-                  letterSpacing: "0.08em",
-                  textTransform: "uppercase",
-                  color: "var(--white)",
-                  background: "var(--ink)",
-                  borderRadius: "4px",
-                  padding: "0.875rem 1rem",
-                  textDecoration: "none",
-                }}
-              >
-                Sign in
-              </Link>
-            </>
-          )}
-        </div>
+        )}
       </div>
     </main>
   );
 }
-

@@ -7,10 +7,12 @@ const PUBLIC_PATHS = [
   "/accuracy",
   "/auth/login",
   "/auth/register",
+  "/onboarding",
   "/api/auth",
   "/api/stripe/webhook",
   "/api/migrate",
   "/api/accuracy",
+  "/api/user/onboarding",
   "/_next",
   "/favicon.ico",
 ];
@@ -20,7 +22,7 @@ export function middleware(request: NextRequest) {
 
   // API routes are handled by individual route handlers - skip middleware redirect
   // They will return 401 if auth is required
-  if (pathname.startsWith("/api/") && !pathname.startsWith("/api/auth/") && !pathname.startsWith("/api/stripe/webhook") && !pathname.startsWith("/api/migrate")) {
+  if (pathname.startsWith("/api/") && !pathname.startsWith("/api/auth/") && !pathname.startsWith("/api/stripe/webhook") && !pathname.startsWith("/api/migrate") && !pathname.startsWith("/api/user/onboarding")) {
     return NextResponse.next();
   }
 
@@ -31,6 +33,8 @@ export function middleware(request: NextRequest) {
     pathname.startsWith("/api/accuracy") ||
     pathname.startsWith("/auth/") ||
     pathname.startsWith("/api/auth/") ||
+    pathname.startsWith("/onboarding") ||
+    pathname.startsWith("/api/user/onboarding") ||
     pathname.startsWith("/_next/") ||
     pathname.startsWith("/api/stripe/webhook") ||
     pathname.startsWith("/api/migrate")
