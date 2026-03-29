@@ -29,3 +29,25 @@
 - **Alpaca OAuth:** Similar to Google — test redirect URL generation and callback token exchange via curl.
 - **Bland AI phone calls:** Cannot test actual phone calls in automation. Verify the API call is made with correct parameters via curl/mocking.
 - **Email notifications:** Verify email sending logic is called with correct parameters. Actual delivery depends on email service configuration.
+
+## Flow Validator Guidance: Web Browser (Foundation Milestone)
+
+### Isolation Rules
+- **User Accounts:** Each validator should use a unique test user account to ensure data isolation
+- **Test Users:** 
+  - `testuser1@example.com` / `TestPass123!` - User A (with data)
+  - `testuser2@example.com` / `TestPass123!` - User B (for multi-tenancy testing)
+- **Session Management:** Each agent-browser instance should use its own session (use `--session` flag)
+- **Shared State:** Do NOT delete or modify test user accounts created by other validators
+- **Database:** All validators share the same Ghost DB - respect user_id scoping
+
+### Boundaries
+- Use the existing dev server on port 3000
+- Do NOT start additional Next.js instances
+- Do NOT modify the database schema
+- Do NOT run migrations during validation (should already be applied)
+
+### Test Data Setup
+Before running validators, ensure these test users exist:
+- User A: `testuser1@example.com` with some signals/watchlist data
+- User B: `testuser2@example.com` with no data (for multi-tenancy testing)

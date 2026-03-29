@@ -660,6 +660,25 @@ export async function getLatestTrade(userId: string): Promise<DBTrade | null> {
   return rows[0] ? normalizeTrade(rows[0]) : null;
 }
 
+export async function getTrades(userId: string, limit = 50, offset = 0): Promise<DBTrade[]> {
+  const rows = await withDb((sql) => sql<DBTrade[]>`
+    SELECT * FROM trades
+    WHERE user_id = ${userId}
+    ORDER BY approved_at DESC
+    LIMIT ${limit}
+    OFFSET ${offset}
+  `);
+  return rows.map(normalizeTrade);
+}
+
+export async function getTradeCount(userId: string): Promise<number> {
+  const rows = await withDb((sql) => sql<{ count: string }[]>`
+    SELECT COUNT(*)::text AS count FROM trades
+    WHERE user_id = ${userId}
+  `);
+  return parseInt(rows[0]?.count ?? "0", 10);
+}
+
 export async function getPortfolio(userId: string): Promise<DBPortfolioWithLastTrade[]> {
   const rows = await withDb((sql) => sql<Array<
     DBPortfolioPosition & {
