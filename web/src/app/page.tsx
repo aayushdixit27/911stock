@@ -1,4 +1,5 @@
 import { auth } from "@/lib/auth";
+import { getAccuracyStats } from "@/lib/db";
 import Link from "next/link";
 import PageClient from "./page-client";
 
@@ -8,6 +9,19 @@ export default async function Home() {
   // If authenticated, show the authenticated home/watchlist page
   if (session?.user?.id) {
     return <PageClient user={session.user} />;
+  }
+
+  // Fetch accuracy stats for the landing page
+  let accuracyStats = { accuracy7d: 0, accuracy30d: 0, totalSignals: 0 };
+  try {
+    const stats = await getAccuracyStats();
+    accuracyStats = {
+      accuracy7d: stats.checked7d > 0 ? Math.round((stats.correct7d / stats.checked7d) * 100) : 0,
+      accuracy30d: stats.checked30d > 0 ? Math.round((stats.correct30d / stats.checked30d) * 100) : 0,
+      totalSignals: stats.totalSignals,
+    };
+  } catch {
+    // If accuracy stats fail, show 0% - this is fine for new deployments
   }
 
   // If not authenticated, show the marketing landing page
@@ -306,11 +320,110 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* CTA Section */}
+      {/* Accuracy Stats Section */}
       <section
         style={{
           padding: "4rem 5vw",
           background: "var(--ink)",
+          textAlign: "center",
+        }}
+      >
+        <div style={{ maxWidth: "800px", margin: "0 auto" }}>
+          <h2
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: "clamp(1.5rem, 4vw, 2rem)",
+              fontStyle: "italic",
+              color: "var(--white)",
+              marginBottom: "0.5rem",
+            }}
+          >
+            Trusted by data
+          </h2>
+          <p
+            style={{
+              fontSize: "var(--text-base)",
+              color: "rgba(255,255,255,0.6)",
+              marginBottom: "2rem",
+            }}
+          >
+            We track every prediction to continuously improve our AI models.
+          </p>
+
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              gap: "3rem",
+              flexWrap: "wrap",
+            }}
+          >
+            <div>
+              <div
+                style={{
+                  fontSize: "3rem",
+                  fontWeight: 700,
+                  color: accuracyStats.accuracy7d >= 60 ? "#22c55e" : "var(--orange)",
+                }}
+              >
+                {accuracyStats.accuracy7d > 0 ? `${accuracyStats.accuracy7d}%` : "—"}
+              </div>
+              <div style={{ fontSize: "var(--text-sm)", color: "rgba(255,255,255,0.6)" }}>
+                7-day accuracy
+              </div>
+            </div>
+
+            <div>
+              <div
+                style={{
+                  fontSize: "3rem",
+                  fontWeight: 700,
+                  color: accuracyStats.accuracy30d >= 60 ? "#22c55e" : "var(--orange)",
+                }}
+              >
+                {accuracyStats.accuracy30d > 0 ? `${accuracyStats.accuracy30d}%` : "—"}
+              </div>
+              <div style={{ fontSize: "var(--text-sm)", color: "rgba(255,255,255,0.6)" }}>
+                30-day accuracy
+              </div>
+            </div>
+
+            <div>
+              <div
+                style={{
+                  fontSize: "3rem",
+                  fontWeight: 700,
+                  color: "var(--white)",
+                }}
+              >
+                {accuracyStats.totalSignals.toLocaleString()}
+              </div>
+              <div style={{ fontSize: "var(--text-sm)", color: "rgba(255,255,255,0.6)" }}>
+                signals tracked
+              </div>
+            </div>
+          </div>
+
+          <Link
+            href="/accuracy"
+            style={{
+              display: "inline-block",
+              marginTop: "2rem",
+              fontSize: "var(--text-sm)",
+              color: "var(--orange)",
+              textDecoration: "none",
+            }}
+          >
+            View full accuracy report →
+          </Link>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section
+        style={{
+          padding: "4rem 5vw",
+          background: "var(--paper)",
           textAlign: "center",
         }}
       >
@@ -319,7 +432,7 @@ export default async function Home() {
             fontFamily: "var(--font-display)",
             fontSize: "clamp(1.75rem, 4vw, 2.5rem)",
             fontStyle: "italic",
-            color: "var(--white)",
+            color: "var(--ink)",
             marginBottom: "1rem",
           }}
         >
@@ -328,7 +441,7 @@ export default async function Home() {
         <p
           style={{
             fontSize: "var(--text-base)",
-            color: "rgba(255,255,255,0.6)",
+            color: "var(--ink-70)",
             marginBottom: "2rem",
             maxWidth: "400px",
             marginLeft: "auto",
@@ -346,8 +459,8 @@ export default async function Home() {
             fontFamily: "var(--font-body)",
             fontWeight: 600,
             fontSize: "var(--text-base)",
-            color: "var(--ink)",
-            background: "var(--white)",
+            color: "var(--white)",
+            background: "var(--orange)",
             padding: "1rem 2rem",
             borderRadius: "6px",
             textDecoration: "none",

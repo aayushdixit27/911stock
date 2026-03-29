@@ -6,7 +6,7 @@ import { detectSignal, getHistoricalPattern, scoreSignal } from "@/lib/signals";
 import { fetchLatestSignal } from "@/lib/edgar";
 import { fetchNewsSentiment } from "@/lib/news";
 import { setLastSignal, setLastUserId } from "@/lib/state";
-import { insertSignal, getLatestSignal, getWatchlist, getPortfolio, insertNotification, getUserTier, type DBSignal } from "@/lib/db";
+import { insertSignal, getLatestSignal, getWatchlist, getPortfolio, insertNotification, getUserTier, insertSignalOutcome, type DBSignal } from "@/lib/db";
 
 // Calculate notification delivery time based on user tier
 // Premium users: immediate (now)
@@ -164,6 +164,36 @@ export async function POST(req: NextRequest) {
         console.log(`[trigger] Saved signal ${dbSignal.id} for user ${userId}`);
       } catch (err) {
         console.error("[trigger] Failed to save signal to DB:", err);
+      }
+
+      // Create signal outcome for accuracy tracking (shared across all users)
+      if (signalInserted) {
+        try {
+          // Extract prediction direction from the explanation
+          // If explanation mentions "sell" or "drop" or "decline", prediction is DOWN
+          // Otherwise assume UP for buy signals
+          const explanation_lower = (explanation ?? '').toLowerCase();
+          const predictionDirection = explanation_lower.includes('sell') || 
+                                      explanation_lower.includes('drop') || 
+                                      explanation_lower.includes('decline') ||
+                                      explanation_lower.includes('down') ||
+                                      signal.action === 'SELL' ? 'DOWN' : 'UP';
+          
+          await insertSignalOutcome({
+            signal_id: dbSignal.id,
+            ticker: signal.ticker,
+            prediction_direction: predictionDirection,
+            price_at_signal: signal.price_per_share,
+            price_after_7d: null,
+            price_after_30d: null,
+            was_correct_7d: null,
+            was_correct_30d: null,
+            checked_at: null,
+          });
+          console.log(`[trigger] Created signal outcome for ${dbSignal.id}, prediction: ${predictionDirection}`);
+        } catch (err) {
+          console.error("[trigger] Failed to create signal outcome:", err);
+        }
       }
 
       // Create notification for this signal (with staggered delivery based on tier)

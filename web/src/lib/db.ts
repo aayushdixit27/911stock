@@ -78,6 +78,21 @@ export type DBSignal = {
   edgar_filing_id?: string | null;
 };
 
+// Signal outcomes - shared across all users (NOT user-scoped)
+export type DBSignalOutcome = {
+  id: string;
+  signal_id: string;
+  ticker: string;
+  prediction_direction: string;
+  price_at_signal: number;
+  price_after_7d: number | null;
+  price_after_30d: number | null;
+  was_correct_7d: boolean | null;
+  was_correct_30d: boolean | null;
+  checked_at: Date | null;
+  created_at: Date;
+};
+
 export type DBAlert = {
   id: string;
   signal_id: string;
@@ -471,6 +486,36 @@ export async function migrate(): Promise<void> {
   // Index on stripe_customer_id for webhook lookups
   await sql`
     CREATE INDEX IF NOT EXISTS users_stripe_customer_id_idx ON users(stripe_customer_id)
+  `;
+
+  // Signal outcomes table - shared across all users (NOT user-scoped)
+  await sql`
+    CREATE TABLE IF NOT EXISTS signal_outcomes (
+      id                  TEXT PRIMARY KEY,
+      signal_id           TEXT NOT NULL REFERENCES signals(id),
+      ticker              TEXT NOT NULL,
+      prediction_direction TEXT NOT NULL,
+      price_at_signal     NUMERIC NOT NULL,
+      price_after_7d      NUMERIC,
+      price_after_30d     NUMERIC,
+      was_correct_7d      BOOLEAN,
+      was_correct_30d     BOOLEAN,
+      checked_at          TIMESTAMPTZ,
+      created_at          TIMESTAMPTZ DEFAULT now()
+    )
+  `;
+
+  await sql`
+    CREATE INDEX IF NOT EXISTS signal_outcomes_signal_id_idx ON signal_outcomes(signal_id)
+  `;
+
+  await sql`
+    CREATE INDEX IF NOT EXISTS signal_outcomes_ticker_idx ON signal_outcomes(ticker)
+  `;
+
+  await sql`
+    CREATE INDEX IF NOT EXISTS signal_outcomes_checked_at_idx ON signal_outcomes(checked_at)
+    WHERE price_after_7d IS NULL OR price_after_30d IS NULL
   `;
 
   _migrated = true;
@@ -1009,6 +1054,134 @@ export async function deleteAlpacaConnection(userId: string): Promise<boolean> {
     DELETE FROM alpaca_connections WHERE user_id = ${userId}
   `);
   return result.count > 0;
+}
+
+// ── Signal Outcome Operations ───────────────────────────────────────────────
+
+export async function insertSignalOutcome(outcome: Omit<DBSignalOutcome, 'id' | 'created_at'>): Promise<DBSignalOutcome> {
+  const id = newId();
+  const rows = await withDb((sql) => sql<DBSignalOutcome[]>`
+    INSERT INTO signal_outcomes (id, signal_id, ticker, prediction_direction, price_at_signal, 
+                                 price_after_7d, price_after_30d, was_correct_7d, was_correct_30d, checked_at)
+    VALUES (${id}, ${outcome.signal_id}, ${outcome.ticker}, ${outcome.prediction_direction}, ${outcome.price_at_signal},
+            ${outcome.price_after_7d ?? null}, ${outcome.price_after_30d ?? null}, 
+            ${outcome.was_correct_7d ?? null}, ${outcome.was_correct_30d ?? null}, ${outcome.checked_at ?? null})
+    ON CONFLICT (signal_id) DO UPDATE SET
+      ticker = ${outcome.ticker},
+      prediction_direction = ${outcome.prediction_direction},
+      price_at_signal = ${outcome.price_at_signal}
+    RETURNING *
+  `);
+  return rows[0];
+}
+
+export async function getSignalOutcomeBySignalId(signalId: string): Promise<DBSignalOutcome | null> {
+  const rows = await withDb((sql) => sql<DBSignalOutcome[]>`
+    SELECT * FROM signal_outcomes WHERE signal_id = ${signalId} LIMIT 1
+  `);
+  return rows[0] ?? null;
+}
+
+export async function getOutstandingOutcomes(): Promise<DBSignalOutcome[]> {
+  const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+  const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+  
+  return withDb((sql) => sql<DBSignalOutcome[]>`
+    SELECT * FROM signal_outcomes
+    WHERE (price_after_7d IS NULL AND created_at <= ${sevenDaysAgo})
+       OR (price_after_30d IS NULL AND created_at <= ${thirtyDaysAgo})
+    ORDER BY created_at ASC
+    LIMIT 100
+  `);
+}
+
+export async function updateSignalOutcomePrices(
+  id: string, 
+  updates: { 
+    price_after_7d?: number; 
+    price_after_30d?: number; 
+    was_correct_7d?: boolean; 
+    was_correct_30d?: boolean;
+  }
+): Promise<DBSignalOutcome | null> {
+  const rows = await withDb((sql) => sql<DBSignalOutcome[]>`
+    UPDATE signal_outcomes
+    SET 
+      price_after_7d = COALESCE(${updates.price_after_7d ?? null}, price_after_7d),
+      price_after_30d = COALESCE(${updates.price_after_30d ?? null}, price_after_30d),
+      was_correct_7d = COALESCE(${updates.was_correct_7d ?? null}, was_correct_7d),
+      was_correct_30d = COALESCE(${updates.was_correct_30d ?? null}, was_correct_30d),
+      checked_at = now()
+    WHERE id = ${id}
+    RETURNING *
+  `);
+  return rows[0] ?? null;
+}
+
+export async function getAccuracyStats(): Promise<{
+  totalSignals: number;
+  checked7d: number;
+  correct7d: number;
+  checked30d: number;
+  correct30d: number;
+  perTicker: Array<{
+    ticker: string;
+    total: number;
+    correct7d: number;
+    correct30d: number;
+  }>;
+}> {
+  return withDb(async (sql) => {
+    // Overall stats
+    const overallRows = await sql<{
+      total: string;
+      checked7d: string;
+      correct7d: string;
+      checked30d: string;
+      correct30d: string;
+    }[]>`
+      SELECT 
+        COUNT(*)::text as total,
+        COUNT(CASE WHEN price_after_7d IS NOT NULL THEN 1 END)::text as checked7d,
+        COUNT(CASE WHEN was_correct_7d = true THEN 1 END)::text as correct7d,
+        COUNT(CASE WHEN price_after_30d IS NOT NULL THEN 1 END)::text as checked30d,
+        COUNT(CASE WHEN was_correct_30d = true THEN 1 END)::text as correct30d
+      FROM signal_outcomes
+    `;
+
+    const overall = overallRows[0];
+
+    // Per-ticker stats
+    const perTickerRows = await sql<{
+      ticker: string;
+      total: string;
+      correct7d: string;
+      correct30d: string;
+    }[]>`
+      SELECT 
+        ticker,
+        COUNT(*)::text as total,
+        COUNT(CASE WHEN was_correct_7d = true THEN 1 END)::text as correct7d,
+        COUNT(CASE WHEN was_correct_30d = true THEN 1 END)::text as correct30d
+      FROM signal_outcomes
+      GROUP BY ticker
+      ORDER BY COUNT(*) DESC
+    `;
+
+    return {
+      totalSignals: parseInt(overall?.total ?? '0', 10),
+      checked7d: parseInt(overall?.checked7d ?? '0', 10),
+      correct7d: parseInt(overall?.correct7d ?? '0', 10),
+      checked30d: parseInt(overall?.checked30d ?? '0', 10),
+      correct30d: parseInt(overall?.correct30d ?? '0', 10),
+      perTicker: perTickerRows.map(row => ({
+        ticker: row.ticker,
+        total: parseInt(row.total, 10),
+        correct7d: parseInt(row.correct7d, 10),
+        correct30d: parseInt(row.correct30d, 10),
+      })),
+    };
+  });
 }
 
 export function newId(): string {

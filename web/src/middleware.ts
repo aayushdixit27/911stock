@@ -4,11 +4,13 @@ import type { NextRequest } from "next/server";
 // Public paths that don't require authentication
 const PUBLIC_PATHS = [
   "/",
+  "/accuracy",
   "/auth/login",
   "/auth/register",
   "/api/auth",
   "/api/stripe/webhook",
   "/api/migrate",
+  "/api/accuracy",
   "/_next",
   "/favicon.ico",
 ];
@@ -25,6 +27,8 @@ export function middleware(request: NextRequest) {
   // Check if path is public
   const isPublicPath = PUBLIC_PATHS.some((path) =>
     pathname === path ||
+    pathname.startsWith("/accuracy") ||
+    pathname.startsWith("/api/accuracy") ||
     pathname.startsWith("/auth/") ||
     pathname.startsWith("/api/auth/") ||
     pathname.startsWith("/_next/") ||
