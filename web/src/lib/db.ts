@@ -442,6 +442,37 @@ export async function migrate(): Promise<void> {
     CREATE INDEX IF NOT EXISTS alpaca_connections_user_id_idx ON alpaca_connections(user_id)
   `;
 
+  // Stripe subscription columns - add to users table
+  await sql`
+    ALTER TABLE users 
+    ADD COLUMN IF NOT EXISTS stripe_customer_id TEXT UNIQUE
+  `;
+
+  await sql`
+    ALTER TABLE users 
+    ADD COLUMN IF NOT EXISTS stripe_subscription_id TEXT
+  `;
+
+  await sql`
+    ALTER TABLE users 
+    ADD COLUMN IF NOT EXISTS stripe_subscription_status TEXT
+  `;
+
+  await sql`
+    ALTER TABLE users 
+    ADD COLUMN IF NOT EXISTS stripe_price_id TEXT
+  `;
+
+  await sql`
+    ALTER TABLE users 
+    ADD COLUMN IF NOT EXISTS stripe_current_period_end TIMESTAMPTZ
+  `;
+
+  // Index on stripe_customer_id for webhook lookups
+  await sql`
+    CREATE INDEX IF NOT EXISTS users_stripe_customer_id_idx ON users(stripe_customer_id)
+  `;
+
   _migrated = true;
 }
 
@@ -911,10 +942,34 @@ export async function upsertUserSettings(
 // ── User Tier Helper ────────────────────────────────────────────────────────
 
 export async function getUserTier(userId: string): Promise<string> {
-  const rows = await withDb((sql) => sql<{ tier: string }[]>`
-    SELECT tier FROM users WHERE id = ${userId} LIMIT 1
+  const rows = await withDb((sql) => sql<{
+    tier: string;
+    stripe_subscription_status: string | null;
+    stripe_current_period_end: Date | null;
+  }[]>`
+    SELECT tier, stripe_subscription_status, stripe_current_period_end 
+    FROM users 
+    WHERE id = ${userId} 
+    LIMIT 1
   `);
-  return rows[0]?.tier ?? 'free';
+  
+  const user = rows[0];
+  if (!user) return 'free';
+
+  // Check if user has an active Stripe subscription
+  const isActive = user.stripe_subscription_status === 'active' || 
+                   user.stripe_subscription_status === 'trialing';
+  const notExpired = user.stripe_current_period_end 
+    ? new Date(user.stripe_current_period_end) > new Date()
+    : false;
+
+  if (isActive && notExpired) return 'premium';
+  return user.tier ?? 'free';
+}
+
+export async function isPremiumUser(userId: string): Promise<boolean> {
+  const tier = await getUserTier(userId);
+  return tier === 'premium';
 }
 
 // ── Alpaca Connection Operations ────────────────────────────────────────────

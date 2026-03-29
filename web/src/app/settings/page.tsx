@@ -20,6 +20,13 @@ interface AlpacaStatus {
   connectedAt: string | null;
 }
 
+interface BillingStatus {
+  tier: string;
+  isPremium: boolean;
+  subscriptionStatus: string | null;
+  currentPeriodEnd: string | null;
+}
+
 export default function Settings() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
@@ -27,6 +34,10 @@ export default function Settings() {
   const [alpacaLoading, setAlpacaLoading] = useState(false);
   const [alpacaError, setAlpacaError] = useState<string | null>(null);
   const [alpacaSuccess, setAlpacaSuccess] = useState<string | null>(null);
+  const [billingStatus, setBillingStatus] = useState<BillingStatus | null>(null);
+  const [billingLoading, setBillingLoading] = useState(false);
+  const [billingError, setBillingError] = useState<string | null>(null);
+  const [billingSuccess, setBillingSuccess] = useState<string | null>(null);
 
   useEffect(() => {
     // Fetch the current user session
@@ -47,19 +58,20 @@ export default function Settings() {
   useEffect(() => {
     if (user) {
       fetchAlpacaStatus();
+      fetchBillingStatus();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
-  // Check for OAuth callback messages
+  // Check for callback messages
   useEffect(() => {
     const url = new URL(window.location.href);
     const alpacaStatus = url.searchParams.get("alpaca");
     const alpacaError = url.searchParams.get("alpaca_error");
+    const checkoutStatus = url.searchParams.get("checkout");
     
     if (alpacaStatus === "connected") {
       setAlpacaSuccess("Alpaca account connected successfully!");
-      // Clean up URL
       window.history.replaceState({}, "", window.location.pathname);
     } else if (alpacaError) {
       const errorMessages: Record<string, string> = {
@@ -74,6 +86,14 @@ export default function Settings() {
       setAlpacaError(errorMessages[alpacaError] || `Connection failed: ${alpacaError}`);
       window.history.replaceState({}, "", window.location.pathname);
     }
+    
+    if (checkoutStatus === "success") {
+      setBillingSuccess("Welcome to Premium! Your subscription is now active.");
+      window.history.replaceState({}, "", window.location.pathname);
+    } else if (checkoutStatus === "canceled") {
+      setBillingError("Checkout was canceled. You can upgrade anytime.");
+      window.history.replaceState({}, "", window.location.pathname);
+    }
   }, []);
 
   const fetchAlpacaStatus = useCallback(async () => {
@@ -85,6 +105,23 @@ export default function Settings() {
       }
     } catch (err) {
       console.error("Failed to fetch Alpaca status:", err);
+    }
+  }, []);
+
+  const fetchBillingStatus = useCallback(async () => {
+    try {
+      const res = await fetch("/api/user/settings");
+      if (res.ok) {
+        const data = await res.json();
+        setBillingStatus({
+          tier: data.tier || "free",
+          isPremium: data.tier === "premium",
+          subscriptionStatus: data.stripeSubscriptionStatus,
+          currentPeriodEnd: data.stripeCurrentPeriodEnd,
+        });
+      }
+    } catch (err) {
+      console.error("Failed to fetch billing status:", err);
     }
   }, []);
 
@@ -130,6 +167,55 @@ export default function Settings() {
     }
   }
 
+  async function upgradeToPremium() {
+    setBillingLoading(true);
+    setBillingError(null);
+    setBillingSuccess(null);
+    
+    try {
+      const res = await fetch("/api/stripe/checkout", {
+        method: "POST",
+      });
+      
+      const data = await res.json();
+      
+      if (res.ok && data.url) {
+        // Redirect to Stripe Checkout
+        window.location.href = data.url;
+      } else {
+        setBillingError(data.error || data.message || "Failed to start checkout.");
+        setBillingLoading(false);
+      }
+    } catch (_err) {
+      setBillingError("Failed to start checkout. Please try again.");
+      setBillingLoading(false);
+    }
+  }
+
+  async function manageSubscription() {
+    setBillingLoading(true);
+    setBillingError(null);
+    
+    try {
+      const res = await fetch("/api/stripe/portal", {
+        method: "POST",
+      });
+      
+      const data = await res.json();
+      
+      if (res.ok && data.url) {
+        // Redirect to Stripe Customer Portal
+        window.location.href = data.url;
+      } else {
+        setBillingError(data.error || data.message || "Failed to open portal.");
+        setBillingLoading(false);
+      }
+    } catch (_err) {
+      setBillingError("Failed to open portal. Please try again.");
+      setBillingLoading(false);
+    }
+  }
+
   return (
     <main style={{ minHeight: "100vh", background: "var(--white)" }}>
       {user && <Nav user={user} />}
@@ -137,6 +223,269 @@ export default function Settings() {
       <div style={{ maxWidth: "680px", margin: "0 auto", padding: "5rem 5vw 5rem" }}>
         <div className="mark-eyebrow" style={{ marginBottom: "1.5rem" }}>
           Settings
+        </div>
+
+        {/* Billing Section */}
+        <div className="mark-card" style={{ padding: "1.5rem", overflow: "hidden", marginBottom: "1.5rem" }}>
+          <div style={{ height: "3px", background: "linear-gradient(to right, var(--orange), var(--ember))", margin: "-1.5rem -1.5rem 1.5rem" }} />
+
+          <div className="mark-eyebrow" style={{ marginBottom: "1rem" }}>
+            Plan & Billing
+          </div>
+
+          {loading ? (
+            <p style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", color: "var(--ink-50)" }}>
+              Loading...
+            </p>
+          ) : user ? (
+            <>
+              {/* Current Plan Display */}
+              <div style={{ marginBottom: "1.5rem" }}>
+                <div style={{ 
+                  display: "flex", 
+                  alignItems: "center", 
+                  justifyContent: "space-between",
+                  marginBottom: "0.75rem"
+                }}>
+                  <span style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", color: "var(--ink-50)" }}>
+                    Current Plan
+                  </span>
+                  <span style={{ 
+                    fontFamily: "var(--font-body)", 
+                    fontSize: "var(--text-sm)", 
+                    fontWeight: 600,
+                    color: billingStatus?.isPremium ? "#16a34a" : "var(--ink)",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.5rem"
+                  }}>
+                    {billingStatus?.isPremium ? (
+                      <>
+                        <span style={{ 
+                          width: 8, 
+                          height: 8, 
+                          borderRadius: "50%", 
+                          background: "#16a34a" 
+                        }} />
+                        Premium
+                      </>
+                    ) : (
+                      <>
+                        <span style={{ 
+                          width: 8, 
+                          height: 8, 
+                          borderRadius: "50%", 
+                          background: "var(--ink-30)" 
+                        }} />
+                        Free
+                      </>
+                    )}
+                  </span>
+                </div>
+
+                {billingStatus?.isPremium && billingStatus.currentPeriodEnd && (
+                  <p style={{ 
+                    fontFamily: "var(--font-body)", 
+                    fontSize: "var(--text-xs)", 
+                    color: "var(--ink-50)",
+                    marginBottom: "0.5rem"
+                  }}>
+                    Renews on {new Date(billingStatus.currentPeriodEnd).toLocaleDateString()}
+                  </p>
+                )}
+
+                {billingStatus?.subscriptionStatus && billingStatus.subscriptionStatus !== "active" && (
+                  <p style={{ 
+                    fontFamily: "var(--font-body)", 
+                    fontSize: "var(--text-xs)", 
+                    color: "#dc2626",
+                    marginBottom: "0.5rem"
+                  }}>
+                    Status: {billingStatus.subscriptionStatus}
+                  </p>
+                )}
+              </div>
+
+              {/* Billing Error/Success Messages */}
+              {billingError && (
+                <div style={{ 
+                  padding: "0.75rem 1rem", 
+                  background: "#fef2f2", 
+                  borderRadius: "4px",
+                  border: "1px solid #fecaca",
+                  marginBottom: "1rem"
+                }}>
+                  <p style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", color: "#dc2626" }}>
+                    {billingError}
+                  </p>
+                </div>
+              )}
+
+              {billingSuccess && (
+                <div style={{ 
+                  padding: "0.75rem 1rem", 
+                  background: "#f0fdf4", 
+                  borderRadius: "4px",
+                  border: "1px solid #bbf7d0",
+                  marginBottom: "1rem"
+                }}>
+                  <p style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", color: "#16a34a" }}>
+                    {billingSuccess}
+                  </p>
+                </div>
+              )}
+
+              {/* Plan Features Comparison */}
+              <div style={{ 
+                padding: "1rem", 
+                background: "var(--ink-05)", 
+                borderRadius: "4px",
+                marginBottom: "1.5rem"
+              }}>
+                <h4 style={{ 
+                  fontFamily: "var(--font-body)", 
+                  fontSize: "var(--text-sm)", 
+                  fontWeight: 600,
+                  color: "var(--ink)",
+                  marginBottom: "0.75rem"
+                }}>
+                  Plan Features
+                </h4>
+                <div style={{ display: "grid", gap: "0.5rem" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                    <span style={{ color: "#16a34a" }}>✓</span>
+                    <span style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", color: "var(--ink)" }}>
+                      Watchlist & Signal Feed
+                    </span>
+                    <span style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-xs)", color: "var(--ink-50)", marginLeft: "auto" }}>
+                      Free
+                    </span>
+                  </div>
+                  <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                    <span style={{ color: billingStatus?.isPremium ? "#16a34a" : "var(--ink-30)" }}>
+                      {billingStatus?.isPremium ? "✓" : "○"}
+                    </span>
+                    <span style={{ 
+                      fontFamily: "var(--font-body)", 
+                      fontSize: "var(--text-sm)", 
+                      color: billingStatus?.isPremium ? "var(--ink)" : "var(--ink-50)" 
+                    }}>
+                      Real-time Signals
+                    </span>
+                    <span style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-xs)", color: "var(--ink-50)", marginLeft: "auto" }}>
+                      Premium
+                    </span>
+                  </div>
+                  <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                    <span style={{ color: billingStatus?.isPremium ? "#16a34a" : "var(--ink-30)" }}>
+                      {billingStatus?.isPremium ? "✓" : "○"}
+                    </span>
+                    <span style={{ 
+                      fontFamily: "var(--font-body)", 
+                      fontSize: "var(--text-sm)", 
+                      color: billingStatus?.isPremium ? "var(--ink)" : "var(--ink-50)" 
+                    }}>
+                      Phone Call Alerts
+                    </span>
+                    <span style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-xs)", color: "var(--ink-50)", marginLeft: "auto" }}>
+                      Premium
+                    </span>
+                  </div>
+                  <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                    <span style={{ color: billingStatus?.isPremium ? "#16a34a" : "var(--ink-30)" }}>
+                      {billingStatus?.isPremium ? "✓" : "○"}
+                    </span>
+                    <span style={{ 
+                      fontFamily: "var(--font-body)", 
+                      fontSize: "var(--text-sm)", 
+                      color: billingStatus?.isPremium ? "var(--ink)" : "var(--ink-50)" 
+                    }}>
+                      Alpaca Trading Integration
+                    </span>
+                    <span style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-xs)", color: "var(--ink-50)", marginLeft: "auto" }}>
+                      Premium
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Action Button */}
+              {billingStatus?.isPremium ? (
+                <button
+                  onClick={manageSubscription}
+                  disabled={billingLoading}
+                  style={{
+                    display: "block",
+                    width: "100%",
+                    textAlign: "center",
+                    fontFamily: "var(--font-body)",
+                    fontWeight: 700,
+                    fontSize: "var(--text-xs)",
+                    letterSpacing: "0.08em",
+                    textTransform: "uppercase",
+                    color: "var(--ink)",
+                    background: "transparent",
+                    border: "1px solid var(--ink-08)",
+                    borderRadius: "4px",
+                    padding: "0.875rem 1rem",
+                    cursor: billingLoading ? "not-allowed" : "pointer",
+                    opacity: billingLoading ? 0.6 : 1,
+                  }}
+                >
+                  {billingLoading ? "Loading..." : "Manage Subscription"}
+                </button>
+              ) : (
+                <button
+                  onClick={upgradeToPremium}
+                  disabled={billingLoading}
+                  style={{
+                    display: "block",
+                    width: "100%",
+                    textAlign: "center",
+                    fontFamily: "var(--font-body)",
+                    fontWeight: 700,
+                    fontSize: "var(--text-xs)",
+                    letterSpacing: "0.08em",
+                    textTransform: "uppercase",
+                    color: "var(--white)",
+                    background: "var(--orange)",
+                    borderRadius: "4px",
+                    padding: "0.875rem 1rem",
+                    border: "none",
+                    cursor: billingLoading ? "not-allowed" : "pointer",
+                    opacity: billingLoading ? 0.6 : 1,
+                  }}
+                >
+                  {billingLoading ? "Loading..." : "Upgrade to Premium"}
+                </button>
+              )}
+            </>
+          ) : (
+            <>
+              <p style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", color: "var(--ink-50)", marginBottom: "0.75rem", lineHeight: 1.6 }}>
+                Sign in to view your plan and billing information.
+              </p>
+              <Link
+                href="/auth/login"
+                style={{
+                  display: "block",
+                  textAlign: "center",
+                  fontFamily: "var(--font-body)",
+                  fontWeight: 700,
+                  fontSize: "var(--text-sm)",
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                  color: "var(--white)",
+                  background: "var(--ink)",
+                  borderRadius: "4px",
+                  padding: "0.875rem 1rem",
+                  textDecoration: "none",
+                }}
+              >
+                Sign in
+              </Link>
+            </>
+          )}
         </div>
 
         {/* Alpaca Integration Section */}

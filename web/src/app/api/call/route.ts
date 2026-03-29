@@ -3,6 +3,7 @@ import { auth } from "@/lib/auth";
 import { makeOutboundCall } from "@/lib/bland";
 import { detectSignal, getHistoricalPattern } from "@/lib/signals";
 import { getWatchlist } from "@/lib/db";
+import { canAccessFeature } from "@/lib/billing";
 
 export async function POST(req: NextRequest) {
   // Check authentication
@@ -11,6 +12,20 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
   const userId = session.user.id;
+
+  // Check feature access - phone calls are premium only
+  const hasAccess = await canAccessFeature(userId, "phone_calls");
+  if (!hasAccess) {
+    return NextResponse.json(
+      { 
+        error: "Premium required", 
+        message: "Phone call alerts are only available for Premium subscribers",
+        feature: "phone_calls",
+        upgradeUrl: "/settings"
+      },
+      { status: 403 }
+    );
+  }
 
   try {
     const body = await req.json().catch(() => ({}));
