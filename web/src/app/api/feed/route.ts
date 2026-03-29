@@ -1,10 +1,12 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
-import { getRecentSignals, type DBSignal } from "@/lib/db";
+import { getRecentSignals, getSignalById, type DBSignal } from "@/lib/db";
 
+// Seed data only shown for demo when explicitly requested
 const SEED: DBSignal[] = [
   {
-    id: "smci-ceo-sell-20260319",
+    id: "demo-smci-ceo-sell-20260319",
+    user_id: "demo",
     ticker: "SMCI",
     company_name: "Super Micro Computer",
     insider: "Charles Liang",
@@ -20,11 +22,12 @@ const SEED: DBSignal[] = [
     position_reduced_pct: 18,
     score: 10,
     explanation:
-      "SMCI's CEO just sold $2.1M — first sale in 14 months, outside his scheduled plan.",
+      "SMCI's CEO just sold $2.1M — first sale in 14 months, outside his scheduled plan. Historical pattern: avg −12% over 30 days.",
     alerted: false,
   },
   {
-    id: "nvda-cfo-sell-20260321",
+    id: "demo-nvda-cfo-sell-20260321",
+    user_id: "demo",
     ticker: "NVDA",
     company_name: "NVIDIA Corporation",
     insider: "Colette Kress",
@@ -44,7 +47,7 @@ const SEED: DBSignal[] = [
   },
 ];
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   // Check authentication
   const session = await auth();
   if (!session?.user?.id) {
@@ -52,18 +55,53 @@ export async function GET() {
   }
   const userId = session.user.id;
 
-  // Try DB first
+  const { searchParams } = new URL(req.url);
+  const page = parseInt(searchParams.get("page") ?? "1", 10);
+  const limit = Math.min(parseInt(searchParams.get("limit") ?? "20", 10), 50);
+  const offset = (page - 1) * limit;
+  const signalId = searchParams.get("id");
+
+  // If signalId is provided, return single signal detail
+  if (signalId) {
+    const signal = await getSignalById(userId, signalId);
+    if (!signal) {
+      return NextResponse.json({ error: "Signal not found" }, { status: 404 });
+    }
+    return NextResponse.json({ signal });
+  }
+
+  // Get user-scoped signals from DB
   if (process.env.DATABASE_URL?.trim()) {
     try {
-      const signals = await getRecentSignals(userId, 20);
+      const signals = await getRecentSignals(userId, limit);
       if (signals.length > 0) {
-        return NextResponse.json({ signals, source: "db" });
+        return NextResponse.json({ 
+          signals, 
+          source: "db",
+          pagination: {
+            page,
+            limit,
+            count: signals.length,
+            hasMore: signals.length === limit,
+          }
+        });
       }
     } catch (err) {
       console.error("Feed: DB unavailable, falling back to seed data", err);
     }
   }
 
-  // Fall back to static seed data when DB is unavailable or empty
-  return NextResponse.json({ signals: SEED, source: "seed" });
+  // Empty state - no signals yet
+  return NextResponse.json({ 
+    signals: [], 
+    source: "db",
+    pagination: {
+      page,
+      limit,
+      count: 0,
+      hasMore: false,
+    },
+    empty: true,
+    message: "No signals yet. Add tickers to your watchlist and run the detection pipeline to see signals here."
+  });
 }

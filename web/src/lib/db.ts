@@ -26,6 +26,7 @@ export type DBWatchlistItem = {
 
 export type DBSignal = {
   id: string;
+  user_id: string;
   ticker: string;
   company_name: string;
   insider: string;
@@ -43,6 +44,8 @@ export type DBSignal = {
   explanation: string | null;
   alerted: boolean;
   created_at?: Date;
+  // EDGAR filing ID for deduplication
+  edgar_filing_id?: string | null;
 };
 
 export type DBAlert = {
@@ -167,6 +170,19 @@ export async function migrate(): Promise<void> {
     ALTER TABLE signals ADD COLUMN IF NOT EXISTS user_id TEXT NOT NULL DEFAULT ''
   `;
 
+  // Add edgar_filing_id for deduplication
+  await sql`
+    ALTER TABLE signals ADD COLUMN IF NOT EXISTS edgar_filing_id TEXT
+  `;
+
+  await sql`
+    ALTER TABLE signals DROP CONSTRAINT IF EXISTS signals_user_id_edgar_filing_id_key
+  `;
+
+  await sql`
+    ALTER TABLE signals ADD CONSTRAINT signals_user_id_edgar_filing_id_key UNIQUE (user_id, edgar_filing_id)
+  `;
+
   await sql`
     ALTER TABLE alerts ADD COLUMN IF NOT EXISTS user_id TEXT NOT NULL DEFAULT ''
   `;
@@ -212,7 +228,9 @@ export async function migrate(): Promise<void> {
       score                       INTEGER NOT NULL DEFAULT 0,
       explanation                 TEXT,
       alerted                     BOOLEAN NOT NULL DEFAULT false,
-      created_at                  TIMESTAMPTZ NOT NULL DEFAULT now()
+      edgar_filing_id             TEXT,
+      created_at                  TIMESTAMPTZ NOT NULL DEFAULT now(),
+      UNIQUE(user_id, edgar_filing_id)
     )
   `;
 
@@ -384,15 +402,15 @@ export async function insertSignal(signal: DBSignal, userId?: string): Promise<v
       (id, user_id, ticker, company_name, insider, role, action, shares,
        price_per_share, total_value, date, filed_at,
        scheduled_10b5_1, last_transaction_months_ago,
-       position_reduced_pct, score, explanation, alerted)
+       position_reduced_pct, score, explanation, alerted, edgar_filing_id)
     VALUES
-      (${signal.id}, ${userId ?? ''}, ${signal.ticker}, ${signal.company_name},
+      (${signal.id}, ${userId ?? signal.user_id ?? ''}, ${signal.ticker}, ${signal.company_name},
        ${signal.insider}, ${signal.role}, ${signal.action},
        ${signal.shares}, ${signal.price_per_share}, ${signal.total_value},
        ${signal.date}, ${signal.filed_at}, ${signal.scheduled_10b5_1},
        ${signal.last_transaction_months_ago}, ${signal.position_reduced_pct},
-       ${signal.score}, ${signal.explanation ?? null}, ${signal.alerted})
-    ON CONFLICT (id) DO NOTHING
+       ${signal.score}, ${signal.explanation ?? null}, ${signal.alerted}, ${signal.edgar_filing_id ?? null})
+    ON CONFLICT (user_id, edgar_filing_id) DO NOTHING
   `);
 }
 

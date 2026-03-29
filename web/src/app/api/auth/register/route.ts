@@ -4,7 +4,7 @@ import { z } from "zod";
 import { getSql, migrate } from "@/lib/db";
 
 const registerSchema = z.object({
-  name: z.string().min(1, "Name is required"),
+  name: z.string().optional(),
   email: z.string().email("Invalid email address"),
   password: z.string().min(8, "Password must be at least 8 characters").max(64),
 });
@@ -43,10 +43,11 @@ export async function POST(req: Request) {
     // Create user
     const id = crypto.randomUUID();
     const now = new Date();
+    const userName = name ?? email.split('@')[0];
 
     await sql`
       INSERT INTO users (id, name, email, email_verified, image, password_hash, tier, created_at)
-      VALUES (${id}, ${name}, ${email}, null, null, ${passwordHash}, ${'free'}, ${now})
+      VALUES (${id}, ${userName}, ${email}, null, null, ${passwordHash}, ${'free'}, ${now})
     `;
 
     return NextResponse.json(
