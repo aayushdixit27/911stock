@@ -45,6 +45,15 @@ export type DBUserSettings = {
   created_at: Date;
 };
 
+export type DBAlpacaConnection = {
+  user_id: string;
+  access_token: string;
+  refresh_token: string | null;
+  token_type: string;
+  expires_at: Date | null;
+  created_at: Date;
+};
+
 export type DBSignal = {
   id: string;
   user_id: string;
@@ -415,6 +424,22 @@ export async function migrate(): Promise<void> {
       ('', 'TSLA', 500, 285.20),
       ('', 'NVDA', 200, 142.80)
     ON CONFLICT (user_id, ticker) DO NOTHING
+  `;
+
+  // Alpaca connections table - OAuth tokens for user paper trading
+  await sql`
+    CREATE TABLE IF NOT EXISTS alpaca_connections (
+      user_id         TEXT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+      access_token    TEXT NOT NULL,
+      refresh_token   TEXT,
+      token_type      TEXT DEFAULT 'Bearer',
+      expires_at      TIMESTAMPTZ,
+      created_at      TIMESTAMPTZ DEFAULT now()
+    )
+  `;
+
+  await sql`
+    CREATE INDEX IF NOT EXISTS alpaca_connections_user_id_idx ON alpaca_connections(user_id)
   `;
 
   _migrated = true;
@@ -871,6 +896,45 @@ export async function getUserTier(userId: string): Promise<string> {
     SELECT tier FROM users WHERE id = ${userId} LIMIT 1
   `);
   return rows[0]?.tier ?? 'free';
+}
+
+// ── Alpaca Connection Operations ────────────────────────────────────────────
+
+export async function getAlpacaConnection(userId: string): Promise<DBAlpacaConnection | null> {
+  const rows = await withDb((sql) => sql<DBAlpacaConnection[]>`
+    SELECT * FROM alpaca_connections WHERE user_id = ${userId} LIMIT 1
+  `);
+  return rows[0] ?? null;
+}
+
+export async function upsertAlpacaConnection(
+  userId: string,
+  tokens: {
+    access_token: string;
+    refresh_token?: string | null;
+    token_type?: string;
+    expires_at?: Date | null;
+  }
+): Promise<DBAlpacaConnection> {
+  const rows = await withDb((sql) => sql<DBAlpacaConnection[]>`
+    INSERT INTO alpaca_connections (user_id, access_token, refresh_token, token_type, expires_at)
+    VALUES (${userId}, ${tokens.access_token}, ${tokens.refresh_token ?? null}, 
+            ${tokens.token_type ?? 'Bearer'}, ${tokens.expires_at ?? null})
+    ON CONFLICT (user_id) DO UPDATE SET
+      access_token = ${tokens.access_token},
+      refresh_token = ${tokens.refresh_token ?? null},
+      token_type = ${tokens.token_type ?? 'Bearer'},
+      expires_at = ${tokens.expires_at ?? null}
+    RETURNING *
+  `);
+  return rows[0];
+}
+
+export async function deleteAlpacaConnection(userId: string): Promise<boolean> {
+  const result = await withDb((sql) => sql`
+    DELETE FROM alpaca_connections WHERE user_id = ${userId}
+  `);
+  return result.count > 0;
 }
 
 export function newId(): string {
