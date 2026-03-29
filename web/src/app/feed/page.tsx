@@ -36,6 +36,8 @@ export default function Feed() {
   const [error, setError] = useState<string | null>(null);
   const [selectedSignal, setSelectedSignal] = useState<DBSignal | null>(null);
   const [emptyMessage, setEmptyMessage] = useState<string | null>(null);
+  const [isPremium, setIsPremium] = useState<boolean>(false);
+  const [signalTiming, setSignalTiming] = useState<"realtime" | "delayed">("delayed");
   const [pagination, setPagination] = useState({
     page: 1,
     limit: 20,
@@ -88,6 +90,13 @@ export default function Feed() {
           limit: pagination.limit,
           hasMore: data.pagination?.hasMore ?? false,
         });
+        // Set tier information for badges
+        if (data.isPremium !== undefined) {
+          setIsPremium(data.isPremium);
+        }
+        if (data.signalTiming) {
+          setSignalTiming(data.signalTiming);
+        }
         setEmptyMessage(null);
       }
     } catch (err) {
@@ -161,18 +170,44 @@ export default function Feed() {
               <span style={{ fontFamily: "var(--font-display)", fontSize: "2rem", fontWeight: 600, color: style.color }}>
                 {selectedSignal.ticker}
               </span>
-              <span
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "var(--text-sm)",
-                  padding: "0.25rem 0.75rem",
-                  background: style.borderColor,
-                  color: style.color,
-                  borderRadius: "9999px",
-                }}
-              >
-                Score: {selectedSignal.score}/10
-              </span>
+              <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                {/* Signal Timing Badge in detail view */}
+                <span
+                  style={{
+                    fontFamily: "var(--font-mono)",
+                    fontSize: "var(--text-xs)",
+                    padding: "0.25rem 0.5rem",
+                    background: isPremium ? "rgba(22, 163, 74, 0.2)" : "var(--ink-10)",
+                    color: isPremium ? "#16a34a" : "var(--ink-50)",
+                    borderRadius: "9999px",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.375rem",
+                  }}
+                >
+                  <span
+                    style={{
+                      width: 6,
+                      height: 6,
+                      borderRadius: "50%",
+                      background: isPremium ? "#16a34a" : "var(--ink-40)",
+                    }}
+                  />
+                  {isPremium ? "Real-time" : "Delayed 15min"}
+                </span>
+                <span
+                  style={{
+                    fontFamily: "var(--font-mono)",
+                    fontSize: "var(--text-sm)",
+                    padding: "0.25rem 0.75rem",
+                    background: style.borderColor,
+                    color: style.color,
+                    borderRadius: "9999px",
+                  }}
+                >
+                  Score: {selectedSignal.score}/10
+                </span>
+              </div>
             </div>
 
             <div style={{ marginBottom: "1.5rem" }}>
@@ -238,8 +273,56 @@ export default function Feed() {
       {user && <Nav user={user} />}
 
       <div style={{ maxWidth: "680px", margin: "0 auto", padding: "5rem 5vw 5rem" }}>
-        <div className="mark-eyebrow" style={{ marginBottom: "1.5rem" }}>
-          Alert Feed
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1.5rem" }}>
+          <div className="mark-eyebrow">
+            Alert Feed
+          </div>
+          {/* Signal Timing Badge */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
+              padding: "0.375rem 0.75rem",
+              borderRadius: "9999px",
+              fontSize: "var(--text-xs)",
+              fontWeight: 500,
+              fontFamily: "var(--font-mono)",
+              ...(isPremium
+                ? {
+                    background: "rgba(22, 163, 74, 0.1)",
+                    color: "#16a34a",
+                    border: "1px solid rgba(22, 163, 74, 0.3)",
+                  }
+                : {
+                    background: "var(--ink-08)",
+                    color: "var(--ink-50)",
+                    border: "1px solid var(--ink-20)",
+                  }),
+            }}
+          >
+            <span
+              style={{
+                width: 6,
+                height: 6,
+                borderRadius: "50%",
+                background: isPremium ? "#16a34a" : "var(--ink-40)",
+              }}
+            />
+            {isPremium ? "Real-time" : "Delayed 15min"}
+            {!isPremium && (
+              <Link
+                href="/settings"
+                style={{
+                  marginLeft: "0.25rem",
+                  color: "var(--orange)",
+                  textDecoration: "none",
+                }}
+              >
+                Upgrade →
+              </Link>
+            )}
+          </div>
         </div>
 
         {loading && (
@@ -328,6 +411,30 @@ export default function Feed() {
                       {signal.ticker}
                     </span>
                     <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                      {/* Signal Timing Badge per signal */}
+                      <span
+                        style={{
+                          fontFamily: "var(--font-mono)",
+                          fontSize: "var(--text-xs)",
+                          padding: "0.125rem 0.375rem",
+                          background: isPremium ? "rgba(22, 163, 74, 0.15)" : "var(--ink-10)",
+                          color: isPremium ? "#16a34a" : "var(--ink-50)",
+                          borderRadius: "4px",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "0.25rem",
+                        }}
+                      >
+                        <span
+                          style={{
+                            width: 4,
+                            height: 4,
+                            borderRadius: "50%",
+                            background: isPremium ? "#16a34a" : "var(--ink-40)",
+                          }}
+                        />
+                        {isPremium ? "Real-time" : "Delayed"}
+                      </span>
                       <span
                         style={{
                           fontFamily: "var(--font-mono)",

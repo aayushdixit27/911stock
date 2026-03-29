@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
-import { getRecentSignals, getSignalById, type DBSignal } from "@/lib/db";
+import { getRecentSignals, getSignalById, getUserTier, type DBSignal } from "@/lib/db";
 
 // Seed data only shown for demo when explicitly requested
 const SEED: DBSignal[] = [
@@ -61,13 +61,22 @@ export async function GET(req: NextRequest) {
   const offset = (page - 1) * limit;
   const signalId = searchParams.get("id");
 
+  // Get user tier for signal timing badges
+  const userTier = await getUserTier(userId);
+  const isPremium = userTier === "premium";
+
   // If signalId is provided, return single signal detail
   if (signalId) {
     const signal = await getSignalById(userId, signalId);
     if (!signal) {
       return NextResponse.json({ error: "Signal not found" }, { status: 404 });
     }
-    return NextResponse.json({ signal });
+    return NextResponse.json({ 
+      signal,
+      tier: userTier,
+      isPremium,
+      signalTiming: isPremium ? "realtime" : "delayed",
+    });
   }
 
   // Get user-scoped signals from DB with pagination
@@ -83,6 +92,9 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({ 
           signals, 
           source: "db",
+          tier: userTier,
+          isPremium,
+          signalTiming: isPremium ? "realtime" : "delayed",
           pagination: {
             page,
             limit,
@@ -101,6 +113,9 @@ export async function GET(req: NextRequest) {
   return NextResponse.json({ 
     signals: [], 
     source: "db",
+    tier: userTier,
+    isPremium,
+    signalTiming: isPremium ? "realtime" : "delayed",
     pagination: {
       page,
       limit,

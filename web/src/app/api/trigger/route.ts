@@ -185,18 +185,23 @@ export async function POST(req: NextRequest) {
         }
       }
 
-      // Trigger outbound call if score is high enough
+      // Trigger outbound call if score is high enough AND user is premium
       let callId: string | null = null;
-      if (score >= 7) {
+      let callTriggered = false;
+      if (score >= 7 && userTier === 'premium') {
         const phone = process.env.MY_PHONE_NUMBER;
         if (phone && phone !== "+1XXXXXXXXXX") {
           try {
             const result = await makeOutboundCall(phone, explanation, signal);
             callId = result.callId;
+            callTriggered = true;
           } catch (err) {
             console.error("[trigger] Failed to make outbound call:", err);
           }
         }
+      } else if (score >= 7 && userTier !== 'premium') {
+        // Log that we skipped the call due to tier restrictions
+        console.log(`[trigger] Skipped outbound call for signal ${dbSignal.id} - user is on ${userTier} tier`);
       }
 
       results.push({
@@ -205,7 +210,7 @@ export async function POST(req: NextRequest) {
         score,
         explanation,
         callId,
-        callTriggered: !!callId,
+        callTriggered,
         tier: userTier,
         deliverAt: deliverAt.toISOString(),
       });
