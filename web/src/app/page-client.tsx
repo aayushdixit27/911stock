@@ -256,6 +256,21 @@ export default function PageClient({ userId }: { userId: string }) {
             Deep Agents Hackathon 2026
           </span>
           <a
+            href="/gtm"
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: "var(--text-xs)",
+              fontWeight: 500,
+              color: "var(--orange)",
+              padding: "0.375rem 0.75rem",
+              border: "1px solid var(--orange)",
+              borderRadius: "4px",
+              textDecoration: "none",
+            }}
+          >
+            GTM
+          </a>
+          <a
             href="/settings"
             style={{
               fontFamily: "var(--font-mono)",
