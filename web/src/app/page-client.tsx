@@ -271,6 +271,21 @@ export default function PageClient({ userId }: { userId: string }) {
             GTM
           </a>
           <a
+            href="/stack"
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: "var(--text-xs)",
+              fontWeight: 500,
+              color: "var(--orange)",
+              padding: "0.375rem 0.75rem",
+              border: "1px solid var(--orange)",
+              borderRadius: "4px",
+              textDecoration: "none",
+            }}
+          >
+            Stack
+          </a>
+          <a
             href="/settings"
             style={{
               fontFamily: "var(--font-mono)",
