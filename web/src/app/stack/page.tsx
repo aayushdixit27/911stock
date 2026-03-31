@@ -257,6 +257,45 @@ export default function StackPage() {
           </p>
         </section>
 
+        {/* Payment Methods */}
+        <section style={{ ...card, marginBottom: "2rem", padding: "2rem" }}>
+          <p style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--ink-30)", marginBottom: "0.75rem" }}>
+            Payment Methods
+          </p>
+          <p style={{ fontFamily: "var(--font-display)", fontSize: "var(--text-xl)", fontStyle: "italic", color: "var(--ink)", marginBottom: "1.25rem", lineHeight: 1.4 }}>
+            How we collect $20/mo &mdash; and how much we keep.
+          </p>
+          <div style={{ borderRadius: "6px", overflow: "hidden", border: "1px solid var(--ink-08)" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1.2fr 0.8fr 0.8fr 1.5fr", background: "var(--paper)", padding: "0.625rem 1rem" }}>
+              {["Method", "You keep", "Fee", "How it works"].map((h) => (
+                <span key={h} style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--ink-30)" }}>{h}</span>
+              ))}
+            </div>
+            {[
+              { method: "Stripe Checkout", keep: "~97%", keepAmt: "$19.42", fee: "2.9% + $0.30", how: "Landing page \u2192 Subscribe \u2192 Stripe handles billing \u2192 bot activates", best: true },
+              { method: "Stripe via Telegram", keep: "~97%", keepAmt: "$19.42", fee: "2.9% + $0.30", how: "Telegram Payments API with Stripe as provider \u2014 zero Telegram cut", best: true },
+              { method: "Crypto (TON/USDC)", keep: "~100%", keepAmt: "$20.00", fee: "Gas only", how: "TON wallet built into Telegram, one-tap payment", best: false },
+              { method: "Telegram Stars", keep: "~65%", keepAmt: "$13.00", fee: "Apple/Google 30% + withdrawal", how: "Required only for digital goods sold inside Telegram Mini App", best: false },
+              { method: "Lemon Squeezy", keep: "~95%", keepAmt: "$19.00", fee: "5%", how: "They handle global sales tax/VAT \u2014 no tax headaches", best: false },
+            ].map((row, i) => (
+              <div key={row.method} style={{ display: "grid", gridTemplateColumns: "1.2fr 0.8fr 0.8fr 1.5fr", padding: "0.75rem 1rem", background: "var(--white)", borderTop: "1px solid var(--ink-08)", alignItems: "baseline" }}>
+                <span style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", fontWeight: 600, color: row.best ? "var(--ink)" : "var(--ink-50)" }}>
+                  {row.method}
+                  {row.best && <span style={{ fontFamily: "var(--font-mono)", fontSize: "9px", fontWeight: 700, color: "var(--orange)", marginLeft: "0.5rem", letterSpacing: "0.08em" }}>REC</span>}
+                </span>
+                <span style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", fontWeight: 600, color: row.best ? "var(--orange)" : "var(--ink-30)" }}>
+                  {row.keep} <span style={{ fontFamily: "var(--font-mono)", fontSize: "11px", color: "var(--ink-30)", fontWeight: 400 }}>({row.keepAmt})</span>
+                </span>
+                <span style={{ fontFamily: "var(--font-mono)", fontSize: "var(--text-sm)", color: "var(--ink-30)" }}>{row.fee}</span>
+                <span style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", color: "var(--ink-50)", lineHeight: 1.5 }}>{row.how}</span>
+              </div>
+            ))}
+          </div>
+          <p style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", fontStyle: "italic", color: "var(--ink-30)", marginTop: "0.75rem" }}>
+            Recommended: Stripe Checkout on your own site (911stock.com/subscribe). Avoids app store cuts entirely. User pays &rarr; gets Telegram bot activation link.
+          </p>
+        </section>
+
         {/* Auth0 Drop Decision */}
         <section style={{ marginBottom: "2rem", background: "var(--ink)", borderRadius: "8px", padding: "2rem", color: "var(--white)" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "1rem" }}>
