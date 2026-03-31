@@ -2,7 +2,7 @@ export default function StackPage() {
   const keep = [
     { layer: "Frontend", current: "Next.js 16 + React 19 + Tailwind 4", verdict: "Best full-stack framework, largest ecosystem. No reason to switch." },
     { layer: "Database", current: "PostgreSQL via Ghost", verdict: "Agent-native workflow, unlimited forks, hard cost caps. Solid." },
-    { layer: "Auth", current: "Auth0 + CIBA + Guardian", verdict: "Enterprise compliance (SOC 2, HIPAA), push-notification trade approvals. Nothing else does CIBA this well." },
+    { layer: "Auth", current: "SMS Approval (replacing Auth0)", verdict: "Simpler, faster, no Guardian enrollment friction. See decision below." },
     { layer: "SEC Data", current: "EDGAR API + Alpha Vantage", verdict: "EDGAR is the authoritative source. Current Form 4 parser is well-built." },
     { layer: "Trading", current: "Alpaca Paper Trading", verdict: "Commission-free, excellent dev experience. Right choice for MVP." },
     { layer: "Deployment", current: "Vercel", verdict: "World-class for Next.js, instant previews. Keep for frontend." },
@@ -121,6 +121,102 @@ export default function StackPage() {
             &larr; Dashboard
           </a>
         </header>
+
+        {/* Auth0 Drop Decision */}
+        <section style={{ marginBottom: "2rem", background: "var(--ink)", borderRadius: "8px", padding: "2rem", color: "var(--white)" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "1rem" }}>
+            <span
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: "10px",
+                fontWeight: 700,
+                letterSpacing: "0.1em",
+                color: "var(--orange)",
+                background: "rgba(234,76,0,0.15)",
+                padding: "0.25rem 0.6rem",
+                borderRadius: "3px",
+              }}
+            >
+              ACTION REQUIRED
+            </span>
+            <span style={{ fontFamily: "var(--font-mono)", fontSize: "11px", color: "rgba(255,255,255,0.4)" }}>
+              Pending CTO approval
+            </span>
+          </div>
+
+          <h2 style={{ fontFamily: "var(--font-display)", fontSize: "var(--text-2xl)", fontWeight: 500, fontStyle: "italic", color: "var(--white)", lineHeight: 1.3, marginBottom: "1rem" }}>
+            Drop Auth0. Replace with SMS approval.
+          </h2>
+
+          <p style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-base)", color: "rgba(255,255,255,0.7)", lineHeight: 1.7, marginBottom: "1.5rem" }}>
+            Auth0 CIBA + Guardian is heavyweight for a simple &ldquo;approve this trade?&rdquo; flow.
+            Guardian enrollment adds friction. Edge middleware incompatibilities caused repeated Vercel deploy failures.
+            SMS does the same job with zero setup for users.
+          </p>
+
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1px", borderRadius: "6px", overflow: "hidden", marginBottom: "1.5rem" }}>
+            <div style={{ background: "rgba(255,255,255,0.05)", padding: "1.25rem" }}>
+              <p style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 600, letterSpacing: "0.1em", color: "rgba(255,255,255,0.35)", marginBottom: "0.75rem" }}>
+                MVP &mdash; SMS APPROVAL
+              </p>
+              <p style={{ fontFamily: "var(--font-display)", fontSize: "var(--text-lg)", fontStyle: "italic", color: "var(--white)", marginBottom: "0.5rem" }}>
+                Twilio SMS
+              </p>
+              <ul style={{ margin: 0, paddingLeft: "1.25rem" }}>
+                <li style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", color: "rgba(255,255,255,0.6)", lineHeight: 1.8 }}>
+                  Bland calls &rarr; user says yes &rarr; SMS: &ldquo;Reply YES to sell 500 SMCI&rdquo;
+                </li>
+                <li style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", color: "rgba(255,255,255,0.6)", lineHeight: 1.8 }}>
+                  $0.0079/SMS &middot; build time: hours
+                </li>
+                <li style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", color: "rgba(255,255,255,0.6)", lineHeight: 1.8 }}>
+                  Zero user setup &mdash; everyone has SMS
+                </li>
+              </ul>
+            </div>
+            <div style={{ background: "rgba(255,255,255,0.05)", padding: "1.25rem" }}>
+              <p style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 600, letterSpacing: "0.1em", color: "rgba(255,255,255,0.35)", marginBottom: "0.75rem" }}>
+                LATER &mdash; CUSTOM APP
+              </p>
+              <p style={{ fontFamily: "var(--font-display)", fontSize: "var(--text-lg)", fontStyle: "italic", color: "var(--white)", marginBottom: "0.5rem" }}>
+                Push Notifications
+              </p>
+              <ul style={{ margin: 0, paddingLeft: "1.25rem" }}>
+                <li style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", color: "rgba(255,255,255,0.6)", lineHeight: 1.8 }}>
+                  911Stock mobile app with approve/deny buttons
+                </li>
+                <li style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", color: "rgba(255,255,255,0.6)", lineHeight: 1.8 }}>
+                  Firebase Cloud Messaging or APNs
+                </li>
+                <li style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", color: "rgba(255,255,255,0.6)", lineHeight: 1.8 }}>
+                  Build time: weeks (React Native / Expo)
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div style={{ background: "rgba(255,255,255,0.05)", borderRadius: "6px", padding: "1.25rem" }}>
+            <p style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 600, letterSpacing: "0.1em", color: "var(--orange)", marginBottom: "0.75rem" }}>
+              WHAT GETS REMOVED
+            </p>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.5rem 2rem" }}>
+              {[
+                "@auth0/nextjs-auth0, @auth0/ai, @auth0/ai-vercel",
+                "/lib/auth0.ts, /lib/auth0-ciba.ts",
+                "/api/ciba-status/, /api/initiate-ciba/",
+                "/api/guardian-enroll/, /auth/[auth0]/",
+                "GuardianEnroll.tsx component",
+                "/settings page (Guardian enrollment)",
+                "Middleware auth checks",
+                "All AUTH0_* env vars",
+              ].map((item) => (
+                <p key={item} style={{ fontFamily: "var(--font-mono)", fontSize: "var(--text-sm)", color: "rgba(255,255,255,0.5)", lineHeight: 1.6 }}>
+                  {item}
+                </p>
+              ))}
+            </div>
+          </div>
+        </section>
 
         {/* Keep Section */}
         <section style={{ marginBottom: "2rem" }}>
