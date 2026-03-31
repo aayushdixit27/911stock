@@ -138,7 +138,7 @@ overclaw/
 Built at the **Deep Agents Hackathon** (RSAC 2026) at AWS Builder Loft, San Francisco.
 
 - **Aayush Dixit** — CEO / Product
-- **CTO** — Backend / Infrastructure
+- **Bunyasit Fang (Big)** — CTO / Backend / Infrastructure
 
 ---
 
