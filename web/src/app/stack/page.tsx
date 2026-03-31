@@ -338,13 +338,148 @@ export default function StackPage() {
           </div>
         </section>
 
+        {/* Action Items */}
+        <section style={{ marginBottom: "2rem" }}>
+          <p style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--orange)", marginBottom: "0.5rem" }}>
+            Action Items
+          </p>
+          <p style={{ fontFamily: "var(--font-display)", fontSize: "var(--text-xl)", fontStyle: "italic", color: "var(--ink)", marginBottom: "1rem", lineHeight: 1.4 }}>
+            Pivot to Telegram-first. Ship fast.
+          </p>
+
+          {/* Phase 1 */}
+          <div style={{ ...card, borderLeft: "4px solid var(--orange)", padding: "1.75rem", marginBottom: "0.75rem" }}>
+            <div style={{ display: "flex", alignItems: "baseline", gap: "0.75rem", marginBottom: "1rem" }}>
+              <span style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 700, letterSpacing: "0.1em", color: "var(--orange)", background: "rgba(234,76,0,0.08)", padding: "0.2rem 0.5rem", borderRadius: "3px" }}>
+                WEEK 1
+              </span>
+              <span style={{ fontFamily: "var(--font-display)", fontSize: "var(--text-lg)", fontWeight: 500, fontStyle: "italic", color: "var(--ink)" }}>
+                Telegram Bot MVP
+              </span>
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+              {[
+                { owner: "CTO", task: "Set up Telegram bot via BotFather, basic /start and /watchlist commands" },
+                { owner: "CTO", task: "Port signal scoring engine + EDGAR monitor to standalone Python service" },
+                { owner: "CTO", task: "Inline keyboard buttons for trade approval (YES / NO / DETAILS)" },
+                { owner: "CTO", task: "Connect Alpaca trade execution to Telegram approval callback" },
+                { owner: "CEO", task: "Write bot copy \u2014 welcome message, alert format, confirmation messages" },
+                { owner: "CEO", task: "Set up Stripe Checkout landing page (911stock.com/subscribe) \u2014 keep 97%" },
+              ].map((item, i) => (
+                <div key={i} style={{ display: "flex", alignItems: "baseline", gap: "0.75rem", padding: "0.5rem 0" }}>
+                  <span style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 600, letterSpacing: "0.08em", color: item.owner === "CTO" ? "var(--orange)" : "var(--terra)", background: item.owner === "CTO" ? "rgba(234,76,0,0.08)" : "rgba(196,92,46,0.08)", padding: "0.15rem 0.4rem", borderRadius: "2px", whiteSpace: "nowrap" }}>
+                    {item.owner}
+                  </span>
+                  <span style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", color: "var(--ink-70)", lineHeight: 1.6 }}>
+                    {item.task}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Phase 2 */}
+          <div style={{ ...card, borderLeft: "4px solid var(--terra)", padding: "1.75rem", marginBottom: "0.75rem" }}>
+            <div style={{ display: "flex", alignItems: "baseline", gap: "0.75rem", marginBottom: "1rem" }}>
+              <span style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 700, letterSpacing: "0.1em", color: "var(--terra)", background: "rgba(196,92,46,0.08)", padding: "0.2rem 0.5rem", borderRadius: "3px" }}>
+                WEEK 2
+              </span>
+              <span style={{ fontFamily: "var(--font-display)", fontSize: "var(--text-lg)", fontWeight: 500, fontStyle: "italic", color: "var(--ink)" }}>
+                Agent Swarm + Payments
+              </span>
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+              {[
+                { owner: "CTO", task: "Multi-source agent swarm \u2014 EDGAR, news APIs, social sentiment running in parallel" },
+                { owner: "CTO", task: "Per-user notification agents \u2014 system spawns agent per watchlist, filters by sensitivity" },
+                { owner: "CTO", task: "Ghost DB integration \u2014 store signals, trades, agent learnings for pattern matching" },
+                { owner: "CEO", task: "Stripe webhook \u2192 bot activation flow (payment confirmed \u2192 /activate link in email)" },
+                { owner: "CEO", task: "Onboarding sequence \u2014 user adds tickers, sets sensitivity, connects Alpaca via OAuth" },
+                { owner: "CEO", task: "Record demo video of full loop: alert \u2192 approve \u2192 trade confirmed in Telegram" },
+              ].map((item, i) => (
+                <div key={i} style={{ display: "flex", alignItems: "baseline", gap: "0.75rem", padding: "0.5rem 0" }}>
+                  <span style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 600, letterSpacing: "0.08em", color: item.owner === "CTO" ? "var(--orange)" : "var(--terra)", background: item.owner === "CTO" ? "rgba(234,76,0,0.08)" : "rgba(196,92,46,0.08)", padding: "0.15rem 0.4rem", borderRadius: "2px", whiteSpace: "nowrap" }}>
+                    {item.owner}
+                  </span>
+                  <span style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", color: "var(--ink-70)", lineHeight: 1.6 }}>
+                    {item.task}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Phase 3 */}
+          <div style={{ ...card, borderLeft: "4px solid var(--ink-15)", padding: "1.75rem" }}>
+            <div style={{ display: "flex", alignItems: "baseline", gap: "0.75rem", marginBottom: "1rem" }}>
+              <span style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 700, letterSpacing: "0.1em", color: "var(--ink-30)", background: "var(--paper)", padding: "0.2rem 0.5rem", borderRadius: "3px" }}>
+                WEEK 3-4
+              </span>
+              <span style={{ fontFamily: "var(--font-display)", fontSize: "var(--text-lg)", fontWeight: 500, fontStyle: "italic", color: "var(--ink)" }}>
+                Scale + Monetize
+              </span>
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+              {[
+                { owner: "CTO", task: "Switch Bland AI \u2192 Retell AI for optional voice call tier (better voice, 22% cheaper)" },
+                { owner: "CTO", task: "Switch node-cron \u2192 Inngest for durable background jobs with retries" },
+                { owner: "CTO", task: "SnapTrade integration \u2014 connect any brokerage, not just Alpaca" },
+                { owner: "CEO", task: "Launch landing page + pricing tiers: Free (alerts only) / $20 (full bot) / $50 (voice calls)" },
+                { owner: "CEO", task: "Seed 50 beta users from hackathon contacts + judge referrals" },
+                { owner: "BOTH", task: "Rip out web dashboard, Auth0, Vercel \u2014 Telegram is the product" },
+              ].map((item, i) => (
+                <div key={i} style={{ display: "flex", alignItems: "baseline", gap: "0.75rem", padding: "0.5rem 0" }}>
+                  <span style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 600, letterSpacing: "0.08em", color: item.owner === "CTO" ? "var(--orange)" : item.owner === "CEO" ? "var(--terra)" : "var(--ink-50)", background: item.owner === "CTO" ? "rgba(234,76,0,0.08)" : item.owner === "CEO" ? "rgba(196,92,46,0.08)" : "var(--paper)", padding: "0.15rem 0.4rem", borderRadius: "2px", whiteSpace: "nowrap" }}>
+                    {item.owner}
+                  </span>
+                  <span style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", color: "var(--ink-70)", lineHeight: 1.6 }}>
+                    {item.task}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Cost Comparison */}
+        <section style={{ ...card, marginBottom: "2rem", padding: "2rem" }}>
+          <p style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--ink-30)", marginBottom: "0.75rem" }}>
+            Why Telegram
+          </p>
+          <p style={{ fontFamily: "var(--font-display)", fontSize: "var(--text-xl)", fontStyle: "italic", color: "var(--ink)", marginBottom: "1.25rem", lineHeight: 1.4 }}>
+            Alerts are free. Approval buttons are free. Push notifications are free.
+          </p>
+          <div style={{ borderRadius: "6px", overflow: "hidden", border: "1px solid var(--ink-08)", marginBottom: "1rem" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", background: "var(--paper)", padding: "0.5rem 1rem" }}>
+              <span style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--ink-30)" }}>Channel</span>
+              <span style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--ink-30)" }}>Per alert</span>
+              <span style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--ink-30)" }}>10K alerts/day</span>
+            </div>
+            {[
+              { channel: "Telegram Bot", per: "$0.00", daily: "$0/day", highlight: true },
+              { channel: "Twilio SMS", per: "$0.0079", daily: "$79/day", highlight: false },
+              { channel: "Bland AI calls", per: "$0.09/min", daily: "$900/day", highlight: false },
+            ].map((row, i) => (
+              <div key={row.channel} style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", padding: "0.625rem 1rem", background: "var(--white)", borderTop: "1px solid var(--ink-08)" }}>
+                <span style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", fontWeight: row.highlight ? 600 : 400, color: row.highlight ? "var(--ink)" : "var(--ink-30)" }}>{row.channel}</span>
+                <span style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", fontWeight: row.highlight ? 600 : 400, color: row.highlight ? "var(--orange)" : "var(--ink-30)" }}>{row.per}</span>
+                <span style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", fontWeight: row.highlight ? 600 : 400, color: row.highlight ? "var(--orange)" : "var(--ink-30)" }}>{row.daily}</span>
+              </div>
+            ))}
+          </div>
+          <p style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", color: "var(--ink-50)", lineHeight: 1.7 }}>
+            Subscription revenue via Stripe Checkout on your own landing page &mdash; you keep 97% ($19.42 of $20).
+            Telegram Stars only required for in-app digital goods (65% kept). Avoid by selling on your site.
+          </p>
+        </section>
+
         {/* Bottom Line */}
         <section style={{ ...card, borderLeft: "4px solid var(--orange)", padding: "2rem", marginBottom: "2rem" }}>
           <p style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--orange)", marginBottom: "0.75rem" }}>
             Bottom Line
           </p>
           <p style={{ fontFamily: "var(--font-display)", fontSize: "var(--text-2xl)", fontWeight: 500, fontStyle: "italic", color: "var(--ink)", lineHeight: 1.4 }}>
-            The CTO made strong architectural choices. Only 3 targeted swaps are worth the switching cost&nbsp;&mdash; and the biggest one (Retell&nbsp;AI) directly fixes the &ldquo;sounds like a scam&rdquo; feedback that judges hammered.
+            Telegram-first. Stripe for payments. The agent architecture is the product &mdash; not the web dashboard. Ship the bot in Week 1, monetize in Week 2, scale in Week 3.
           </p>
         </section>
 
