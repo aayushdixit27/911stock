@@ -40,6 +40,58 @@ export default function StackPage() {
           </a>
         </header>
 
+        {/* Design Doc Summary */}
+        <section style={{ marginBottom: "2rem", background: "var(--ink)", borderRadius: "8px", padding: "2rem", color: "var(--white)" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "1rem" }}>
+            <span style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 700, letterSpacing: "0.1em", color: "#22c55e", background: "rgba(34,197,94,0.15)", padding: "0.25rem 0.6rem", borderRadius: "3px" }}>
+              APPROVED
+            </span>
+            <span style={{ fontFamily: "var(--font-mono)", fontSize: "11px", color: "rgba(255,255,255,0.4)" }}>
+              Design doc &middot; Apr 1, 2026 &middot; /office-hours
+            </span>
+          </div>
+
+          <h2 style={{ fontFamily: "var(--font-display)", fontSize: "var(--text-2xl)", fontWeight: 500, fontStyle: "italic", color: "var(--white)", lineHeight: 1.3, marginBottom: "0.75rem" }}>
+            911Stock is a latency product, not an information product.
+          </h2>
+          <p style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-base)", color: "rgba(255,255,255,0.7)", lineHeight: 1.7, marginBottom: "1.25rem" }}>
+            The data is public (SEC EDGAR). The analysis is commoditized (LLMs). The value is delivering the right signal to the user&apos;s lock screen within minutes of the filing.
+            No existing competitor uses messaging as primary delivery. All 10+ products are web dashboards with email. The gap is wide open.
+          </p>
+
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "1px", borderRadius: "6px", overflow: "hidden", marginBottom: "1.25rem" }}>
+            {[
+              { label: "Wedge", value: "SEC Form 4 alerts via RCS", sub: "Plain-English context, no trade execution" },
+              { label: "Price", value: "$99/year", sub: "Stripe Checkout, keep 97%" },
+              { label: "Target", value: "<$100K portfolios", sub: "Individual stock holders underserved by brokerages" },
+            ].map((item) => (
+              <div key={item.label} style={{ background: "rgba(255,255,255,0.05)", padding: "1rem" }}>
+                <p style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 600, letterSpacing: "0.1em", color: "rgba(255,255,255,0.35)", marginBottom: "0.375rem" }}>{item.label}</p>
+                <p style={{ fontFamily: "var(--font-display)", fontSize: "var(--text-base)", fontStyle: "italic", color: "var(--white)", marginBottom: "0.25rem" }}>{item.value}</p>
+                <p style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", color: "rgba(255,255,255,0.5)" }}>{item.sub}</p>
+              </div>
+            ))}
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1px", borderRadius: "6px", overflow: "hidden", marginBottom: "1.25rem" }}>
+            {[
+              { label: "Week 1", goal: "Real Form 4 \u2192 real SMS/RCS on your phone < 5 min" },
+              { label: "Week 2", goal: "Landing page live, 50 free beta users" },
+              { label: "Week 4", goal: "First $99/year payment from a non-friend" },
+              { label: "Month 2", goal: "100 paying users ($9,900 ARR)" },
+            ].map((m) => (
+              <div key={m.label} style={{ background: "rgba(255,255,255,0.05)", padding: "0.75rem 1rem", display: "flex", alignItems: "baseline", gap: "0.75rem" }}>
+                <span style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 600, color: "var(--orange)", whiteSpace: "nowrap" }}>{m.label}</span>
+                <span style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", color: "rgba(255,255,255,0.6)" }}>{m.goal}</span>
+              </div>
+            ))}
+          </div>
+
+          <p style={{ fontFamily: "var(--font-display)", fontSize: "var(--text-base)", fontStyle: "italic", color: "rgba(255,255,255,0.5)" }}>
+            Assignment: Text 10 people who own stocks. Show them the alert. Ask: &ldquo;Would you pay $99/year?&rdquo; If 5+ say yes, start building.
+          </p>
+        </section>
+
         {/* Action Items */}
         <section style={{ marginBottom: "2rem" }}>
           <p style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--orange)", marginBottom: "0.5rem" }}>
