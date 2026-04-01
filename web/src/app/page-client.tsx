@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { NewsTimeline } from "@/components/NewsTimeline";
+import Nav from "@/components/Nav";
 
 type Sensitivity = "major_only" | "all_news" | "act_auto";
 
@@ -21,46 +22,9 @@ type Signal = {
   context: Record<string, string>;
 };
 
-const DEFAULT_PRICES: Record<string, { price: number; change: number; changePct: number }> = {
-  SMCI: { price: 42.50, change: 1.72, changePct: 4.2 },
-  TSLA: { price: 285.20, change: 2.28, changePct: 0.8 },
-  NVDA: { price: 142.80, change: -0.14, changePct: -0.1 },
-};
+const DEFAULT_PRICES: Record<string, { price: number; change: number; changePct: number }> = {};
 
-const SEED_SIGNALS: Signal[] = [
-  {
-    ticker: "SMCI",
-    headline: "CEO sold $2.1M — unscheduled",
-    date: "Mar 19",
-    detail: "Charles Liang sold 50,000 shares outside 10b5-1 plan. First sale in 14 months.",
-    significance: "high",
-    reasons: [
-      "First unscheduled sale in 14 months",
-      "3 historical matches — avg 12% drop in 30 days",
-      "Outside 10b5-1 scheduled plan",
-    ],
-    context: {
-      "ghost db": "3 pattern matches",
-      "avg 30-day drop": "−12%",
-      "last similar event": "aug 2025",
-      "your position": "1,000 shares",
-      "current value": "$42,500",
-      "overmind": "within policy",
-    },
-  },
-  {
-    ticker: "NVDA",
-    headline: "CFO sold $890K — scheduled",
-    date: "Mar 21",
-    detail: "Routine 10b5-1 plan execution. No pattern deviation.",
-    significance: "low",
-    reasons: [],
-    context: {
-      "ghost db": "1 pattern match",
-      "classification": "routine 10b5-1",
-    },
-  },
-];
+const SEED_SIGNALS: Signal[] = [];
 
 const SENSITIVITY_LABELS: Record<Sensitivity, string> = {
   major_only: "major only",
@@ -68,19 +32,50 @@ const SENSITIVITY_LABELS: Record<Sensitivity, string> = {
   act_auto: "act auto",
 };
 
-export default function PageClient({ userId }: { userId: string }) {
+interface User {
+  id: string;
+  name?: string | null;
+  email?: string | null;
+  image?: string | null;
+}
+
+export default function PageClient({ user }: { user: User }) {
   const router = useRouter();
-  const [watchlist, setWatchlist] = useState<WatchItem[]>([
-    { ticker: "SMCI", sensitivity: "major_only" },
-    { ticker: "TSLA", sensitivity: "major_only" },
-    { ticker: "NVDA", sensitivity: "all_news" },
-  ]);
+  const [watchlist, setWatchlist] = useState<WatchItem[]>([]);
+  const [isLoadingWatchlist, setIsLoadingWatchlist] = useState(true);
+  const [watchlistError, setWatchlistError] = useState<string | null>(null);
   const [input, setInput] = useState("");
-  const [selectedSignal, setSelectedSignal] = useState<Signal | null>(SEED_SIGNALS[0]);
+  const [selectedSignal, setSelectedSignal] = useState<Signal | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [signalDetected, setSignalDetected] = useState(false);
   const [livePrices, setLivePrices] = useState(DEFAULT_PRICES);
+
+  // Load watchlist from API on mount
+  useEffect(() => {
+    async function loadWatchlist() {
+      try {
+        const res = await fetch("/api/watchlist", {
+          credentials: "include",
+        });
+        if (!res.ok) {
+          throw new Error("Failed to load watchlist");
+        }
+        const data = await res.json();
+        const items: WatchItem[] = (data.watchlist || []).map((item: { ticker: string }) => ({
+          ticker: item.ticker,
+          sensitivity: "major_only" as Sensitivity,
+        }));
+        setWatchlist(items);
+      } catch (err) {
+        console.error("Failed to load watchlist:", err);
+        setWatchlistError("Failed to load watchlist");
+      } finally {
+        setIsLoadingWatchlist(false);
+      }
+    }
+    loadWatchlist();
+  }, []);
 
   const handlePriceUpdate = useCallback((prices: Record<string, { price: number; change: number; changePct: number }>) => {
     setLivePrices((prev) => ({ ...prev, ...prices }));
@@ -128,14 +123,14 @@ export default function PageClient({ userId }: { userId: string }) {
 
   const handleSignalDetected = useCallback(async () => {
     setSignalDetected(true);
-    setSelectedSignal(SEED_SIGNALS[0]);
+    setSelectedSignal(null);
     setLoading(true);
     setError(null);
     try {
       const res = await fetch("/api/trigger", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId }),
+        credentials: "include",
       });
       if (!res.ok) {
         const data = await res.json();
@@ -146,19 +141,53 @@ export default function PageClient({ userId }: { userId: string }) {
       setError(err instanceof Error ? err.message : "Something went wrong");
       setLoading(false);
     }
-  }, [router, userId]);
+  }, [router]);
 
   async function addTicker() {
     const t = input.trim().toUpperCase();
-    if (t && !watchlist.find((w) => w.ticker === t)) {
+    if (!t) return;
+
+    // Validate ticker format (1-5 uppercase letters)
+    if (!/^[A-Z]{1,5}$/.test(t)) {
+      setWatchlistError("Invalid ticker format. Must be 1-5 uppercase letters.");
+      return;
+    }
+
+    if (watchlist.find((w) => w.ticker === t)) {
+      setWatchlistError("Ticker already in watchlist");
+      return;
+    }
+
+    try {
+      const res = await fetch("/api/watchlist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ ticker: t }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        if (res.status === 409) {
+          setWatchlistError("Ticker already in watchlist");
+        } else if (res.status === 400) {
+          setWatchlistError(data.error || "Invalid request");
+        } else {
+          setWatchlistError("Failed to add ticker");
+        }
+        return;
+      }
+
+      // Success - add to local state
       setWatchlist([...watchlist, { ticker: t, sensitivity: "major_only" }]);
       setInput("");
-      
+      setWatchlistError(null);
+
       // Fetch price for the new ticker
       try {
-        const res = await fetch(`/api/stock-quote?ticker=${t}`);
-        if (res.ok) {
-          const data = await res.json();
+        const priceRes = await fetch(`/api/stock-quote?ticker=${t}`);
+        if (priceRes.ok) {
+          const data = await priceRes.json();
           if (data.price) {
             setLivePrices((prev) => ({
               ...prev,
@@ -173,11 +202,29 @@ export default function PageClient({ userId }: { userId: string }) {
       } catch (err) {
         console.error(`Failed to fetch price for ${t}:`, err);
       }
+    } catch (err) {
+      console.error("Failed to add ticker:", err);
+      setWatchlistError("Failed to add ticker");
     }
   }
 
-  function removeTicker(ticker: string) {
-    setWatchlist(watchlist.filter((w) => w.ticker !== ticker));
+  async function removeTicker(ticker: string) {
+    try {
+      const res = await fetch(`/api/watchlist/${ticker}`, {
+        method: "DELETE",
+        credentials: "include",
+      });
+
+      if (!res.ok) {
+        console.error("Failed to remove ticker:", await res.text());
+        return;
+      }
+
+      setWatchlist(watchlist.filter((w) => w.ticker !== ticker));
+      setWatchlistError(null);
+    } catch (err) {
+      console.error("Failed to remove ticker:", err);
+    }
   }
 
   function setSensitivity(ticker: string, s: Sensitivity) {
@@ -191,7 +238,7 @@ export default function PageClient({ userId }: { userId: string }) {
       const res = await fetch("/api/trigger", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId }),
+        credentials: "include",
       });
       if (!res.ok) {
         const data = await res.json();
@@ -213,95 +260,7 @@ export default function PageClient({ userId }: { userId: string }) {
   return (
     <main style={{ minHeight: "100vh", background: "var(--white)" }}>
       {/* ── NAV ── */}
-      <nav
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          right: 0,
-          zIndex: 500,
-          padding: "1rem 5vw",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          background: "rgba(255,255,255,0.95)",
-          backdropFilter: "blur(12px)",
-          borderBottom: "1px solid var(--ink-08)",
-        }}
-      >
-        <span
-          style={{
-            fontFamily: "var(--font-display)",
-            fontWeight: 500,
-            fontSize: "1.25rem",
-            fontStyle: "italic",
-            color: "var(--orange)",
-          }}
-        >
-          911stock
-        </span>
-        <span style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
-          <span
-            style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: "var(--text-xs)",
-              fontWeight: 500,
-              letterSpacing: "0.05em",
-              color: "var(--ink-30)",
-              padding: "0.375rem 0.75rem",
-              background: "var(--paper)",
-              borderRadius: "4px",
-            }}
-          >
-            Deep Agents Hackathon 2026
-          </span>
-          <a
-            href="/gtm"
-            style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: "var(--text-xs)",
-              fontWeight: 500,
-              color: "var(--orange)",
-              padding: "0.375rem 0.75rem",
-              border: "1px solid var(--orange)",
-              borderRadius: "4px",
-              textDecoration: "none",
-            }}
-          >
-            GTM
-          </a>
-          <a
-            href="/stack"
-            style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: "var(--text-xs)",
-              fontWeight: 500,
-              color: "var(--orange)",
-              padding: "0.375rem 0.75rem",
-              border: "1px solid var(--orange)",
-              borderRadius: "4px",
-              textDecoration: "none",
-            }}
-          >
-            Stack
-          </a>
-          <a
-            href="/settings"
-            style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: "var(--text-xs)",
-              fontWeight: 500,
-              color: "var(--ink-30)",
-              padding: "0.375rem 0.75rem",
-              border: "1px solid var(--ink-08)",
-              borderRadius: "4px",
-              textDecoration: "none",
-            }}
-          >
-            Settings
-          </a>
-        </span>
-      </nav>
+      <Nav user={user} />
 
       {/* ── DASHBOARD BODY ── */}
       <div style={{ padding: "5rem 5vw 2.5rem" }}>
@@ -495,6 +454,16 @@ export default function PageClient({ userId }: { userId: string }) {
                 + Add
               </button>
             </div>
+            {watchlistError && (
+              <p style={{ color: "var(--orange)", fontSize: "var(--text-xs)", marginTop: "0.5rem" }}>
+                {watchlistError}
+              </p>
+            )}
+            {isLoadingWatchlist && (
+              <p style={{ color: "var(--ink-50)", fontSize: "var(--text-xs)", marginTop: "0.5rem" }}>
+                Loading watchlist...
+              </p>
+            )}
           </div>
 
           {/* RIGHT: News Timeline */}

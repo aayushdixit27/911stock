@@ -5,12 +5,14 @@ import { useState, useEffect } from "react";
 
 type Trade = {
   id: string;
+  signalId: string | null;
   ticker: string;
   action: string;
   shares: number;
   price: number;
   totalValue: number;
-  reason: string;
+  reductionPct: number;
+  orderId: string;
   approvedVia: string;
   executedAt: string;
   beforeShares: number;
@@ -19,16 +21,16 @@ type Trade = {
 
 type Position = {
   ticker: string;
-  companyName: string;
+  companyName?: string;
   shares: number;
-  avgCost: number;
-  currentPrice: number;
+  avgCost?: number;
+  currentPrice?: number;
 };
 
 const OVERMIND_TRACE = [
   "Signal detected: HIGH significance (SMCI CEO sell)",
   "Recommendation: Alert user + suggest position reduction",
-  "Trade executed: SMCI −50% (user approved via CIBA)",
+  "Trade executed: SMCI −50% (user approved via web)",
 ];
 
 const GHOST_WRITES = [
@@ -44,15 +46,37 @@ export default function Resolution() {
   const [callStatus, setCallStatus] = useState<"idle" | "calling" | "done" | "error">("idle");
   const [trade, setTrade] = useState<Trade | null>(null);
   const [positions, setPositions] = useState<Position[]>([]);
+  const [tradeHistory, setTradeHistory] = useState<Trade[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Fetch portfolio and latest trade
     fetch("/api/portfolio")
       .then((r) => r.json())
       .then((data) => {
-        setTrade(data.lastTrade);
-        setPositions(data.positions);
+        setPositions(data.positions || []);
+        if (data.lastTrade) {
+          setTrade(data.lastTrade);
+        }
       })
       .catch(() => {});
+
+    // Fetch trade history from the new endpoint
+    fetch("/api/trades?limit=10")
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.trades && data.trades.length > 0) {
+          setTradeHistory(data.trades);
+          // If no trade from portfolio, use the latest from history
+          if (!trade) {
+            setTrade(data.trades[0]);
+          }
+        }
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
+      });
   }, []);
 
   async function handleCallMe() {
@@ -75,12 +99,14 @@ export default function Resolution() {
 
   const tradeRows = trade
     ? [
-        { label: "Order", value: trade.id, mono: true },
-        { label: "Action", value: `SELL ${trade.shares} shares @ $${trade.price.toFixed(2)}` },
+        { label: "Order ID", value: trade.orderId.slice(0, 20) + "...", mono: true },
+        { label: "Trade ID", value: trade.id.slice(0, 16) + "...", mono: true },
+        { label: "Action", value: `${trade.action} ${trade.shares.toLocaleString()} shares @ $${trade.price.toFixed(2)}` },
         { label: "Total", value: `$${trade.totalValue.toLocaleString()}`, highlight: true },
-        { label: "Position", value: `${trade.beforeShares} → ${trade.afterShares} shares` },
-        { label: "Approval", value: "Auth0 CIBA", terra: true },
-        { label: "Time", value: new Date(trade.executedAt).toLocaleTimeString() },
+        { label: "Position", value: `${trade.beforeShares.toLocaleString()} → ${trade.afterShares.toLocaleString()} shares` },
+        { label: "Reduction", value: `${trade.reductionPct}%` },
+        { label: "Approval", value: trade.approvedVia.replace("_", " ").toUpperCase(), terra: true },
+        { label: "Time", value: new Date(trade.executedAt).toLocaleString() },
       ]
     : [
         { label: "Trigger", value: "CEO sold $2.1M (Mar 19)" },
@@ -90,7 +116,7 @@ export default function Resolution() {
       ];
 
   const watchingStocks = positions.length > 0
-    ? positions.filter((p) => p.ticker !== "SMCI")
+    ? positions.filter((p) => p.ticker !== trade?.ticker)
     : [{ ticker: "TSLA", shares: 200 }, { ticker: "NVDA", shares: 500 }];
 
   return (
@@ -166,7 +192,7 @@ export default function Resolution() {
               }}
             >
               {trade ? trade.ticker : "SMCI"} position{" "}
-              <span style={{ color: "var(--orange)" }}>reduced by 50%</span>
+              <span style={{ color: "var(--orange)" }}>reduced by {trade ? trade.reductionPct : 50}%</span>
             </h1>
             <p style={{ fontSize: "var(--text-xs)", color: "rgba(255,255,255,0.3)" }}>
               Based on historical 12% avg decline over 30 days
@@ -263,6 +289,39 @@ export default function Resolution() {
           </div>
         </div>
 
+        {/* Trade History Section */}
+        {!loading && tradeHistory.length > 0 && (
+          <div style={{ marginTop: "1.5rem" }}>
+            <div className="mark-eyebrow" style={{ marginBottom: "1rem" }}>Recent Trades</div>
+            <div style={{ background: "var(--white)", borderRadius: "8px", overflow: "hidden", border: "1px solid var(--ink-08)" }}>
+              <table style={{ width: "100%", borderCollapse: "collapse" }}>
+                <thead>
+                  <tr style={{ background: "var(--paper)" }}>
+                    <th style={{ padding: "0.75rem 1rem", textAlign: "left", fontSize: "var(--text-xs)", color: "var(--ink-50)", fontWeight: 500 }}>Ticker</th>
+                    <th style={{ padding: "0.75rem 1rem", textAlign: "left", fontSize: "var(--text-xs)", color: "var(--ink-50)", fontWeight: 500 }}>Action</th>
+                    <th style={{ padding: "0.75rem 1rem", textAlign: "left", fontSize: "var(--text-xs)", color: "var(--ink-50)", fontWeight: 500 }}>Shares</th>
+                    <th style={{ padding: "0.75rem 1rem", textAlign: "left", fontSize: "var(--text-xs)", color: "var(--ink-50)", fontWeight: 500 }}>Price</th>
+                    <th style={{ padding: "0.75rem 1rem", textAlign: "left", fontSize: "var(--text-xs)", color: "var(--ink-50)", fontWeight: 500 }}>Total</th>
+                    <th style={{ padding: "0.75rem 1rem", textAlign: "left", fontSize: "var(--text-xs)", color: "var(--ink-50)", fontWeight: 500 }}>Time</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {tradeHistory.map((t, i) => (
+                    <tr key={t.id} style={{ borderTop: "1px solid var(--ink-08)", background: i % 2 === 0 ? "var(--white)" : "var(--paper)" }}>
+                      <td style={{ padding: "0.75rem 1rem", fontSize: "var(--text-sm)", fontWeight: 600, color: "var(--ink)" }}>{t.ticker}</td>
+                      <td style={{ padding: "0.75rem 1rem", fontSize: "var(--text-sm)", color: t.action === "SELL" ? "var(--orange)" : "#22c55e" }}>{t.action}</td>
+                      <td style={{ padding: "0.75rem 1rem", fontSize: "var(--text-sm)", color: "var(--ink)" }}>{t.shares.toLocaleString()}</td>
+                      <td style={{ padding: "0.75rem 1rem", fontSize: "var(--text-sm)", color: "var(--ink)" }}>${t.price.toFixed(2)}</td>
+                      <td style={{ padding: "0.75rem 1rem", fontSize: "var(--text-sm)", fontWeight: 500, color: "var(--ink)" }}>${t.totalValue.toLocaleString()}</td>
+                      <td style={{ padding: "0.75rem 1rem", fontSize: "var(--text-xs)", color: "var(--ink-50)" }}>{new Date(t.executedAt).toLocaleDateString()}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
         {/* Still watching + Call — single row */}
         <div
           style={{
@@ -273,6 +332,7 @@ export default function Resolution() {
             borderTop: "1px solid var(--ink-08)",
             gap: "1.5rem",
             flexWrap: "wrap",
+            marginTop: "1.5rem",
           }}
         >
           {/* Still watching */}

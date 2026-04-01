@@ -1,6 +1,9 @@
+import { NextRequest } from "next/server";
+import { auth } from "@/lib/auth";
 import { analyzeSignal } from "@/lib/gemini";
 import { detectSignal, getHistoricalPattern } from "@/lib/signals";
-import { getLastSignal } from "@/lib/state";
+import { getLastSignal, getLastUserId } from "@/lib/state";
+import { getWatchlist } from "@/lib/db";
 
 const OVERCLAW_URL = `http://localhost:${process.env.OVERCLAW_PORT ?? "8001"}/analyze`;
 
@@ -20,8 +23,19 @@ async function analyzeViaOverclaw(
   return data.explanation;
 }
 
-// SSE endpoint — streams pipeline status to the dashboard
-export async function GET() {
+// SSE endpoint — streams pipeline status to the dashboard (user-scoped)
+export async function GET(req: NextRequest) {
+  // Check authentication
+  const session = await auth();
+  if (!session?.user?.id) {
+    return new Response("Unauthorized", { status: 401 });
+  }
+  const userId = session.user.id;
+
+  // Get user's watchlist for personalized scanning
+  const watchlist = await getWatchlist(userId);
+  const userTickers = watchlist.map((w) => w.ticker);
+
   const encoder = new TextEncoder();
 
   const stream = new ReadableStream({
@@ -30,41 +44,62 @@ export async function GET() {
         controller.enqueue(encoder.encode(`data: ${JSON.stringify(event)}\n\n`));
       }
 
-      // Step 1
+      // Step 1 - Scan user's watchlist
       await delay(400);
-      send({ step: "scanning", status: "done" });
+      send({ 
+        step: "scanning", 
+        status: "done",
+        data: { tickers: userTickers, count: userTickers.length }
+      });
 
-      // Step 2 — use real signal from state if available, else SMCI fallback
+      // Step 2 — use real signal from state if available and matches user's watchlist
       await delay(800);
       const lastSignal = getLastSignal();
+      const lastUserId = getLastUserId();
+      
+      // Only show signal if it belongs to this user's watchlist or was triggered by this user
+      const isRelevantSignal = lastSignal && 
+        (userTickers.includes(lastSignal.ticker) || lastUserId === userId);
+      
       send({
         step: "signal_detected",
         status: "done",
-        data: lastSignal
+        data: isRelevantSignal
           ? {
               ticker: lastSignal.ticker,
               insider: lastSignal.insider,
               role: lastSignal.role,
               total_value: lastSignal.total_value,
+              userScoped: lastUserId === userId,
             }
-          : { ticker: "SMCI", insider: "Charles Liang", role: "CEO", total_value: 2125000 },
+          : { 
+              ticker: userTickers[0] ?? "N/A", 
+              insider: "No signals", 
+              role: "-", 
+              total_value: 0,
+              userScoped: false,
+              message: userTickers.length === 0 
+                ? "Add tickers to your watchlist to see signals" 
+                : "No new signals detected for your watchlist"
+            },
       });
 
       // Step 3
       await delay(1000);
       send({ step: "cross_referencing", status: "done" });
 
-      // Step 4
+      // Step 4 - Score based on user's context
       await delay(600);
-      send({ step: "scoring", status: "done", data: { score: 8, significance: "HIGH" } });
+      const score = isRelevantSignal ? 8 : 0;
+      send({ step: "scoring", status: "done", data: { score, significance: score >= 7 ? "HIGH" : score >= 4 ? "MEDIUM" : "LOW" } });
 
-      // Step 5 — same logic as POST /api/analyze (avoid self-fetch + empty JSON.parse on bad responses)
+      // Step 5 — generate explanation for this user
       await delay(800);
       const fallback =
         "SMCI's CEO just sold $2.1M in stock — his first sale in 14 months, outside his scheduled plan. The last 3 times SMCI insiders did this, the stock dropped an average of 12% over 30 days. You own SMCI. This is worth paying attention to.";
       try {
         const signal = detectSignal();
-        if (signal) {
+        if (signal && userTickers.includes(signal.ticker)) {
           const pattern = getHistoricalPattern(signal.ticker);
           let explanation: string;
           try {

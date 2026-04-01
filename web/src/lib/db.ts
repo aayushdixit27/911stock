@@ -17,8 +17,46 @@ export function getSql(): ReturnType<typeof postgres> | null {
 
 // ── Types ───────────────────────────────────────────────────────────────────
 
+export type DBWatchlistItem = {
+  id: string;
+  user_id: string;
+  ticker: string;
+  added_at: Date;
+};
+
+export type DBNotification = {
+  id: string;
+  user_id: string;
+  signal_id: string | null;
+  type: string;
+  title: string;
+  body: string;
+  read: boolean;
+  deliver_at: Date;
+  created_at: Date;
+};
+
+export type DBUserSettings = {
+  user_id: string;
+  risk_tolerance: string;
+  notify_in_app: boolean;
+  notify_email: boolean;
+  notify_phone: boolean;
+  created_at: Date;
+};
+
+export type DBAlpacaConnection = {
+  user_id: string;
+  access_token: string;
+  refresh_token: string | null;
+  token_type: string;
+  expires_at: Date | null;
+  created_at: Date;
+};
+
 export type DBSignal = {
   id: string;
+  user_id: string;
   ticker: string;
   company_name: string;
   insider: string;
@@ -36,6 +74,23 @@ export type DBSignal = {
   explanation: string | null;
   alerted: boolean;
   created_at?: Date;
+  // EDGAR filing ID for deduplication
+  edgar_filing_id?: string | null;
+};
+
+// Signal outcomes - shared across all users (NOT user-scoped)
+export type DBSignalOutcome = {
+  id: string;
+  signal_id: string;
+  ticker: string;
+  prediction_direction: string;
+  price_at_signal: number;
+  price_after_7d: number | null;
+  price_after_30d: number | null;
+  was_correct_7d: boolean | null;
+  was_correct_30d: boolean | null;
+  checked_at: Date | null;
+  created_at: Date;
 };
 
 export type DBAlert = {
@@ -94,9 +149,114 @@ export async function migrate(): Promise<void> {
   if (!sql) throw new Error("DATABASE_URL not set");
   if (_migrated) return;
 
+  // ── Auth Tables (for NextAuth.js) ───────────────────────────────────────────
+
+  // Users table - core user data
+  await sql`
+    CREATE TABLE IF NOT EXISTS users (
+      id              TEXT PRIMARY KEY,
+      name            TEXT,
+      email           TEXT UNIQUE,
+      email_verified  TIMESTAMPTZ,
+      image           TEXT,
+      password_hash   TEXT,
+      tier            TEXT NOT NULL DEFAULT 'free',
+      created_at      TIMESTAMPTZ NOT NULL DEFAULT now()
+    )
+  `;
+
+  // Accounts table - for OAuth providers
+  await sql`
+    CREATE TABLE IF NOT EXISTS accounts (
+      id                    TEXT PRIMARY KEY,
+      user_id               TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      type                  TEXT NOT NULL,
+      provider              TEXT NOT NULL,
+      provider_account_id   TEXT NOT NULL,
+      refresh_token         TEXT,
+      access_token          TEXT,
+      expires_at            BIGINT,
+      id_token              TEXT,
+      scope                 TEXT,
+      session_state         TEXT,
+      token_type            TEXT
+    )
+  `;
+
+  await sql`
+    CREATE UNIQUE INDEX IF NOT EXISTS accounts_provider_account_idx 
+    ON accounts(provider, provider_account_id)
+  `;
+
+  // Sessions table - for database session strategy
+  await sql`
+    CREATE TABLE IF NOT EXISTS sessions (
+      id            TEXT PRIMARY KEY,
+      user_id       TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      session_token TEXT NOT NULL UNIQUE,
+      expires       TIMESTAMPTZ NOT NULL
+    )
+  `;
+
+  // Verification tokens table - for email verification
+  await sql`
+    CREATE TABLE IF NOT EXISTS verification_tokens (
+      identifier  TEXT NOT NULL,
+      token       TEXT NOT NULL,
+      expires     TIMESTAMPTZ NOT NULL,
+      PRIMARY KEY (identifier, token)
+    )
+  `;
+
+  // ── Application Tables ─────────────────────────────────────────────────────
+
+  // Add user_id columns to existing tables (migration for multi-tenancy)
+  await sql`
+    ALTER TABLE signals ADD COLUMN IF NOT EXISTS user_id TEXT NOT NULL DEFAULT ''
+  `;
+
+  // Add edgar_filing_id for deduplication
+  await sql`
+    ALTER TABLE signals ADD COLUMN IF NOT EXISTS edgar_filing_id TEXT
+  `;
+
+  await sql`
+    ALTER TABLE signals DROP CONSTRAINT IF EXISTS signals_user_id_edgar_filing_id_key
+  `;
+
+  await sql`
+    ALTER TABLE signals ADD CONSTRAINT signals_user_id_edgar_filing_id_key UNIQUE (user_id, edgar_filing_id)
+  `;
+
+  await sql`
+    ALTER TABLE alerts ADD COLUMN IF NOT EXISTS user_id TEXT NOT NULL DEFAULT ''
+  `;
+
+  await sql`
+    ALTER TABLE agent_learnings ADD COLUMN IF NOT EXISTS user_id TEXT NOT NULL DEFAULT ''
+  `;
+
+  await sql`
+    ALTER TABLE trades ADD COLUMN IF NOT EXISTS user_id TEXT NOT NULL DEFAULT ''
+  `;
+
+  await sql`
+    ALTER TABLE portfolio ADD COLUMN IF NOT EXISTS user_id TEXT NOT NULL DEFAULT ''
+  `;
+
+  // Change portfolio primary key to include user_id
+  await sql`
+    ALTER TABLE portfolio DROP CONSTRAINT IF EXISTS portfolio_pkey
+  `;
+  
+  await sql`
+    ALTER TABLE portfolio ADD PRIMARY KEY (user_id, ticker)
+  `;
+
   await sql`
     CREATE TABLE IF NOT EXISTS signals (
       id                          TEXT PRIMARY KEY,
+      user_id                     TEXT NOT NULL DEFAULT '',
       ticker                      TEXT NOT NULL,
       company_name                TEXT NOT NULL,
       insider                     TEXT NOT NULL,
@@ -113,13 +273,20 @@ export async function migrate(): Promise<void> {
       score                       INTEGER NOT NULL DEFAULT 0,
       explanation                 TEXT,
       alerted                     BOOLEAN NOT NULL DEFAULT false,
-      created_at                  TIMESTAMPTZ NOT NULL DEFAULT now()
+      edgar_filing_id             TEXT,
+      created_at                  TIMESTAMPTZ NOT NULL DEFAULT now(),
+      UNIQUE(user_id, edgar_filing_id)
     )
+  `;
+
+  await sql`
+    CREATE INDEX IF NOT EXISTS signals_user_id_idx ON signals(user_id)
   `;
 
   await sql`
     CREATE TABLE IF NOT EXISTS alerts (
       id          TEXT PRIMARY KEY,
+      user_id     TEXT NOT NULL DEFAULT '',
       signal_id   TEXT NOT NULL REFERENCES signals(id),
       ticker      TEXT NOT NULL,
       call_id     TEXT,
@@ -129,8 +296,13 @@ export async function migrate(): Promise<void> {
   `;
 
   await sql`
+    CREATE INDEX IF NOT EXISTS alerts_user_id_idx ON alerts(user_id)
+  `;
+
+  await sql`
     CREATE TABLE IF NOT EXISTS agent_learnings (
       id                   TEXT PRIMARY KEY,
+      user_id              TEXT NOT NULL DEFAULT '',
       signal_id            TEXT NOT NULL REFERENCES signals(id),
       ticker               TEXT NOT NULL,
       pattern_match_count  INTEGER NOT NULL DEFAULT 0,
@@ -143,8 +315,13 @@ export async function migrate(): Promise<void> {
   `;
 
   await sql`
+    CREATE INDEX IF NOT EXISTS agent_learnings_user_id_idx ON agent_learnings(user_id)
+  `;
+
+  await sql`
     CREATE TABLE IF NOT EXISTS trades (
       id               TEXT PRIMARY KEY,
+      user_id          TEXT NOT NULL DEFAULT '',
       signal_id        TEXT REFERENCES signals(id),
       ticker           TEXT NOT NULL,
       action           TEXT NOT NULL,
@@ -161,6 +338,10 @@ export async function migrate(): Promise<void> {
   `;
 
   await sql`
+    CREATE INDEX IF NOT EXISTS trades_user_id_idx ON trades(user_id)
+  `;
+
+  await sql`
     CREATE UNIQUE INDEX IF NOT EXISTS trades_signal_id_unique
     ON trades(signal_id)
     WHERE signal_id IS NOT NULL
@@ -168,22 +349,83 @@ export async function migrate(): Promise<void> {
 
   await sql`
     CREATE TABLE IF NOT EXISTS portfolio (
-      ticker      TEXT PRIMARY KEY,
+      user_id     TEXT NOT NULL DEFAULT '',
+      ticker      TEXT NOT NULL,
       shares      INTEGER NOT NULL,
       avg_cost    NUMERIC NOT NULL DEFAULT 0,
-      updated_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+      updated_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
+      PRIMARY KEY (user_id, ticker)
     )
   `;
 
-  // Seed the SMCI demo signal
+  await sql`
+    CREATE INDEX IF NOT EXISTS portfolio_user_id_idx ON portfolio(user_id)
+  `;
+
+  // Watchlist table - per-user watchlist CRUD
+  await sql`
+    CREATE TABLE IF NOT EXISTS watchlist (
+      id        TEXT PRIMARY KEY,
+      user_id   TEXT NOT NULL,
+      ticker    TEXT NOT NULL,
+      added_at  TIMESTAMPTZ DEFAULT now(),
+      UNIQUE(user_id, ticker)
+    )
+  `;
+
+  await sql`
+    CREATE INDEX IF NOT EXISTS watchlist_user_id_idx ON watchlist(user_id)
+  `;
+
+  // Notifications table - in-app notifications with staggered delivery
+  await sql`
+    CREATE TABLE IF NOT EXISTS notifications (
+      id          TEXT PRIMARY KEY,
+      user_id     TEXT NOT NULL,
+      signal_id   TEXT REFERENCES signals(id),
+      type        TEXT NOT NULL,
+      title       TEXT NOT NULL,
+      body        TEXT NOT NULL,
+      read        BOOLEAN NOT NULL DEFAULT false,
+      deliver_at  TIMESTAMPTZ NOT NULL,
+      created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+    )
+  `;
+
+  await sql`
+    CREATE INDEX IF NOT EXISTS notifications_user_read_deliver_idx 
+    ON notifications(user_id, read, deliver_at)
+  `;
+
+  await sql`
+    CREATE INDEX IF NOT EXISTS notifications_user_id_idx ON notifications(user_id)
+  `;
+
+  // User settings table - notification preferences and risk tolerance
+  await sql`
+    CREATE TABLE IF NOT EXISTS user_settings (
+      user_id         TEXT PRIMARY KEY,
+      risk_tolerance  TEXT NOT NULL DEFAULT 'moderate',
+      notify_in_app   BOOLEAN NOT NULL DEFAULT true,
+      notify_email    BOOLEAN NOT NULL DEFAULT false,
+      notify_phone    BOOLEAN NOT NULL DEFAULT false,
+      created_at      TIMESTAMPTZ NOT NULL DEFAULT now()
+    )
+  `;
+
+  await sql`
+    CREATE INDEX IF NOT EXISTS user_settings_user_id_idx ON user_settings(user_id)
+  `;
+
+  // Seed the SMCI demo signal (with empty user_id for backward compatibility)
   await sql`
     INSERT INTO signals
-      (id, ticker, company_name, insider, role, action, shares,
+      (id, user_id, ticker, company_name, insider, role, action, shares,
        price_per_share, total_value, date, filed_at,
        scheduled_10b5_1, last_transaction_months_ago,
        position_reduced_pct, score, explanation, alerted)
     VALUES
-      ('smci-ceo-sell-20260319', 'SMCI', 'Super Micro Computer',
+      ('smci-ceo-sell-20260319', '', 'SMCI', 'Super Micro Computer',
        'Charles Liang', 'CEO', 'SELL', 50000, 42.50, 2125000,
        '2026-03-19', '2026-03-19T16:30:00Z',
        false, 14, 18, 10, null, false)
@@ -191,12 +433,95 @@ export async function migrate(): Promise<void> {
   `;
 
   await sql`
-    INSERT INTO portfolio (ticker, shares, avg_cost)
+    INSERT INTO portfolio (user_id, ticker, shares, avg_cost)
     VALUES
-      ('SMCI', 1000, 42.50),
-      ('TSLA', 500, 285.20),
-      ('NVDA', 200, 142.80)
-    ON CONFLICT (ticker) DO NOTHING
+      ('', 'SMCI', 1000, 42.50),
+      ('', 'TSLA', 500, 285.20),
+      ('', 'NVDA', 200, 142.80)
+    ON CONFLICT (user_id, ticker) DO NOTHING
+  `;
+
+  // Alpaca connections table - OAuth tokens for user paper trading
+  await sql`
+    CREATE TABLE IF NOT EXISTS alpaca_connections (
+      user_id         TEXT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+      access_token    TEXT NOT NULL,
+      refresh_token   TEXT,
+      token_type      TEXT DEFAULT 'Bearer',
+      expires_at      TIMESTAMPTZ,
+      created_at      TIMESTAMPTZ DEFAULT now()
+    )
+  `;
+
+  await sql`
+    CREATE INDEX IF NOT EXISTS alpaca_connections_user_id_idx ON alpaca_connections(user_id)
+  `;
+
+  // Onboarding completion flag
+  await sql`
+    ALTER TABLE users 
+    ADD COLUMN IF NOT EXISTS onboarding_completed BOOLEAN DEFAULT false
+  `;
+
+  // Stripe subscription columns - add to users table
+  await sql`
+    ALTER TABLE users 
+    ADD COLUMN IF NOT EXISTS stripe_customer_id TEXT UNIQUE
+  `;
+
+  await sql`
+    ALTER TABLE users 
+    ADD COLUMN IF NOT EXISTS stripe_subscription_id TEXT
+  `;
+
+  await sql`
+    ALTER TABLE users 
+    ADD COLUMN IF NOT EXISTS stripe_subscription_status TEXT
+  `;
+
+  await sql`
+    ALTER TABLE users 
+    ADD COLUMN IF NOT EXISTS stripe_price_id TEXT
+  `;
+
+  await sql`
+    ALTER TABLE users 
+    ADD COLUMN IF NOT EXISTS stripe_current_period_end TIMESTAMPTZ
+  `;
+
+  // Index on stripe_customer_id for webhook lookups
+  await sql`
+    CREATE INDEX IF NOT EXISTS users_stripe_customer_id_idx ON users(stripe_customer_id)
+  `;
+
+  // Signal outcomes table - shared across all users (NOT user-scoped)
+  await sql`
+    CREATE TABLE IF NOT EXISTS signal_outcomes (
+      id                  TEXT PRIMARY KEY,
+      signal_id           TEXT NOT NULL REFERENCES signals(id),
+      ticker              TEXT NOT NULL,
+      prediction_direction TEXT NOT NULL,
+      price_at_signal     NUMERIC NOT NULL,
+      price_after_7d      NUMERIC,
+      price_after_30d     NUMERIC,
+      was_correct_7d      BOOLEAN,
+      was_correct_30d     BOOLEAN,
+      checked_at          TIMESTAMPTZ,
+      created_at          TIMESTAMPTZ DEFAULT now()
+    )
+  `;
+
+  await sql`
+    CREATE INDEX IF NOT EXISTS signal_outcomes_signal_id_idx ON signal_outcomes(signal_id)
+  `;
+
+  await sql`
+    CREATE INDEX IF NOT EXISTS signal_outcomes_ticker_idx ON signal_outcomes(ticker)
+  `;
+
+  await sql`
+    CREATE INDEX IF NOT EXISTS signal_outcomes_checked_at_idx ON signal_outcomes(checked_at)
+    WHERE price_after_7d IS NULL OR price_after_30d IS NULL
   `;
 
   _migrated = true;
@@ -239,91 +564,96 @@ function normalizePortfolioPosition(
 
 // ── Operations ───────────────────────────────────────────────────────────────
 
-export async function insertSignal(signal: DBSignal): Promise<void> {
+export async function insertSignal(signal: DBSignal, userId?: string): Promise<void> {
   await withDb((sql) => sql`
     INSERT INTO signals
-      (id, ticker, company_name, insider, role, action, shares,
+      (id, user_id, ticker, company_name, insider, role, action, shares,
        price_per_share, total_value, date, filed_at,
        scheduled_10b5_1, last_transaction_months_ago,
-       position_reduced_pct, score, explanation, alerted)
+       position_reduced_pct, score, explanation, alerted, edgar_filing_id)
     VALUES
-      (${signal.id}, ${signal.ticker}, ${signal.company_name},
+      (${signal.id}, ${userId ?? signal.user_id ?? ''}, ${signal.ticker}, ${signal.company_name},
        ${signal.insider}, ${signal.role}, ${signal.action},
        ${signal.shares}, ${signal.price_per_share}, ${signal.total_value},
        ${signal.date}, ${signal.filed_at}, ${signal.scheduled_10b5_1},
        ${signal.last_transaction_months_ago}, ${signal.position_reduced_pct},
-       ${signal.score}, ${signal.explanation ?? null}, ${signal.alerted})
-    ON CONFLICT (id) DO NOTHING
+       ${signal.score}, ${signal.explanation ?? null}, ${signal.alerted}, ${signal.edgar_filing_id ?? null})
+    ON CONFLICT (user_id, edgar_filing_id) DO NOTHING
   `);
 }
 
-export async function getLatestSignal(ticker?: string): Promise<DBSignal | null> {
+export async function getLatestSignal(userId: string, ticker?: string): Promise<DBSignal | null> {
   const rows = await withDb((sql) =>
     ticker
       ? sql<DBSignal[]>`
           SELECT * FROM signals
-          WHERE ticker = ${ticker}
+          WHERE user_id = ${userId} AND ticker = ${ticker}
           ORDER BY created_at DESC LIMIT 1`
       : sql<DBSignal[]>`
           SELECT * FROM signals
+          WHERE user_id = ${userId}
           ORDER BY score DESC, created_at DESC LIMIT 1`
   );
   return rows[0] ?? null;
 }
 
-export async function getSignalById(id: string): Promise<DBSignal | null> {
+export async function getSignalById(userId: string, id: string): Promise<DBSignal | null> {
   const rows = await withDb((sql) => sql<DBSignal[]>`
-    SELECT * FROM signals WHERE id = ${id} LIMIT 1
+    SELECT * FROM signals WHERE user_id = ${userId} AND id = ${id} LIMIT 1
   `);
   return rows[0] ?? null;
 }
 
-export async function getRecentSignals(limit = 20): Promise<DBSignal[]> {
+export async function getRecentSignals(userId: string, limit = 20, offset = 0): Promise<DBSignal[]> {
   return withDb((sql) => sql<DBSignal[]>`
     SELECT * FROM signals
-    WHERE created_at > now() - interval '7 days'
+    WHERE user_id = ${userId}
     ORDER BY score DESC, created_at DESC
     LIMIT ${limit}
+    OFFSET ${offset}
   `);
 }
 
-export async function markSignalAlerted(id: string): Promise<void> {
+export async function markSignalAlerted(userId: string, id: string): Promise<void> {
   await withDb((sql) => sql`
-    UPDATE signals SET alerted = true WHERE id = ${id}
+    UPDATE signals SET alerted = true WHERE user_id = ${userId} AND id = ${id}
   `);
 }
 
-export async function insertAlert(alert: DBAlert): Promise<void> {
+export async function insertAlert(alert: DBAlert, userId: string): Promise<void> {
   await withDb((sql) => sql`
-    INSERT INTO alerts (id, signal_id, ticker, call_id, explanation)
-    VALUES (${alert.id}, ${alert.signal_id}, ${alert.ticker},
+    INSERT INTO alerts (id, user_id, signal_id, ticker, call_id, explanation)
+    VALUES (${alert.id}, ${userId}, ${alert.signal_id}, ${alert.ticker},
             ${alert.call_id ?? null}, ${alert.explanation})
   `);
 }
 
-export async function getRecentAlerts(limit = 20): Promise<DBAlert[]> {
+export async function getRecentAlerts(userId: string, limit = 20): Promise<DBAlert[]> {
   return withDb((sql) => sql<DBAlert[]>`
-    SELECT * FROM alerts ORDER BY created_at DESC LIMIT ${limit}
+    SELECT * FROM alerts 
+    WHERE user_id = ${userId}
+    ORDER BY created_at DESC LIMIT ${limit}
   `);
 }
 
-export async function getTradeBySignalId(signalId: string): Promise<DBTrade | null> {
+export async function getTradeBySignalId(userId: string, signalId: string): Promise<DBTrade | null> {
   const rows = await withDb((sql) => sql<DBTrade[]>`
     SELECT * FROM trades
-    WHERE signal_id = ${signalId}
+    WHERE user_id = ${userId} AND signal_id = ${signalId}
     LIMIT 1
   `);
   return rows[0] ? normalizeTrade(rows[0]) : null;
 }
 
 export async function executeTrade(params: {
+  userId: string;
   signalId: string;
   ticker: string;
   reductionPct: number;
   pricePerShare: number;
   approvalMethod: string;
 }): Promise<DBTrade> {
-  const { signalId, ticker, reductionPct, pricePerShare, approvalMethod } = params;
+  const { userId, signalId, ticker, reductionPct, pricePerShare, approvalMethod } = params;
 
   return withDb((sql) =>
     sql.begin(async (tx) => {
@@ -331,14 +661,14 @@ export async function executeTrade(params: {
 
       const existing = await trx<DBTrade[]>`
         SELECT * FROM trades
-        WHERE signal_id = ${signalId}
+        WHERE user_id = ${userId} AND signal_id = ${signalId}
         LIMIT 1
       `;
       if (existing[0]) return normalizeTrade(existing[0]);
 
       const portfolioRows = await trx<DBPortfolioPosition[]>`
         SELECT * FROM portfolio
-        WHERE ticker = ${ticker}
+        WHERE user_id = ${userId} AND ticker = ${ticker}
         FOR UPDATE
       `;
       const position = portfolioRows[0];
@@ -346,7 +676,7 @@ export async function executeTrade(params: {
 
       const existingAfterLock = await trx<DBTrade[]>`
         SELECT * FROM trades
-        WHERE signal_id = ${signalId}
+        WHERE user_id = ${userId} AND signal_id = ${signalId}
         LIMIT 1
       `;
       if (existingAfterLock[0]) return normalizeTrade(existingAfterLock[0]);
@@ -360,6 +690,7 @@ export async function executeTrade(params: {
       const inserted = await trx<DBTrade[]>`
         INSERT INTO trades (
           id,
+          user_id,
           signal_id,
           ticker,
           action,
@@ -374,6 +705,7 @@ export async function executeTrade(params: {
         )
         VALUES (
           ${newId()},
+          ${userId},
           ${signalId},
           ${ticker},
           ${"SELL"},
@@ -392,7 +724,7 @@ export async function executeTrade(params: {
       await trx`
         UPDATE portfolio
         SET shares = ${sharesAfter}, updated_at = now()
-        WHERE ticker = ${ticker}
+        WHERE user_id = ${userId} AND ticker = ${ticker}
       `;
 
       return normalizeTrade(inserted[0]);
@@ -400,16 +732,36 @@ export async function executeTrade(params: {
   );
 }
 
-export async function getLatestTrade(): Promise<DBTrade | null> {
+export async function getLatestTrade(userId: string): Promise<DBTrade | null> {
   const rows = await withDb((sql) => sql<DBTrade[]>`
     SELECT * FROM trades
+    WHERE user_id = ${userId}
     ORDER BY approved_at DESC
     LIMIT 1
   `);
   return rows[0] ? normalizeTrade(rows[0]) : null;
 }
 
-export async function getPortfolio(): Promise<DBPortfolioWithLastTrade[]> {
+export async function getTrades(userId: string, limit = 50, offset = 0): Promise<DBTrade[]> {
+  const rows = await withDb((sql) => sql<DBTrade[]>`
+    SELECT * FROM trades
+    WHERE user_id = ${userId}
+    ORDER BY approved_at DESC
+    LIMIT ${limit}
+    OFFSET ${offset}
+  `);
+  return rows.map(normalizeTrade);
+}
+
+export async function getTradeCount(userId: string): Promise<number> {
+  const rows = await withDb((sql) => sql<{ count: string }[]>`
+    SELECT COUNT(*)::text AS count FROM trades
+    WHERE user_id = ${userId}
+  `);
+  return parseInt(rows[0]?.count ?? "0", 10);
+}
+
+export async function getPortfolio(userId: string): Promise<DBPortfolioWithLastTrade[]> {
   const rows = await withDb((sql) => sql<Array<
     DBPortfolioPosition & {
       trade_id: string | null;
@@ -447,10 +799,11 @@ export async function getPortfolio(): Promise<DBPortfolioWithLastTrade[]> {
     LEFT JOIN LATERAL (
       SELECT *
       FROM trades t
-      WHERE t.ticker = p.ticker
+      WHERE t.user_id = p.user_id AND t.ticker = p.ticker
       ORDER BY t.approved_at DESC
       LIMIT 1
     ) t ON true
+    WHERE p.user_id = ${userId}
     ORDER BY p.ticker
   `);
 
@@ -476,13 +829,13 @@ export async function getPortfolio(): Promise<DBPortfolioWithLastTrade[]> {
   }));
 }
 
-export async function insertLearning(learning: DBLearning): Promise<void> {
+export async function insertLearning(learning: DBLearning, userId: string): Promise<void> {
   await withDb((sql) => sql`
     INSERT INTO agent_learnings
-      (id, signal_id, ticker, pattern_match_count, avg_historical_drop,
+      (id, user_id, signal_id, ticker, pattern_match_count, avg_historical_drop,
        action_taken, user_approved, notes)
     VALUES
-      (${learning.id}, ${learning.signal_id}, ${learning.ticker},
+      (${learning.id}, ${userId}, ${learning.signal_id}, ${learning.ticker},
        ${learning.pattern_match_count}, ${learning.avg_historical_drop},
        ${learning.action_taken}, ${learning.user_approved},
        ${learning.notes ?? null})
@@ -490,11 +843,351 @@ export async function insertLearning(learning: DBLearning): Promise<void> {
   `);
 }
 
-export async function getLearningCount(ticker: string): Promise<number> {
+export async function getLearningCount(userId: string, ticker: string): Promise<number> {
   const rows = await withDb((sql) => sql<{ count: string }[]>`
-    SELECT COUNT(*)::text AS count FROM agent_learnings WHERE ticker = ${ticker}
+    SELECT COUNT(*)::text AS count FROM agent_learnings 
+    WHERE user_id = ${userId} AND ticker = ${ticker}
   `);
   return parseInt(rows[0]?.count ?? "0", 10);
+}
+
+// ── Watchlist Operations ────────────────────────────────────────────────────
+
+export async function getWatchlist(userId: string): Promise<DBWatchlistItem[]> {
+  return withDb((sql) => sql<DBWatchlistItem[]>`
+    SELECT * FROM watchlist
+    WHERE user_id = ${userId}
+    ORDER BY added_at DESC
+  `);
+}
+
+export async function addToWatchlist(userId: string, ticker: string): Promise<DBWatchlistItem> {
+  const id = newId();
+  const rows = await withDb((sql) => sql<DBWatchlistItem[]>`
+    INSERT INTO watchlist (id, user_id, ticker)
+    VALUES (${id}, ${userId}, ${ticker})
+    ON CONFLICT (user_id, ticker) DO UPDATE SET ticker = ${ticker}
+    RETURNING *
+  `);
+  return rows[0];
+}
+
+export async function removeFromWatchlist(userId: string, ticker: string): Promise<void> {
+  await withDb((sql) => sql`
+    DELETE FROM watchlist
+    WHERE user_id = ${userId} AND ticker = ${ticker}
+  `);
+}
+
+export async function getWatchlistCount(userId: string): Promise<number> {
+  const rows = await withDb((sql) => sql<{ count: string }[]>`
+    SELECT COUNT(*)::text AS count FROM watchlist
+    WHERE user_id = ${userId}
+  `);
+  return parseInt(rows[0]?.count ?? "0", 10);
+}
+
+// ── Notification Operations ─────────────────────────────────────────────────
+
+export async function insertNotification(notification: Omit<DBNotification, 'id' | 'created_at'>): Promise<DBNotification> {
+  const id = newId();
+  const rows = await withDb((sql) => sql<DBNotification[]>`
+    INSERT INTO notifications (id, user_id, signal_id, type, title, body, read, deliver_at)
+    VALUES (${id}, ${notification.user_id}, ${notification.signal_id ?? null}, 
+            ${notification.type}, ${notification.title}, ${notification.body}, 
+            ${notification.read}, ${notification.deliver_at})
+    RETURNING *
+  `);
+  return rows[0];
+}
+
+export async function getDeliveredNotifications(
+  userId: string, 
+  options?: { 
+    includeRead?: boolean; 
+    limit?: number; 
+    offset?: number;
+  }
+): Promise<DBNotification[]> {
+  const { includeRead = true, limit = 20, offset = 0 } = options ?? {};
+  const now = new Date();
+  
+  return withDb((sql) => sql<DBNotification[]>`
+    SELECT * FROM notifications
+    WHERE user_id = ${userId}
+      AND deliver_at <= ${now}
+      ${!includeRead ? sql`AND read = false` : sql``}
+    ORDER BY deliver_at DESC, created_at DESC
+    LIMIT ${limit}
+    OFFSET ${offset}
+  `);
+}
+
+export async function getUnreadNotificationCount(userId: string): Promise<number> {
+  const now = new Date();
+  const rows = await withDb((sql) => sql<{ count: string }[]>`
+    SELECT COUNT(*)::text AS count FROM notifications
+    WHERE user_id = ${userId}
+      AND read = false
+      AND deliver_at <= ${now}
+  `);
+  return parseInt(rows[0]?.count ?? "0", 10);
+}
+
+export async function markNotificationRead(userId: string, notificationId: string): Promise<boolean> {
+  const result = await withDb((sql) => sql`
+    UPDATE notifications 
+    SET read = true 
+    WHERE user_id = ${userId} AND id = ${notificationId}
+  `);
+  return result.count > 0;
+}
+
+export async function markAllNotificationsRead(userId: string): Promise<void> {
+  await withDb((sql) => sql`
+    UPDATE notifications 
+    SET read = true 
+    WHERE user_id = ${userId} AND read = false
+  `);
+}
+
+// ── User Settings Operations ────────────────────────────────────────────────
+
+export async function getUserSettings(userId: string): Promise<DBUserSettings | null> {
+  const rows = await withDb((sql) => sql<DBUserSettings[]>`
+    SELECT * FROM user_settings WHERE user_id = ${userId} LIMIT 1
+  `);
+  return rows[0] ?? null;
+}
+
+export async function upsertUserSettings(
+  userId: string, 
+  settings: Partial<Omit<DBUserSettings, 'user_id' | 'created_at'>>
+): Promise<DBUserSettings> {
+  const existing = await getUserSettings(userId);
+  
+  if (existing) {
+    const rows = await withDb((sql) => sql<DBUserSettings[]>`
+      UPDATE user_settings
+      SET 
+        risk_tolerance = COALESCE(${settings.risk_tolerance ?? existing.risk_tolerance}, risk_tolerance),
+        notify_in_app = COALESCE(${settings.notify_in_app ?? existing.notify_in_app}, notify_in_app),
+        notify_email = COALESCE(${settings.notify_email ?? existing.notify_email}, notify_email),
+        notify_phone = COALESCE(${settings.notify_phone ?? existing.notify_phone}, notify_phone)
+      WHERE user_id = ${userId}
+      RETURNING *
+    `);
+    return rows[0];
+  } else {
+    const rows = await withDb((sql) => sql<DBUserSettings[]>`
+      INSERT INTO user_settings (user_id, risk_tolerance, notify_in_app, notify_email, notify_phone)
+      VALUES (${userId}, ${settings.risk_tolerance ?? 'moderate'}, 
+              ${settings.notify_in_app ?? true}, ${settings.notify_email ?? false}, 
+              ${settings.notify_phone ?? false})
+      RETURNING *
+    `);
+    return rows[0];
+  }
+}
+
+// ── User Tier Helper ────────────────────────────────────────────────────────
+
+export async function getUserTier(userId: string): Promise<string> {
+  const rows = await withDb((sql) => sql<{
+    tier: string;
+    stripe_subscription_status: string | null;
+    stripe_current_period_end: Date | null;
+  }[]>`
+    SELECT tier, stripe_subscription_status, stripe_current_period_end 
+    FROM users 
+    WHERE id = ${userId} 
+    LIMIT 1
+  `);
+  
+  const user = rows[0];
+  if (!user) return 'free';
+
+  // Check if user has an active Stripe subscription
+  const isActive = user.stripe_subscription_status === 'active' || 
+                   user.stripe_subscription_status === 'trialing';
+  const notExpired = user.stripe_current_period_end 
+    ? new Date(user.stripe_current_period_end) > new Date()
+    : false;
+
+  if (isActive && notExpired) return 'premium';
+  return user.tier ?? 'free';
+}
+
+export async function isPremiumUser(userId: string): Promise<boolean> {
+  const tier = await getUserTier(userId);
+  return tier === 'premium';
+}
+
+// ── Alpaca Connection Operations ────────────────────────────────────────────
+
+export async function getAlpacaConnection(userId: string): Promise<DBAlpacaConnection | null> {
+  const rows = await withDb((sql) => sql<DBAlpacaConnection[]>`
+    SELECT * FROM alpaca_connections WHERE user_id = ${userId} LIMIT 1
+  `);
+  return rows[0] ?? null;
+}
+
+export async function upsertAlpacaConnection(
+  userId: string,
+  tokens: {
+    access_token: string;
+    refresh_token?: string | null;
+    token_type?: string;
+    expires_at?: Date | null;
+  }
+): Promise<DBAlpacaConnection> {
+  const rows = await withDb((sql) => sql<DBAlpacaConnection[]>`
+    INSERT INTO alpaca_connections (user_id, access_token, refresh_token, token_type, expires_at)
+    VALUES (${userId}, ${tokens.access_token}, ${tokens.refresh_token ?? null}, 
+            ${tokens.token_type ?? 'Bearer'}, ${tokens.expires_at ?? null})
+    ON CONFLICT (user_id) DO UPDATE SET
+      access_token = ${tokens.access_token},
+      refresh_token = ${tokens.refresh_token ?? null},
+      token_type = ${tokens.token_type ?? 'Bearer'},
+      expires_at = ${tokens.expires_at ?? null}
+    RETURNING *
+  `);
+  return rows[0];
+}
+
+export async function deleteAlpacaConnection(userId: string): Promise<boolean> {
+  const result = await withDb((sql) => sql`
+    DELETE FROM alpaca_connections WHERE user_id = ${userId}
+  `);
+  return result.count > 0;
+}
+
+// ── Signal Outcome Operations ───────────────────────────────────────────────
+
+export async function insertSignalOutcome(outcome: Omit<DBSignalOutcome, 'id' | 'created_at'>): Promise<DBSignalOutcome> {
+  const id = newId();
+  const rows = await withDb((sql) => sql<DBSignalOutcome[]>`
+    INSERT INTO signal_outcomes (id, signal_id, ticker, prediction_direction, price_at_signal, 
+                                 price_after_7d, price_after_30d, was_correct_7d, was_correct_30d, checked_at)
+    VALUES (${id}, ${outcome.signal_id}, ${outcome.ticker}, ${outcome.prediction_direction}, ${outcome.price_at_signal},
+            ${outcome.price_after_7d ?? null}, ${outcome.price_after_30d ?? null}, 
+            ${outcome.was_correct_7d ?? null}, ${outcome.was_correct_30d ?? null}, ${outcome.checked_at ?? null})
+    ON CONFLICT (signal_id) DO UPDATE SET
+      ticker = ${outcome.ticker},
+      prediction_direction = ${outcome.prediction_direction},
+      price_at_signal = ${outcome.price_at_signal}
+    RETURNING *
+  `);
+  return rows[0];
+}
+
+export async function getSignalOutcomeBySignalId(signalId: string): Promise<DBSignalOutcome | null> {
+  const rows = await withDb((sql) => sql<DBSignalOutcome[]>`
+    SELECT * FROM signal_outcomes WHERE signal_id = ${signalId} LIMIT 1
+  `);
+  return rows[0] ?? null;
+}
+
+export async function getOutstandingOutcomes(): Promise<DBSignalOutcome[]> {
+  const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+  const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+  
+  return withDb((sql) => sql<DBSignalOutcome[]>`
+    SELECT * FROM signal_outcomes
+    WHERE (price_after_7d IS NULL AND created_at <= ${sevenDaysAgo})
+       OR (price_after_30d IS NULL AND created_at <= ${thirtyDaysAgo})
+    ORDER BY created_at ASC
+    LIMIT 100
+  `);
+}
+
+export async function updateSignalOutcomePrices(
+  id: string, 
+  updates: { 
+    price_after_7d?: number; 
+    price_after_30d?: number; 
+    was_correct_7d?: boolean; 
+    was_correct_30d?: boolean;
+  }
+): Promise<DBSignalOutcome | null> {
+  const rows = await withDb((sql) => sql<DBSignalOutcome[]>`
+    UPDATE signal_outcomes
+    SET 
+      price_after_7d = COALESCE(${updates.price_after_7d ?? null}, price_after_7d),
+      price_after_30d = COALESCE(${updates.price_after_30d ?? null}, price_after_30d),
+      was_correct_7d = COALESCE(${updates.was_correct_7d ?? null}, was_correct_7d),
+      was_correct_30d = COALESCE(${updates.was_correct_30d ?? null}, was_correct_30d),
+      checked_at = now()
+    WHERE id = ${id}
+    RETURNING *
+  `);
+  return rows[0] ?? null;
+}
+
+export async function getAccuracyStats(): Promise<{
+  totalSignals: number;
+  checked7d: number;
+  correct7d: number;
+  checked30d: number;
+  correct30d: number;
+  perTicker: Array<{
+    ticker: string;
+    total: number;
+    correct7d: number;
+    correct30d: number;
+  }>;
+}> {
+  return withDb(async (sql) => {
+    // Overall stats
+    const overallRows = await sql<{
+      total: string;
+      checked7d: string;
+      correct7d: string;
+      checked30d: string;
+      correct30d: string;
+    }[]>`
+      SELECT 
+        COUNT(*)::text as total,
+        COUNT(CASE WHEN price_after_7d IS NOT NULL THEN 1 END)::text as checked7d,
+        COUNT(CASE WHEN was_correct_7d = true THEN 1 END)::text as correct7d,
+        COUNT(CASE WHEN price_after_30d IS NOT NULL THEN 1 END)::text as checked30d,
+        COUNT(CASE WHEN was_correct_30d = true THEN 1 END)::text as correct30d
+      FROM signal_outcomes
+    `;
+
+    const overall = overallRows[0];
+
+    // Per-ticker stats
+    const perTickerRows = await sql<{
+      ticker: string;
+      total: string;
+      correct7d: string;
+      correct30d: string;
+    }[]>`
+      SELECT 
+        ticker,
+        COUNT(*)::text as total,
+        COUNT(CASE WHEN was_correct_7d = true THEN 1 END)::text as correct7d,
+        COUNT(CASE WHEN was_correct_30d = true THEN 1 END)::text as correct30d
+      FROM signal_outcomes
+      GROUP BY ticker
+      ORDER BY COUNT(*) DESC
+    `;
+
+    return {
+      totalSignals: parseInt(overall?.total ?? '0', 10),
+      checked7d: parseInt(overall?.checked7d ?? '0', 10),
+      correct7d: parseInt(overall?.correct7d ?? '0', 10),
+      checked30d: parseInt(overall?.checked30d ?? '0', 10),
+      correct30d: parseInt(overall?.correct30d ?? '0', 10),
+      perTicker: perTickerRows.map(row => ({
+        ticker: row.ticker,
+        total: parseInt(row.total, 10),
+        correct7d: parseInt(row.correct7d, 10),
+        correct30d: parseInt(row.correct30d, 10),
+      })),
+    };
+  });
 }
 
 export function newId(): string {

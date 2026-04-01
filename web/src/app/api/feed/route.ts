@@ -1,9 +1,12 @@
-import { NextResponse } from "next/server";
-import { getRecentSignals, type DBSignal } from "@/lib/db";
+import { NextRequest, NextResponse } from "next/server";
+import { auth } from "@/lib/auth";
+import { getRecentSignals, getSignalById, getUserTier, type DBSignal } from "@/lib/db";
 
+// Seed data only shown for demo when explicitly requested
 const SEED: DBSignal[] = [
   {
-    id: "smci-ceo-sell-20260319",
+    id: "demo-smci-ceo-sell-20260319",
+    user_id: "demo",
     ticker: "SMCI",
     company_name: "Super Micro Computer",
     insider: "Charles Liang",
@@ -19,11 +22,12 @@ const SEED: DBSignal[] = [
     position_reduced_pct: 18,
     score: 10,
     explanation:
-      "SMCI's CEO just sold $2.1M — first sale in 14 months, outside his scheduled plan.",
+      "SMCI's CEO just sold $2.1M — first sale in 14 months, outside his scheduled plan. Historical pattern: avg −12% over 30 days.",
     alerted: false,
   },
   {
-    id: "nvda-cfo-sell-20260321",
+    id: "demo-nvda-cfo-sell-20260321",
+    user_id: "demo",
     ticker: "NVDA",
     company_name: "NVIDIA Corporation",
     insider: "Colette Kress",
@@ -43,19 +47,82 @@ const SEED: DBSignal[] = [
   },
 ];
 
-export async function GET() {
-  // Try DB first
+export async function GET(req: NextRequest) {
+  // Check authentication
+  const session = await auth();
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  const userId = session.user.id;
+
+  const { searchParams } = new URL(req.url);
+  const page = parseInt(searchParams.get("page") ?? "1", 10);
+  const limit = Math.min(parseInt(searchParams.get("limit") ?? "20", 10), 50);
+  const offset = (page - 1) * limit;
+  const signalId = searchParams.get("id");
+
+  // Get user tier for signal timing badges
+  const userTier = await getUserTier(userId);
+  const isPremium = userTier === "premium";
+
+  // If signalId is provided, return single signal detail
+  if (signalId) {
+    const signal = await getSignalById(userId, signalId);
+    if (!signal) {
+      return NextResponse.json({ error: "Signal not found" }, { status: 404 });
+    }
+    return NextResponse.json({ 
+      signal,
+      tier: userTier,
+      isPremium,
+      signalTiming: isPremium ? "realtime" : "delayed",
+    });
+  }
+
+  // Get user-scoped signals from DB with pagination
   if (process.env.DATABASE_URL?.trim()) {
     try {
-      const signals = await getRecentSignals(20);
-      if (signals.length > 0) {
-        return NextResponse.json({ signals, source: "db" });
+      const signals = await getRecentSignals(userId, limit, offset);
+      
+      // Check if there are more signals for pagination
+      const totalCheck = await getRecentSignals(userId, limit + 1, offset);
+      const hasMore = totalCheck.length > limit;
+      
+      if (signals.length > 0 || offset > 0) {
+        return NextResponse.json({ 
+          signals, 
+          source: "db",
+          tier: userTier,
+          isPremium,
+          signalTiming: isPremium ? "realtime" : "delayed",
+          pagination: {
+            page,
+            limit,
+            count: signals.length,
+            hasMore,
+            nextPage: hasMore ? page + 1 : null,
+          }
+        });
       }
     } catch (err) {
       console.error("Feed: DB unavailable, falling back to seed data", err);
     }
   }
 
-  // Fall back to static seed data when DB is unavailable or empty
-  return NextResponse.json({ signals: SEED, source: "seed" });
+  // Empty state - no signals yet
+  return NextResponse.json({ 
+    signals: [], 
+    source: "db",
+    tier: userTier,
+    isPremium,
+    signalTiming: isPremium ? "realtime" : "delayed",
+    pagination: {
+      page,
+      limit,
+      count: 0,
+      hasMore: false,
+    },
+    empty: true,
+    message: "No signals yet. Add tickers to your watchlist and run the detection pipeline to see signals here."
+  });
 }

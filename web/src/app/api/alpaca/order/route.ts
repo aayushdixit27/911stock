@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { auth } from "@/lib/auth";
 import { 
   createOrder, 
   sellPercentage, 
@@ -23,6 +24,12 @@ type OrderRequest = {
 };
 
 export async function GET(req: NextRequest) {
+  // Check authentication
+  const session = await auth();
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   if (!isAlpacaConfigured()) {
     return NextResponse.json(
       { 
@@ -68,6 +75,12 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
+  // Check authentication
+  const session = await auth();
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   if (!isAlpacaConfigured()) {
     return NextResponse.json(
       { 
@@ -169,6 +182,12 @@ export async function POST(req: NextRequest) {
 }
 
 export async function DELETE(req: NextRequest) {
+  // Check authentication
+  const session = await auth();
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   if (!isAlpacaConfigured()) {
     return NextResponse.json(
       { 

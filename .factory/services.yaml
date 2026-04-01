@@ -1,0 +1,14 @@
+commands:
+  install: cd web && npm install
+  build: cd web && npm run build
+  lint: cd web && npx eslint src/
+  typecheck: cd web && npx tsc --noEmit
+  test: echo "No test runner configured yet"
+
+services:
+  web:
+    start: cd web && PORT=3000 npx next dev --turbopack
+    stop: lsof -ti :3000 | xargs kill -9 2>/dev/null || true
+    healthcheck: curl -sf http://localhost:3000
+    port: 3000
+    depends_on: []

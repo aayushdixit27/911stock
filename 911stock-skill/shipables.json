@@ -1,0 +1,81 @@
+{
+  "version": "1.0.0",
+  "keywords": [
+    "insider-trading",
+    "sec-edgar",
+    "stock-alerts",
+    "fintech",
+    "voice-ai",
+    "real-time-monitoring",
+    "form-4",
+    "bland-ai",
+    "auth0-ciba"
+  ],
+  "categories": ["fintech", "security", "ai-agents"],
+  "author": {
+    "name": "911Stock Team",
+    "github": "aayushdixit"
+  },
+  "mcp": {
+    "servers": [
+      {
+        "name": "bland-ai",
+        "package": "@anthropic/bland-ai-mcp",
+        "registry": "npm",
+        "transport": "stdio"
+      }
+    ]
+  },
+  "config": {
+    "env": [
+      {
+        "name": "DATABASE_URL",
+        "description": "PostgreSQL connection string for signal and alert persistence",
+        "required": true,
+        "secret": true
+      },
+      {
+        "name": "GEMINI_API_KEY",
+        "description": "Google Gemini API key for AI signal analysis",
+        "required": true,
+        "secret": true
+      },
+      {
+        "name": "BLAND_API_KEY",
+        "description": "Bland AI API key for automated outbound phone calls",
+        "required": true,
+        "secret": true
+      },
+      {
+        "name": "AUTH0_DOMAIN",
+        "description": "Auth0 tenant domain for CIBA-based trade approvals",
+        "required": true,
+        "secret": false
+      },
+      {
+        "name": "AUTH0_CLIENT_ID",
+        "description": "Auth0 OAuth client ID",
+        "required": true,
+        "secret": true
+      },
+      {
+        "name": "AUTH0_CLIENT_SECRET",
+        "description": "Auth0 OAuth client secret",
+        "required": true,
+        "secret": true
+      },
+      {
+        "name": "ALPHA_VANTAGE_KEY",
+        "description": "Alpha Vantage API key for news sentiment analysis",
+        "required": false,
+        "secret": true
+      },
+      {
+        "name": "MY_PHONE_NUMBER",
+        "description": "Phone number for receiving alert calls (E.164 format)",
+        "required": false,
+        "secret": true
+      }
+    ]
+  }
+}

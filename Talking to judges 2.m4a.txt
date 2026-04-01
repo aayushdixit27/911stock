@@ -1,0 +1,3392 @@
+00:00:04,340 --> 00:00:31,000 [Speaker 0]
+[background chatter] 
+
+00:00:44,840 --> 00:00:48,700 [Speaker 1]
+Hey, how's it going? Hey, so we made a little progress. I just wanted to show you if you don't mind. 
+
+00:00:48,700 --> 00:00:49,420 [Speaker 0]
+Oh, yeah. I would love to see it. 
+
+00:00:49,420 --> 00:00:53,460 [Speaker 1]
+So... Awesome. So, you know, you, you invest in stocks, right? 
+
+00:00:53,460 --> 00:00:53,540 [Speaker 0]
+Yeah. 
+
+00:00:53,540 --> 00:01:02,280 [Speaker 1]
+And, um, so imagine it's March eighteenth, right? You own SMCI, Tesla and Nvidia. Everything looks fine. SMCI is up four percent. Um, 
+
+00:01:04,599 --> 00:01:13,740 [Speaker 1]
+the next morning, the DOJ unseals an indictment against the co-founder for smuggling two point five billion of AI chips to China. The stock drops thirty-three percent in two days. But by the time CNBC covers it, it's too late. 
+
+00:01:13,740 --> 00:01:14,540 [Speaker 0]
+Yeah, yeah. 
+
+00:01:14,540 --> 00:01:19,460 [Speaker 1]
+Right? So, okay. So this is... 
+
+00:01:19,460 --> 00:01:19,700 [Speaker 0]
+Oh, awesome. 
+
+00:01:19,740 --> 00:01:19,950 [Speaker 1]
+Sorry. 
+
+00:01:19,950 --> 00:01:20,820 [Speaker 0]
+I love it. Welcome. 
+
+00:01:20,820 --> 00:01:22,470 [Speaker 1]
+Oh, cheers. Thank you. And so 
+
+00:01:23,520 --> 00:01:27,320 [Speaker 1]
+the idea is... Okay, so this is the simulated timeline. So March eighteenth happens. 
+
+00:01:29,280 --> 00:01:51,030 [Speaker 1]
+So they have very hot stocks. Nothing so far. Then March nineteenth comes along. Oops, the charges sound smuggling, and then Super Micro dips thirty-three percent and Nvidia. So as soon as it sees this, then the call gets sent, and then we get the call saying, "Hey, there's a problem. Would you like to execute?" And then, uh, yeah. So as you can see, SMCI is just five percent right now. 
+
+00:01:51,030 --> 00:01:51,220 [Speaker 0]
+Yeah. 
+
+00:01:51,220 --> 00:01:53,380 [Speaker 1]
+But then as it goes along, it just tumbles. 
+
+00:01:53,380 --> 00:01:54,040 [Speaker 0]
+Nice stock. 
+
+00:01:54,040 --> 00:01:54,300 [Speaker 1]
+Yeah. 
+
+00:01:54,300 --> 00:01:55,040 [Speaker 0]
+That's awesome, man. 
+
+00:01:55,040 --> 00:02:01,080 [Speaker 1]
+Right. Right. So cheers. Thank you. So if this existed right now, would you use it? 
+
+00:02:01,080 --> 00:02:02,120 [Speaker 0]
+Oh, yeah, one hundred percent. 
+
+00:02:02,120 --> 00:02:02,660 [Speaker 1]
+Okay. Solid. 
+
+00:02:02,660 --> 00:02:04,200 [Speaker 0]
+It seems like a no-brainer. 
+
+00:02:04,200 --> 00:02:06,170 [Speaker 1]
+Okay, excellent. Excellent. And what would- 
+
+00:02:06,170 --> 00:02:07,580 [Speaker 0]
+I mean, what would be the risk? 
+
+00:02:07,580 --> 00:02:08,240 [Speaker 1]
+Yeah, right. 
+
+00:02:08,240 --> 00:02:09,900 [Speaker 0]
+And maybe the downside. 
+
+00:02:09,900 --> 00:02:13,520 [Speaker 1]
+Excellent. Excellent. And what would you pay monthly for something like this? 
+
+00:02:13,520 --> 00:02:17,980 [Speaker 0]
+Um, so that would totally depend on the level of my hobby. 
+
+00:02:17,980 --> 00:02:18,560 [Speaker 1]
+Sure. 
+
+00:02:18,560 --> 00:02:19,120 [Speaker 0]
+Right. 
+
+00:02:19,120 --> 00:02:21,520 [Speaker 1]
+So tiered pricing would be a good idea? 
+
+00:02:21,520 --> 00:02:22,220 [Speaker 0]
+I think so. 
+
+00:02:22,220 --> 00:02:22,500 [Speaker 1]
+Yeah. 
+
+00:02:22,500 --> 00:02:22,920 [Speaker 0]
+Yeah. 
+
+00:02:22,920 --> 00:02:23,140 [Speaker 1]
+Okay. 
+
+00:02:23,140 --> 00:02:23,609 [Speaker 0]
+Because- 
+
+00:02:23,609 --> 00:02:23,840 [Speaker 1]
+I see. 
+
+00:02:23,840 --> 00:02:28,310 [Speaker 0]
+Based, based on how big, high, high roller I am would basically answer that. 
+
+00:02:31,020 --> 00:02:36,900 [Speaker 1]
+Makes a lot of sense. So an enterprise model or like a whale model, [chuckles] if I can put it this way. Right. Um- 
+
+00:02:36,900 --> 00:02:43,440 [Speaker 0]
+Also the more, I think the more money you have to invest too, um, and kind of the more assets and that kind of thing so... 
+
+00:02:45,180 --> 00:02:52,500 [Speaker 1]
+I see. I see. Uh, makes sense. Okay. Uh, all right. And which of your stocks would you put on this first, if you don't mind me asking? 
+
+00:02:53,740 --> 00:02:56,720 [Speaker 1]
+Or you can c- make up a stock if you don't want to tell me. [chuckles] Yeah. 
+
+00:02:56,720 --> 00:02:58,170 [Speaker 0]
+I, I mean, um, I think- 
+
+00:02:58,170 --> 00:02:59,340 [Speaker 2]
+So are you going to work on that or... 
+
+00:03:01,500 --> 00:03:02,740 [Speaker 0]
+Uh, quantum stuff- 
+
+00:03:02,740 --> 00:03:02,920 [Speaker 1]
+Okay 
+
+00:03:02,920 --> 00:03:04,540 [Speaker 0]
+... on my side. So basically, uh- 
+
+00:03:04,540 --> 00:03:04,840 [Speaker 1]
+Solid. 
+
+00:03:06,520 --> 00:03:10,359 [Speaker 0]
+Um, so my, my wife is actually the stock person. 
+
+00:03:10,359 --> 00:03:10,760 [Speaker 1]
+[chuckles] 
+
+00:03:10,760 --> 00:03:11,580 [Speaker 0]
+I say, "Okay," and- 
+
+00:03:11,580 --> 00:03:12,800 [Speaker 1]
+Nice. Yeah 
+
+00:03:12,800 --> 00:03:14,280 [Speaker 0]
+... she does it, um- 
+
+00:03:14,280 --> 00:03:14,680 [Speaker 1]
+Very nice 
+
+00:03:14,680 --> 00:03:16,000 [Speaker 0]
+... for all the ones. But yeah. 
+
+00:03:16,000 --> 00:03:16,420 [Speaker 1]
+Solid. 
+
+00:03:16,420 --> 00:03:18,920 [Speaker 0]
+You mean, I, I of course I have all the crypto stuff. 
+
+00:03:18,920 --> 00:03:19,990 [Speaker 1]
+Nice. Nice. 
+
+00:03:19,990 --> 00:03:20,000 [Speaker 0]
+And- 
+
+00:03:20,000 --> 00:03:20,910 [Speaker 2]
+Bullshit, but that's legal 
+
+00:03:20,910 --> 00:03:25,620 [Speaker 1]
+... solid. Solid. Okay. So what's one thing that would make you say, "I need this right now"? 
+
+00:03:27,260 --> 00:03:28,260 [Speaker 2]
+Are they gonna worsen? 
+
+00:03:28,260 --> 00:03:32,240 [Speaker 0]
+Um, I would just... I mean, if I'm, if I'm putting my money in stocks- 
+
+00:03:32,240 --> 00:03:32,250 [Speaker 1]
+Mm-hmm 
+
+00:03:33,300 --> 00:03:34,420 [Speaker 0]
+... then I would wanna- 
+
+00:03:34,420 --> 00:03:34,440 [Speaker 1]
+Yeah. 
+
+00:03:34,440 --> 00:03:35,380 [Speaker 0]
+I would wanna know, right? 
+
+00:03:35,380 --> 00:03:35,720 [Speaker 1]
+Yeah. 
+
+00:03:35,720 --> 00:03:36,180 [Speaker 0]
+I would wanna know. 
+
+00:03:36,180 --> 00:03:39,780 [Speaker 1]
+Makes sense. Makes sense. So i- i- in your mind, you'd think, "Okay, 
+
+00:03:41,260 --> 00:03:41,269 [Speaker 1]
+I'm a- 
+
+00:03:41,269 --> 00:03:42,359 [Speaker 0]
+Especially day trading, right? 
+
+00:03:42,360 --> 00:03:57,500 [Speaker 1]
+Right. Exactly. I'm a trader. I, I do... Stocks are a good portion of my portfolio. Why would I not want to know when things are happening? You know, if I could just get a call, I mean, now it's no longer do I see the news? That's the blocker. Now it is, did I pick up the call or not, right? 
+
+00:03:57,500 --> 00:03:57,900 [Speaker 0]
+Yeah. 
+
+00:03:57,900 --> 00:03:59,080 [Speaker 1]
+So, okay. I see. 
+
+00:03:59,080 --> 00:04:04,060 [Speaker 0]
+You can't, you can't allow the AI in these cases to automatically take action, right? 
+
+00:04:04,060 --> 00:04:04,560 [Speaker 1]
+Yeah. 
+
+00:04:04,560 --> 00:04:05,060 [Speaker 0]
+That, that would be like- 
+
+00:04:05,060 --> 00:04:11,160 [Speaker 1]
+Right. Automatically would... Yeah, it would be-- But if it can call you and ask, "Hey, um, execute"- 
+
+00:04:11,160 --> 00:04:11,180 [Speaker 0]
+Sure. 
+
+00:04:11,180 --> 00:04:13,980 [Speaker 1]
+... then, you know, maybe that's one extra step. 'Cause- 
+
+00:04:13,980 --> 00:04:21,269 [Speaker 0]
+How do you... Do you have some onus to, to verify that it really happened, right? Some kind of non-deniability. 
+
+00:04:21,269 --> 00:04:33,820 [Speaker 1]
+Yeah. What if, what if I said to the AI on the phone, "Hold on. Let me do the search." You do a quick search, you confirm everything. Then you say, "You know what? Yes, you're absolutely right." 'Cause I'm losing, losing money every second, right? So I say, "Yeah, execute the trade," and it does it for me. What do you think? 
+
+00:04:34,980 --> 00:04:39,900 [Speaker 0]
+Yeah. I think, um, compliance-wise, you have to have a little more than that. 
+
+00:04:39,900 --> 00:04:41,200 [Speaker 1]
+Okay. I see. 
+
+00:04:41,200 --> 00:04:43,850 [Speaker 0]
+But I think for our purposes, that's perfect. 
+
+00:04:43,850 --> 00:04:46,000 [Speaker 1]
+Yeah. Okay. Solid. Solid. Thank you. I appreciate it. Yeah. 
+
+00:04:47,200 --> 00:04:47,840 [Speaker 1]
+Thank you. Thank you. 
+
+00:04:50,080 --> 00:04:51,120 [Speaker 1]
+Hello. How's it going? 
+
+00:04:51,120 --> 00:04:51,820 [Speaker 2]
+Hey, what's up? 
+
+00:04:51,820 --> 00:04:55,260 [Speaker 1]
+Um, do you mind if I just tell you a little bit about what I'm building? 
+
+00:04:55,260 --> 00:04:56,380 [Speaker 2]
+Yeah. Go for it. 
+
+00:04:56,380 --> 00:05:04,860 [Speaker 1]
+Excellent. Excellent. So, okay, question for you is, do you-- I'm sure you invest in individual stocks or is it mostly, uh, index funds? 
+
+00:05:04,920 --> 00:05:05,680 [Speaker 2]
+Both. 
+
+00:05:05,680 --> 00:05:09,580 [Speaker 1]
+Both? Solid. And have you ever been caught off guard by a stock drop? Uh- 
+
+00:05:09,580 --> 00:05:10,190 [Speaker 2]
+Of course. [chuckles] 
+
+00:05:10,190 --> 00:05:11,280 [Speaker 1]
+Where... Of course, right? [chuckles] 
+
+00:05:11,280 --> 00:05:11,940 [Speaker 2]
+Everyone did. 
+
+00:05:11,940 --> 00:05:16,940 [Speaker 1]
+Absolutely. Absolutely. And then how do you currently track insider activity or SEC filings? 
+
+00:05:16,940 --> 00:05:18,140 [Speaker 2]
+Well, I don't. 
+
+00:05:18,140 --> 00:05:18,910 [Speaker 1]
+You don't? 
+
+00:05:18,910 --> 00:05:18,960 [Speaker 2]
+No. 
+
+00:05:18,960 --> 00:05:19,840 [Speaker 1]
+Solid. Solid. 
+
+00:05:19,840 --> 00:05:20,620 [Speaker 2]
+Damn. No. 
+
+00:05:20,620 --> 00:05:20,920 [Speaker 1]
+Okay. 
+
+00:05:20,920 --> 00:05:24,590 [Speaker 2]
+That was a good pitch right there. [laughing] 
+
+00:05:24,590 --> 00:05:28,599 [Speaker 1]
+Solid. Okay, so imagine it's March eighteenth, right? You own SMCI, Tesla and Nvidia. 
+
+00:05:28,600 --> 00:05:28,719 [Speaker 2]
+Mm-hmm. 
+
+00:05:28,720 --> 00:05:31,260 [Speaker 1]
+Everything looks fine. SMCI is up four percent. 
+
+00:05:31,260 --> 00:05:31,280 [Speaker 2]
+Okay. 
+
+00:05:31,280 --> 00:05:36,539 [Speaker 1]
+Then the next morning, the DOJ unseals an indictment against the co-founder for smuggling two point five billion of AI chips to China. 
+
+00:05:36,540 --> 00:05:37,200 [Speaker 2]
+Yeah. 
+
+00:05:37,200 --> 00:05:39,219 [Speaker 1]
+Then the stock drops thirty-three percent in two days. 
+
+00:05:39,220 --> 00:05:39,270 [Speaker 2]
+Mm-hmm. 
+
+00:05:39,270 --> 00:05:42,300 [Speaker 1]
+But by the time CNBC covers it, it's too late, right? 
+
+00:05:42,300 --> 00:05:42,980 [Speaker 2]
+Mm-hmm. Mm-hmm. 
+
+00:05:42,980 --> 00:05:49,090 [Speaker 1]
+So, okay, now to our product. So this is our... We're calling it nine one one stock. Uh, so- [laughing] 
+
+00:05:49,090 --> 00:05:50,340 [Speaker 2]
+Nice title. I like it. 
+
+00:05:50,340 --> 00:05:58,000 [Speaker 1]
+Thank you. So this is the timeline. So March eighteenth comes along. Super Micro, Dell, HP have h- hot stocks. Everything looks fine, right? 
+
+00:05:58,000 --> 00:05:58,110 [Speaker 2]
+Mm-hmm. 
+
+00:05:58,110 --> 00:05:59,760 [Speaker 1]
+March eight-- nineteenth happens rather. Um- 
+
+00:05:59,760 --> 00:06:02,580 [Speaker 2]
+So it's gonna real-time news analysis or what is it? 
+
+00:06:02,580 --> 00:06:04,680 [Speaker 1]
+Yes, real time. You're using, yeah, uh- 
+
+00:06:04,680 --> 00:06:04,690 [Speaker 2]
+Mm-hmm 
+
+00:06:04,690 --> 00:06:06,860 [Speaker 1]
+... the API to get the data. 
+
+00:06:06,860 --> 00:06:06,870 [Speaker 2]
+All right. 
+
+00:06:06,870 --> 00:06:10,840 [Speaker 1]
+And then, um, three, three POTG, so it's bearish. 
+
+00:06:10,840 --> 00:06:10,890 [Speaker 2]
+Oh, okay. 
+
+00:06:10,890 --> 00:06:32,680 [Speaker 1]
+Then US charges three bearish, so the bear, right? So then it gives you a call saying, "Hey, this has been what's happening on the stocks right now. Uh, what would you like to do?" So, um-He pointed out a blocker. What if you have to verify? So I can tell the guy, uh, the, the agent rather, say, "Hold on. Let, let me just do a quick Google search." You do a search. You say, "Oh my gosh, I'm losing money by the second. I go, 'Yes, execute the trade.'" And then it goes. 
+
+00:06:32,680 --> 00:06:32,710 [Speaker 3]
+Mm. 
+
+00:06:32,710 --> 00:06:34,420 [Speaker 1]
+So then... And then- 
+
+00:06:34,420 --> 00:06:38,780 [Speaker 3]
+Interesting. So I'm assuming an agent would notify you? 
+
+00:06:38,780 --> 00:06:40,190 [Speaker 1]
+Yeah. The agent would make the call. 
+
+00:06:40,190 --> 00:06:40,200 [Speaker 3]
+Nice. 
+
+00:06:40,200 --> 00:06:41,679 [Speaker 1]
+So we're using the call API. 
+
+00:06:41,680 --> 00:06:42,160 [Speaker 3]
+Oh, really? 
+
+00:06:42,160 --> 00:06:42,520 [Speaker 1]
+Yeah. 
+
+00:06:42,520 --> 00:06:43,020 [Speaker 3]
+Blend API? 
+
+00:06:43,020 --> 00:06:43,440 [Speaker 1]
+Blend API. 
+
+00:06:43,440 --> 00:06:43,700 [Speaker 3]
+Oh, nice. 
+
+00:06:43,700 --> 00:06:44,480 [Speaker 1]
+That's right. So- 
+
+00:06:44,480 --> 00:06:46,320 [Speaker 3]
+Dude, that's so cool. Did you use TrueFoundry? 
+
+00:06:46,320 --> 00:06:51,640 [Speaker 1]
+Um, n- I don't think so. Not, not at the moment. Do, do you have an idea of how we could im-implement it though? 
+
+00:06:51,640 --> 00:06:55,380 [Speaker 3]
+So if you, uh, where is your agent? What models are you using? 
+
+00:06:55,380 --> 00:06:57,400 [Speaker 1]
+So we are using- 
+
+00:06:57,400 --> 00:06:59,910 [Speaker 4]
+This stock typically drops five to twelve percent- 
+
+00:06:59,910 --> 00:07:00,000 [Speaker 3]
+Your product? 
+
+00:07:00,000 --> 00:07:00,220 [Speaker 1]
+Yeah 
+
+00:07:00,220 --> 00:07:01,200 [Speaker 4]
+... within the following month. 
+
+00:07:01,200 --> 00:07:01,680 [Speaker 1]
+Yes. 
+
+00:07:01,680 --> 00:07:05,620 [Speaker 4]
+This matters because the person running the company is pulling out a large chunk of his own money. 
+
+00:07:05,620 --> 00:07:07,160 [Speaker 3]
+[laughs] Nice. 
+
+00:07:07,160 --> 00:07:07,430 [Speaker 5]
+Don't focus things on the wrong- 
+
+00:07:07,430 --> 00:07:07,980 [Speaker 1]
+Wait. Wait, wait, wait. 
+
+00:07:07,980 --> 00:07:08,540 [Speaker 5]
+That's- 
+
+00:07:08,540 --> 00:07:11,240 [Speaker 1]
+Can you... Are you a hundred percent sure about this? What, what are your sources? 
+
+00:07:14,940 --> 00:07:19,520 [Speaker 4]
+I track SEC filings directly. The Form 4 was filed today showing the sale. 
+
+00:07:19,520 --> 00:07:19,910 [Speaker 5]
+Nice. 
+
+00:07:19,910 --> 00:07:19,930 [Speaker 4]
+I can 
+
+00:07:21,100 --> 00:07:21,110 [Speaker 4]
+reduce your FDPI risk- 
+
+00:07:21,110 --> 00:07:22,520 [Speaker 3]
+Six, six, sixty. That's sick 
+
+00:07:22,520 --> 00:07:23,620 [Speaker 4]
+... by fifty percent as a precaution. 
+
+00:07:23,620 --> 00:07:25,200 [Speaker 3]
+You should make a product out of that. 
+
+00:07:25,200 --> 00:07:25,620 [Speaker 1]
+Yeah? 
+
+00:07:25,620 --> 00:07:26,520 [Speaker 3]
+It's good. 
+
+00:07:26,520 --> 00:07:29,060 [Speaker 1]
+Cofounders. Yeah. [laughs] Um- 
+
+00:07:29,060 --> 00:07:29,660 [Speaker 5]
+Okay, um, yeah. 
+
+00:07:29,660 --> 00:07:30,420 [Speaker 1]
+Yeah. So, so- 
+
+00:07:30,420 --> 00:07:32,100 [Speaker 3]
+We're talking with the agent itself. 
+
+00:07:32,100 --> 00:07:32,250 [Speaker 1]
+So- 
+
+00:07:32,250 --> 00:07:33,600 [Speaker 3]
+What models are you using, and then- 
+
+00:07:33,600 --> 00:07:34,110 [Speaker 1]
+Yeah, so what- 
+
+00:07:34,110 --> 00:07:35,200 [Speaker 4]
+Yeah. I didn't know people could hear me. 
+
+00:07:35,200 --> 00:07:36,620 [Speaker 1]
+You can probably hang up. Yeah. [laughs] 
+
+00:07:36,620 --> 00:07:37,030 [Speaker 4]
+Oh, sorry. 
+
+00:07:37,030 --> 00:07:37,960 [Speaker 3]
+Yeah, yeah, yeah. 
+
+00:07:37,960 --> 00:07:38,500 [Speaker 1]
+So- 
+
+00:07:38,500 --> 00:07:39,460 [Speaker 3]
+The government storage, it's good 
+
+00:07:39,460 --> 00:07:41,540 [Speaker 5]
+... coding-wise, if you're sending code, we are stuck. 
+
+00:07:41,540 --> 00:07:41,740 [Speaker 1]
+Yeah. 
+
+00:07:41,740 --> 00:07:43,480 [Speaker 5]
+Like, no one wants to play with me. 
+
+00:07:43,480 --> 00:07:43,839 [Speaker 1]
+That's fine. Yeah. 
+
+00:07:43,840 --> 00:07:46,500 [Speaker 5]
+I will not, I will not use it. 
+
+00:07:46,500 --> 00:07:47,460 [Speaker 3]
+You would not use it? 
+
+00:07:47,460 --> 00:07:47,900 [Speaker 5]
+Yeah. 
+
+00:07:47,900 --> 00:07:49,339 [Speaker 3]
+Because it sounds like scam, right? 
+
+00:07:49,340 --> 00:07:49,480 [Speaker 1]
+Yeah. 
+
+00:07:49,540 --> 00:07:49,950 [Speaker 5]
+Because it's a scam. 
+
+00:07:49,950 --> 00:07:50,570 [Speaker 3]
+That is the voice. 
+
+00:07:50,570 --> 00:07:51,259 [Speaker 1]
+It sounds, sounds like a- 
+
+00:07:51,260 --> 00:07:52,100 [Speaker 3]
+That is the voice module. 
+
+00:07:52,100 --> 00:07:53,140 [Speaker 1]
+So, so, but that- 
+
+00:07:53,140 --> 00:07:54,580 [Speaker 5]
+But also lack control. How- 
+
+00:07:54,580 --> 00:07:54,660 [Speaker 1]
+Yeah 
+
+00:07:54,660 --> 00:07:56,000 [Speaker 5]
+... because just, just from how it is- 
+
+00:07:56,000 --> 00:07:56,650 [Speaker 3]
+No. Th- th- 
+
+00:07:56,650 --> 00:07:56,680 [Speaker 5]
+It's- 
+
+00:07:56,680 --> 00:08:01,660 [Speaker 3]
+Yeah, but it will not tell. But it, it will send like a notif-notification on Auth0- 
+
+00:08:01,660 --> 00:08:01,820 [Speaker 5]
+Mm 
+
+00:08:01,820 --> 00:08:02,360 [Speaker 3]
+... and you click, "I approve." 
+
+00:08:02,360 --> 00:08:03,500 [Speaker 5]
+Ah, I see, I see. Oh, I see. 
+
+00:08:03,500 --> 00:08:04,560 [Speaker 1]
+So there's one human in the loop. 
+
+00:08:04,560 --> 00:08:05,100 [Speaker 5]
+Okay. 
+
+00:08:05,100 --> 00:08:07,400 [Speaker 1]
+Yeah. Yeah. No, n- that, that would be compliance nightmare, right? 
+
+00:08:07,400 --> 00:08:07,630 [Speaker 5]
+Yes. [laughs] 
+
+00:08:07,630 --> 00:08:08,420 [Speaker 1]
+AI doing it. Yeah. So- 
+
+00:08:08,420 --> 00:08:09,220 [Speaker 5]
+Of course, yeah. 
+
+00:08:09,220 --> 00:08:11,980 [Speaker 1]
+So I, I think he can answer the AI model question better. 
+
+00:08:11,980 --> 00:08:12,110 [Speaker 3]
+Yes, please. 
+
+00:08:12,110 --> 00:08:17,040 [Speaker 1]
+But let me, l-let me ask you this though. If this existed right now, given what you know, would you use it? 
+
+00:08:17,040 --> 00:08:17,570 [Speaker 5]
+No. 
+
+00:08:17,570 --> 00:08:17,660 [Speaker 1]
+No? 
+
+00:08:17,660 --> 00:08:19,440 [Speaker 3]
+I, um, I might want to know- 
+
+00:08:19,440 --> 00:08:19,500 [Speaker 1]
+Yeah 
+
+00:08:19,500 --> 00:08:20,660 [Speaker 3]
+... if something happened. 
+
+00:08:20,660 --> 00:08:20,860 [Speaker 1]
+Okay. 
+
+00:08:20,860 --> 00:08:21,440 [Speaker 3]
+For sure. 
+
+00:08:21,440 --> 00:08:21,860 [Speaker 1]
+Okay. 
+
+00:08:21,860 --> 00:08:23,940 [Speaker 3]
+Um, but I th- I think, I think I would use it. 
+
+00:08:23,940 --> 00:08:24,560 [Speaker 1]
+Mm-hmm. 
+
+00:08:24,560 --> 00:08:26,340 [Speaker 3]
+But there should be some sort of trust layer. 
+
+00:08:26,340 --> 00:08:26,360 [Speaker 1]
+Yeah. 
+
+00:08:26,360 --> 00:08:29,659 [Speaker 3]
+I think, you know, to experience... The experience should be a bit more trust-oriented. 
+
+00:08:29,660 --> 00:08:29,890 [Speaker 1]
+I see. 
+
+00:08:29,890 --> 00:08:31,779 [Speaker 3]
+I would definitely want to know if something happens. 
+
+00:08:31,779 --> 00:08:33,740 [Speaker 5]
+My logic is, uh, uh, answer is very simple. 
+
+00:08:33,740 --> 00:08:34,200 [Speaker 1]
+Yeah. 
+
+00:08:34,200 --> 00:08:42,600 [Speaker 5]
+So in order to get majority user use tools like this, you really have to go through a n- a normal cycle of proving of social proof. 
+
+00:08:42,600 --> 00:08:42,860 [Speaker 1]
+Mm-hmm. 
+
+00:08:42,860 --> 00:08:52,500 [Speaker 5]
+Because people are usually very risk-averse with respect to their money and investment. They don't-- With a very few exception of early adopters, nobody immediately jumps to the product like this. 
+
+00:08:52,500 --> 00:08:52,740 [Speaker 1]
+Right. 
+
+00:08:52,740 --> 00:09:03,340 [Speaker 5]
+I, I can tell you, based on my experience, it will get, uh, if, let's say, this will be a product, it will take, uh, three to four years to get enough social proof that people will start considering. 
+
+00:09:03,340 --> 00:09:03,980 [Speaker 1]
+Mm-hmm. 
+
+00:09:03,980 --> 00:09:05,800 [Speaker 5]
+So it's definitely not overnight success. 
+
+00:09:05,800 --> 00:09:06,180 [Speaker 1]
+Uh-huh. Okay. 
+
+00:09:06,180 --> 00:09:07,680 [Speaker 5]
+That is my personal opinion. 
+
+00:09:07,680 --> 00:09:10,320 [Speaker 1]
+Mm-hmm. Mm-hmm. Okay. So 
+
+00:09:11,440 --> 00:09:21,599 [Speaker 1]
+suppose everything was working, and there was y- um, social proof, and you decided, "Okay, I, I wanna do this," what would you pay monthly for something like this? 
+
+00:09:21,600 --> 00:09:24,420 [Speaker 3]
+Hmm, I don't have an answer for this. 
+
+00:09:24,420 --> 00:09:25,320 [Speaker 1]
+Twenty bucks a month? 
+
+00:09:25,320 --> 00:09:26,640 [Speaker 3]
+Three bucks a month sounds about right. 
+
+00:09:26,640 --> 00:09:30,560 [Speaker 5]
+But logic is, uh, uh, this an interesting question and very bad answer. 
+
+00:09:30,560 --> 00:09:31,100 [Speaker 1]
+Mm-hmm. 
+
+00:09:31,100 --> 00:09:39,580 [Speaker 5]
+Because, uh, one, one, one people think, "Oh, twenty bucks." In reality, this is where we're all trained that all subscription, uh, cost about twenty bucks. 
+
+00:09:39,580 --> 00:09:39,840 [Speaker 1]
+Yeah. 
+
+00:09:39,840 --> 00:09:45,240 [Speaker 5]
+So it's not value-driven price. It's just pretty much standard price floating around. 
+
+00:09:45,240 --> 00:09:45,879 [Speaker 1]
+Mm-hmm. 
+
+00:09:45,880 --> 00:09:48,820 [Speaker 5]
+So I'm not sure that... [laughs] I don't know how much it will cost. 
+
+00:09:48,820 --> 00:09:49,800 [Speaker 3]
+Mm. Yeah. 
+
+00:09:49,800 --> 00:09:49,820 [Speaker 1]
+Yeah. 
+
+00:09:49,820 --> 00:09:54,580 [Speaker 5]
+Because logic is if, let's say, this product will save me thousands of dollars- 
+
+00:09:54,580 --> 00:09:56,480 [Speaker 1]
+Sure. Then- 
+
+00:09:56,480 --> 00:09:57,300 [Speaker 5]
+I, I, I don't know. I, I, I might even- 
+
+00:09:57,300 --> 00:09:57,450 [Speaker 1]
+But I mean- 
+
+00:09:57,450 --> 00:10:00,000 [Speaker 5]
+... consider investing more because it really works. 
+
+00:10:00,000 --> 00:10:00,320 [Speaker 3]
+Mm. 
+
+00:10:00,320 --> 00:10:02,720 [Speaker 5]
+If I have no idea if it works- 
+
+00:10:02,720 --> 00:10:03,080 [Speaker 1]
+Fair. Yes 
+
+00:10:03,080 --> 00:10:03,940 [Speaker 5]
+... give me like a- 
+
+00:10:03,940 --> 00:10:04,440 [Speaker 3]
+Yeah 
+
+00:10:04,440 --> 00:10:05,030 [Speaker 5]
+... free, uh- 
+
+00:10:05,030 --> 00:10:05,030 [Speaker 1]
+I see 
+
+00:10:05,030 --> 00:10:06,260 [Speaker 5]
+... do you do free trial? 
+
+00:10:06,260 --> 00:10:07,340 [Speaker 1]
+So, okay, okay. 
+
+00:10:07,340 --> 00:10:07,570 [Speaker 5]
+So- 
+
+00:10:07,570 --> 00:10:19,610 [Speaker 1]
+So but, but see, that would, that would be my job to, to execute that, right? Like, uh, to figure out how we can make the trust factor jump, right? That would be... I, I would come up with a strategy. I would work with my CTO. I'd work with my marketing team, figure out, you know, that kind of thing. 
+
+00:10:19,610 --> 00:10:20,180 [Speaker 5]
+Trust. 
+
+00:10:20,180 --> 00:10:25,960 [Speaker 1]
+But, but okay. So my question to you is this then: What's one thing that would make you say, "I need this right now"? 
+
+00:10:27,360 --> 00:10:29,000 [Speaker 3]
+Hmm, if I'm a trader- 
+
+00:10:29,000 --> 00:10:29,680 [Speaker 1]
+Uh-huh 
+
+00:10:29,680 --> 00:10:33,000 [Speaker 3]
+... uh, then I would definitely want to know, like, any and every signal that I want. 
+
+00:10:33,000 --> 00:10:33,520 [Speaker 1]
+Mm-hmm. 
+
+00:10:33,520 --> 00:10:34,680 [Speaker 3]
+I'm sure, uh, 
+
+00:10:36,380 --> 00:10:38,080 [Speaker 3]
+a retail investor like me- 
+
+00:10:38,080 --> 00:10:38,320 [Speaker 1]
+Okay 
+
+00:10:38,320 --> 00:10:43,479 [Speaker 3]
+... would want to know things, but definitely not, again, not enough confident to execute. 
+
+00:10:43,479 --> 00:10:43,659 [Speaker 1]
+Yes. 
+
+00:10:43,659 --> 00:10:44,600 [Speaker 3]
+So if- 
+
+00:10:45,800 --> 00:10:45,820 [Speaker 1]
+Yes. 
+
+00:10:45,820 --> 00:10:48,560 [Speaker 3]
+I don't know, if, if thousand more people are doing the same thing- 
+
+00:10:48,560 --> 00:10:48,750 [Speaker 1]
+Uh-huh 
+
+00:10:48,750 --> 00:10:52,240 [Speaker 3]
+... or if there's a thousand more people are acting on it, then I would feel a bit more confident. 
+
+00:10:52,240 --> 00:10:54,390 [Speaker 1]
+Oh, I see. Very good. Okay. 
+
+00:10:54,390 --> 00:10:54,420 [Speaker 3]
+Yeah. 
+
+00:10:54,420 --> 00:10:58,630 [Speaker 1]
+So if we can track buy signals as well on the market. I see. And what about you? 
+
+00:10:58,630 --> 00:11:00,860 [Speaker 5]
+For me, nothing, because I'm not active trader. 
+
+00:11:00,860 --> 00:11:02,190 [Speaker 1]
+Oh, I see. I see. Okay. 
+
+00:11:02,190 --> 00:11:02,200 [Speaker 5]
+So- 
+
+00:11:02,200 --> 00:11:04,850 [Speaker 1]
+Makes sense. Makes sense. Outside the ICP, right? Makes sense. Yeah. 
+
+00:11:04,850 --> 00:11:05,410 [Speaker 5]
+Yes. I will just, uh- 
+
+00:11:05,410 --> 00:11:05,410 [Speaker 1]
+Yeah 
+
+00:11:05,410 --> 00:11:06,240 [Speaker 5]
+... I'm not your customer. 
+
+00:11:06,240 --> 00:11:06,440 [Speaker 3]
+Yeah. 
+
+00:11:06,440 --> 00:11:10,350 [Speaker 1]
+Yeah, yeah, yeah. Makes sense. Makes sense. We can't boil the ocean, right? We have to boil the lake. [laughs] Yeah. 
+
+00:11:10,350 --> 00:11:12,780 [Speaker 3]
+Oh, no, but Gary Tan says you should boil the oceans nowadays. 
+
+00:11:14,460 --> 00:11:15,200 [Speaker 3]
+But, uh- 
+
+00:11:15,200 --> 00:11:15,280 [Speaker 1]
+Yeah 
+
+00:11:15,280 --> 00:11:15,830 [Speaker 3]
+... good one though. 
+
+00:11:15,830 --> 00:11:15,920 [Speaker 1]
+Oh. 
+
+00:11:15,920 --> 00:11:16,600 [Speaker 3]
+Loved this. Loved this. 
+
+00:11:16,600 --> 00:11:17,220 [Speaker 1]
+Okay. Excellent. 
+
+00:11:17,220 --> 00:11:22,300 [Speaker 3]
+Uh, do you wanna, do you wanna, uh, do you wanna do the audit of your agent and see how you can use TrueFoundry? 
+
+00:11:22,300 --> 00:11:25,400 [Speaker 1]
+Yeah, sure, sure. Yeah, we could do that. Yeah, we can call, um- 
+
+00:11:25,400 --> 00:11:25,580 [Speaker 3]
+Yeah 
+
+00:11:25,580 --> 00:11:26,619 [Speaker 1]
+... his, his CTO. 
+
+00:11:26,620 --> 00:11:26,800 [Speaker 3]
+Call your CTOs. 
+
+00:11:26,800 --> 00:11:27,860 [Speaker 1]
+Yeah, that's right. 
+
+00:11:34,460 --> 00:11:41,220 [Speaker 1]
+[laughs] Good. Look, look. So, um, they're asking if we wanna do an audit to see how we could use, um, TrueFoundry. 
+
+00:11:41,220 --> 00:11:41,680 [Speaker 3]
+Yeah. 
+
+00:11:41,680 --> 00:11:44,970 [Speaker 1]
+Yeah? Okay. I'll, I'll go talk to other judges. You can handle them, okay? 
+
+00:11:44,970 --> 00:11:45,000 [Speaker 3]
+Yeah. 
+
+00:11:45,000 --> 00:11:47,760 [Speaker 1]
+All right, cool. 
+
+00:11:54,360 --> 00:11:55,570 [Speaker 1]
+Hello, how are you? 
+
+00:11:55,570 --> 00:11:55,640 [Speaker 5]
+Good. 
+
+00:11:55,640 --> 00:11:58,820 [Speaker 1]
+Uh, would it be okay if I sh- told you a little bit ab-about what I'm building? 
+
+00:11:58,820 --> 00:11:59,380 [Speaker 5]
+Yeah, yeah. Sure. 
+
+00:11:59,380 --> 00:11:59,480 [Speaker 1]
+Cool. 
+
+00:12:00,940 --> 00:12:03,739 [Speaker 1]
+Awesome. Awesome. Sounds good. My name is, uh, Ayush, by the way. Nice to meet you. 
+
+00:12:03,740 --> 00:12:05,600 [Speaker 5]
+Ayush? All right, nice to meet you. 
+
+00:12:05,600 --> 00:12:05,950 [Speaker 1]
+Nice. Nice to meet you. 
+
+00:12:05,950 --> 00:12:05,950 [Speaker 5]
+Charlie. Nice to meet you. 
+
+00:12:05,950 --> 00:12:06,119 [Speaker 1]
+Nice to meet you. 
+
+00:12:06,120 --> 00:12:06,840 [Speaker 5]
+This is nice to meet you. 
+
+00:12:06,840 --> 00:12:08,760 [Speaker 1]
+Good to meet you. Okay. So, 
+
+00:12:11,160 --> 00:12:16,799 [Speaker 1]
+uh, questions for you. So one question for you. Do you invest in in-in-individual stocks or mostly index funds? 
+
+00:12:20,500 --> 00:12:21,440 [Speaker 5]
+Uh, um, I'm about
+
+00:12:21,924 --> 00:12:22,824 [Speaker 6]
+Fifty-fifty 
+
+00:12:22,824 --> 00:12:25,544 [Speaker 1]
+Okay. Solid, solid. I'll assume the same probably. 
+
+00:12:25,544 --> 00:12:25,584 [Speaker 6]
+Sure. 
+
+00:12:25,584 --> 00:12:32,404 [Speaker 1]
+Just about. Just about. Okay. Sounds good. Um, then, uh, have you ever been caught off guard by a stock drop, like you found out too late? 
+
+00:12:32,404 --> 00:12:32,683 [Speaker 6]
+Yes. 
+
+00:12:32,684 --> 00:12:37,084 [Speaker 1]
+Yeah. Absolutely. Okay. So how do you currently track insider activities or SEC filings? 
+
+00:12:39,164 --> 00:12:42,324 [Speaker 6]
+Um, my brokerage usually does it for me. 
+
+00:12:42,324 --> 00:12:43,214 [Speaker 1]
+Okay. Solid. 
+
+00:12:43,214 --> 00:12:49,744 [Speaker 6]
+And I have a-- You know, I have enough money invested with Merrill Lynch that I do get alerts about this, right? 
+
+00:12:49,744 --> 00:12:50,104 [Speaker 1]
+I see. 
+
+00:12:50,104 --> 00:12:50,584 [Speaker 6]
+So, yeah. 
+
+00:12:50,584 --> 00:12:53,903 [Speaker 1]
+Solid. Solid. But do you think they find out from, uh, 
+
+00:12:55,124 --> 00:12:58,124 [Speaker 1]
+CNBC, or do you think they have their own techniques? 
+
+00:12:59,344 --> 00:13:07,264 [Speaker 6]
+Well, given the number of analysts they employ and the fact that they're one of the US's largest i-investment banks- 
+
+00:13:07,264 --> 00:13:07,364 [Speaker 1]
+Yeah. 
+
+00:13:08,404 --> 00:13:09,314 [Speaker 1]
+They probably have their own- 
+
+00:13:09,314 --> 00:13:10,314 [Speaker 6]
+... private companies, yeah. 
+
+00:13:10,314 --> 00:13:11,014 [Speaker 1]
+Yeah. Yeah. They probably have- 
+
+00:13:11,014 --> 00:13:11,974 [Speaker 6]
+They write their own research, right? 
+
+00:13:11,974 --> 00:13:30,714 [Speaker 1]
+Makes sense. Makes sense. Okay. Sounds good. So okay, imagine this. It's March eighteenth. You own SMCI, Tesla, and Nvidia. Everything looks fine. SMCI is up four percent. Um, and then the next morning, the DOJ unseals an indictment against the co-founder for smuggling two point five billion of AI chips to China. And [laughs] 
+
+00:13:30,714 --> 00:13:31,404 [Speaker 6]
+Is that Super Micro? 
+
+00:13:31,404 --> 00:13:33,903 [Speaker 1]
+Yeah. Um, and- 
+
+00:13:33,904 --> 00:13:34,174 [Speaker 6]
+SMCI. 
+
+00:13:34,174 --> 00:13:40,704 [Speaker 1]
+SMCI. That's right. So stock drops thirty-three percent in two days, but by the time CNBC covers it, it's too late, right? So, 
+
+00:13:41,764 --> 00:13:43,364 [Speaker 1]
+okay, so this is our product. 
+
+00:13:45,304 --> 00:13:46,884 [Speaker 1]
+So we're calling it nine one one Stock. 
+
+00:13:48,584 --> 00:13:49,534 [Speaker 6]
+Mm-hmm. 
+
+00:13:51,644 --> 00:13:56,074 [Speaker 1]
+So, um, so essentially, the timeline comes along. So March eighteenth, everything seems fine, right? 
+
+00:13:56,074 --> 00:13:56,104 [Speaker 6]
+Mm-hmm. 
+
+00:13:56,104 --> 00:13:58,384 [Speaker 1]
+Then March nineteenth comes along, and then 
+
+00:13:59,844 --> 00:14:09,524 [Speaker 1]
+you, you get these bear signals. And then after that, March twentieth, uh, happens. Uh, but it-- actually on March nineteenth that a phone call using Bland was- 
+
+00:14:09,524 --> 00:14:10,284 [Speaker 6]
+Mm-hmm 
+
+00:14:10,284 --> 00:14:15,524 [Speaker 1]
+... uh, uh, sent, and, uh, I got a call saying, "Hey, this bearish activity is happening on this stock." 
+
+00:14:15,524 --> 00:14:16,124 [Speaker 6]
+Mm-hmm. 
+
+00:14:16,124 --> 00:14:25,724 [Speaker 1]
+Uh, and then I'll say, "Hold on, hold on. Let, let me actually verify, 'cause how do you know?" Um, and then, um, I do a Google search and say, "Okay, this is, this is solid." So then I say-- 
+
+00:14:26,924 --> 00:14:29,704 [Speaker 1]
+Um, no, no, I'm losing money by the second executes. 
+
+00:14:29,704 --> 00:14:29,784 [Speaker 6]
+Yes. 
+
+00:14:29,784 --> 00:14:34,244 [Speaker 1]
+So then, uh, it executes for me, but only after human in the loop confirmation. 
+
+00:14:34,244 --> 00:14:34,773 [Speaker 6]
+Mm-hmm. 
+
+00:14:34,773 --> 00:14:35,744 [Speaker 1]
+And yeah. So- 
+
+00:14:35,744 --> 00:14:36,583 [Speaker 6]
+Okay. 
+
+00:14:36,584 --> 00:14:49,784 [Speaker 1]
+Right. And then you end up here. So they just sold it, and then the agent is requesting authorization to reduce the position by fifty percent, sell five hundred shares, and you get a push notification via Otto. 
+
+00:14:49,784 --> 00:14:50,084 [Speaker 6]
+Mm-hmm. 
+
+00:14:50,084 --> 00:14:53,984 [Speaker 1]
+Um, a guardian. And you just-- Once you approve it on your phone- 
+
+00:14:53,984 --> 00:14:53,994 [Speaker 6]
+Mm-hmm 
+
+00:14:53,994 --> 00:15:04,024 [Speaker 1]
+... then, uh, this stock goes too. So then next day, all your friends find out via CNBC that they lost all this money, but half your position is gone, so you save thousands. So that's the idea. 
+
+00:15:04,024 --> 00:15:06,464 [Speaker 6]
+That's cool. That's cool. Yeah. 
+
+00:15:06,464 --> 00:15:10,444 [Speaker 1]
+So okay. Um, questions for you would be... 
+
+00:15:13,944 --> 00:15:15,904 [Speaker 1]
+Okay, if this existed right now, would you use it? 
+
+00:15:19,424 --> 00:15:31,704 [Speaker 6]
+So hang on. Um, I get a-- You said you got a phone call. 
+
+00:15:31,704 --> 00:15:31,864 [Speaker 1]
+Yeah. 
+
+00:15:31,864 --> 00:15:34,484 [Speaker 6]
+I-- But, but it would, it would be a push notification. 
+
+00:15:34,484 --> 00:15:34,764 [Speaker 1]
+Yeah. 
+
+00:15:34,764 --> 00:15:43,484 [Speaker 6]
+The moment, the moment that that, that, that the asset drops beyond this-- Is this analyzed solely by the technicals, right? 
+
+00:15:43,484 --> 00:15:43,684 [Speaker 1]
+Yeah. 
+
+00:15:43,684 --> 00:15:46,314 [Speaker 6]
+Like once it goes beyond below a support level- 
+
+00:15:46,314 --> 00:15:47,044 [Speaker 1]
+Right. Or above a support level. 
+
+00:15:47,044 --> 00:15:47,704 [Speaker 6]
+Okay. 
+
+00:15:47,704 --> 00:15:47,984 [Speaker 1]
+Yeah. 
+
+00:15:47,984 --> 00:15:50,844 [Speaker 6]
+So once it, once it drops below a support, I get notified. Okay. 
+
+00:15:52,024 --> 00:15:52,204 [Speaker 6]
+Um, 
+
+00:15:55,104 --> 00:15:58,664 [Speaker 6]
+my Merrill app already alerts me of that. 
+
+00:15:58,664 --> 00:16:00,143 [Speaker 1]
+Okay. Okay. 
+
+00:16:00,144 --> 00:16:01,664 [Speaker 6]
+The moment that happens. 
+
+00:16:01,664 --> 00:16:02,094 [Speaker 1]
+Okay. 
+
+00:16:02,094 --> 00:16:05,863 [Speaker 6]
+So, uh, I don't know if I would use it. 
+
+00:16:05,864 --> 00:16:06,424 [Speaker 1]
+Sure. Sure. 
+
+00:16:06,424 --> 00:16:06,684 [Speaker 6]
+Yeah. 
+
+00:16:06,684 --> 00:16:12,344 [Speaker 1]
+But okay. So two questions. What if, number one, you weren't with Merrill, and number two, 
+
+00:16:13,504 --> 00:16:17,444 [Speaker 1]
+is Merrill less utilizing AI to get it to you ASAP? 
+
+00:16:19,044 --> 00:16:27,344 [Speaker 6]
+Um, so, you know, uh, they're a big slow-moving bank. 
+
+00:16:27,344 --> 00:16:29,384 [Speaker 1]
+Yeah. Right. That's what- 
+
+00:16:29,384 --> 00:16:32,514 [Speaker 6]
+Uh, they are, they're probably not using AI. 
+
+00:16:32,514 --> 00:16:32,724 [Speaker 1]
+Right. 
+
+00:16:32,724 --> 00:16:33,254 [Speaker 6]
+But they-- 
+
+00:16:35,904 --> 00:16:37,364 [Speaker 6]
+I mean, here's the thing, right? 
+
+00:16:37,364 --> 00:16:37,374 [Speaker 1]
+Mm-hmm. 
+
+00:16:37,374 --> 00:16:40,183 [Speaker 6]
+Um, 
+
+00:16:41,884 --> 00:16:43,363 [Speaker 6]
+as a market maker- 
+
+00:16:43,363 --> 00:16:44,324 [Speaker 1]
+Yeah 
+
+00:16:44,324 --> 00:16:49,924 [Speaker 6]
+... they have the ability to execute once I tell them to significantly faster- 
+
+00:16:49,924 --> 00:16:49,934 [Speaker 1]
+Right 
+
+00:16:49,934 --> 00:16:52,364 [Speaker 6]
+... than I would. So I mean, like- 
+
+00:16:52,364 --> 00:16:53,284 [Speaker 1]
+Yeah. So- 
+
+00:16:53,284 --> 00:17:00,944 [Speaker 6]
+Who's gonna be the broker dealer for you, right? You're gonna have to go through someone like Merrill, right? And that's gonna create a delay. 
+
+00:17:00,944 --> 00:17:00,974 [Speaker 1]
+Sure. 
+
+00:17:00,974 --> 00:17:07,724 [Speaker 6]
+So I'm just wondering if, if I were to measure out the overall round trip time- 
+
+00:17:07,724 --> 00:17:08,044 [Speaker 1]
+Mm-hmm 
+
+00:17:08,044 --> 00:17:10,324 [Speaker 6]
+... do I-- what do I get? 
+
+00:17:10,324 --> 00:17:12,104 [Speaker 1]
+Sure. I see. Yeah. Yeah. So- 
+
+00:17:12,104 --> 00:17:14,464 [Speaker 6]
+Especially since if I really wanted to- 
+
+00:17:14,464 --> 00:17:14,744 [Speaker 1]
+Yeah 
+
+00:17:14,744 --> 00:17:21,564 [Speaker 6]
+... Merrill exposes an REST API that I could, theoretically, I mean, I would have to, you know, um, 
+
+00:17:22,964 --> 00:17:30,764 [Speaker 6]
+I mean, there would be no security problem. It's all TLS encrypted. I, I mean, I already log into their website. 
+
+00:17:30,764 --> 00:17:31,503 [Speaker 1]
+Yeah. 
+
+00:17:31,504 --> 00:17:32,704 [Speaker 6]
+Two shit. So yeah. 
+
+00:17:32,704 --> 00:17:33,354 [Speaker 1]
+Yeah. Yeah. 
+
+00:17:33,354 --> 00:17:39,524 [Speaker 6]
+No. I mean, I could see this for retail investors that don't have enough money in the market- 
+
+00:17:39,524 --> 00:17:39,914 [Speaker 1]
+Mm-hmm 
+
+00:17:39,914 --> 00:17:44,944 [Speaker 6]
+... to, to, to have the services of a large investment bank, I suppose. 
+
+00:17:44,944 --> 00:17:57,264 [Speaker 1]
+Yeah. Yeah. Fair. I think you, you might be in a unique category. I mean, not, not exactly, but, like, I think just as you said, the retail investors, I think is, is probably the best bet 'cause, um- 
+
+00:17:57,264 --> 00:18:00,644 [Speaker 6]
+I mean, it's not like I'm a millionaire here, right? I mean, like, you get reasonable service- 
+
+00:18:00,644 --> 00:18:02,234 [Speaker 1]
+So you say. No, I'm just kidding. [laughs] 
+
+00:18:02,234 --> 00:18:03,644 [Speaker 6]
+... from like a hundred thousand dollars, right? 
+
+00:18:03,644 --> 00:18:07,824 [Speaker 1]
+Yeah. Fair. Fair. No. Fair enough. Yeah. Yeah. Okay. That makes-- So that makes sense. Um, 
+
+00:18:09,484 --> 00:18:10,804 [Speaker 1]
+okay. Uh, 
+
+00:18:13,184 --> 00:18:19,324 [Speaker 1]
+right. Like, for example, I usually do mainly ETFs and, like, high yield savings. You know, I'm not, like, exactly that kind of... But, uh, 
+
+00:18:20,424 --> 00:18:24,744 [Speaker 1]
+yeah. Okay. So think more about the, uh, investment banking client 
+
+00:18:25,904 --> 00:18:42,476 [Speaker 1]
+ICP. But then again, you know, I'm not really trying to boil the ocean right now. I, I have to boil the lake, you know? So-Um, but yeah, thank you. That's, that's a great point. Uh, it's very helpful. So okay, last thing, last question for you guys is, um, what's the one thing that would make you say, "I need this right now"? 
+
+00:18:44,236 --> 00:18:53,016 [Speaker 7]
+And then the battery level being similar version where there is lot of energy used by the battery because- 
+
+00:18:53,016 --> 00:18:58,196 [Speaker 6]
+Asset classes are not tracked by index funds. Merrill doesn't do anything with crypto. 
+
+00:18:58,196 --> 00:18:58,496 [Speaker 1]
+Oh, okay. 
+
+00:18:58,496 --> 00:19:02,036 [Speaker 6]
+They refuse to participate in that market. Yeah. 
+
+00:19:02,036 --> 00:19:03,416 [Speaker 7]
+So, but the idea is this- 
+
+00:19:03,416 --> 00:19:04,255 [Speaker 6]
+So yeah. 
+
+00:19:04,255 --> 00:19:05,036 [Speaker 1]
+Fascinating. Okay. 
+
+00:19:06,176 --> 00:19:13,876 [Speaker 1]
+I see. I s-- Okay, that makes sense. So okay. Figure out the asset. Okay. Understood. Understood. 
+
+00:19:13,876 --> 00:19:14,296 [Speaker 6]
+Let me, let me know. 
+
+00:19:14,296 --> 00:19:16,656 [Speaker 1]
+Solid. Solid. Any, anything from you guys? No? 
+
+00:19:16,656 --> 00:19:24,936 [Speaker 6]
+And the a- the anti-pattern would be asset classes where you could only invest in-- you could invest in like foreign securities, right? So... 
+
+00:19:26,376 --> 00:19:26,486 [Speaker 1]
+Yeah. 
+
+00:19:28,936 --> 00:19:30,126 [Speaker 1]
+Solid. Um. 
+
+00:19:30,126 --> 00:19:32,176 [Speaker 6]
+Where revenue from, from scratch. 
+
+00:19:33,356 --> 00:19:33,916 [Speaker 1]
+Okay. 
+
+00:19:36,216 --> 00:19:42,776 [Speaker 1]
+Solid. Solid. Yeah. Okay, perfect. Thank you for, um... Thank you for your... Uh, yeah. 
+
+00:19:45,416 --> 00:19:50,716 [Speaker 1]
+Appreciate it. [microphone rustling] Hey, how you doing? Um, would it be cool if I showed you some... Oh, are you building? 
+
+00:19:50,716 --> 00:19:53,135 [Speaker 8]
+Uh, no, no, no. I'm just gonna... Like, we, we- 
+
+00:19:53,136 --> 00:19:55,006 [Speaker 1]
+Oh, sorry. Sorry. That's- 
+
+00:19:55,006 --> 00:19:55,356 [Speaker 8]
+Sorry, were you- 
+
+00:19:55,356 --> 00:19:59,156 [Speaker 1]
+That's my bad. I, I, I was, I was gonna ask, would it be cool if I showed you what we were building? 
+
+00:19:59,156 --> 00:20:00,356 [Speaker 8]
+Uh, yeah, yeah. 
+
+00:20:00,356 --> 00:20:03,816 [Speaker 1]
+Or if you want, you can finish your call, then that's perfect. Yeah. I can come back in ten minutes if- 
+
+00:20:03,816 --> 00:20:04,676 [Speaker 8]
+You know what? I'll, uh... 
+
+00:20:06,316 --> 00:20:07,656 [Speaker 7]
+Other one. 
+
+00:20:07,656 --> 00:20:09,846 [Speaker 8]
+Yeah. Uh, l-let me have a look. Yeah. 
+
+00:20:09,846 --> 00:20:12,966 [Speaker 1]
+Oh, sure. Sure. Gonna borrow this chair. 
+
+00:20:12,966 --> 00:20:18,796 [Speaker 8]
+Yeah, sure. There's a chair. You can take it. You can take that. 
+
+00:20:18,796 --> 00:20:24,276 [Speaker 1]
+Okay. Sounds good. Thank you. All right. So, okay. Um, 
+
+00:20:26,136 --> 00:20:27,256 [Speaker 1]
+question for you. 
+
+00:20:27,256 --> 00:20:28,256 [Speaker 8]
+Mm-hmm. 
+
+00:20:28,256 --> 00:20:33,196 [Speaker 1]
+Do you invest in individual stocks or mostly in, in index funds? Thank you. Um- 
+
+00:20:33,196 --> 00:20:35,136 [Speaker 8]
+Individual stocks or- 
+
+00:20:35,136 --> 00:20:36,336 [Speaker 1]
+Yeah, mostly index funds. 
+
+00:20:36,336 --> 00:20:38,616 [Speaker 8]
+Index funds? Uh, you know what? Combination. 
+
+00:20:38,616 --> 00:20:38,896 [Speaker 1]
+Okay. 
+
+00:20:38,896 --> 00:20:39,056 [Speaker 8]
+Yeah. 
+
+00:20:39,056 --> 00:20:40,136 [Speaker 1]
+Sounds solid. Solid. 
+
+00:20:40,136 --> 00:20:40,336 [Speaker 8]
+Yeah. 
+
+00:20:40,336 --> 00:20:44,586 [Speaker 1]
+Um, have you ever been caught off guard by a stock drop? Like you found out too late. 
+
+00:20:44,586 --> 00:20:46,036 [Speaker 8]
+About a stock tip? 
+
+00:20:46,036 --> 00:20:46,945 [Speaker 1]
+Stock drop. Drop. 
+
+00:20:46,945 --> 00:20:46,975 [Speaker 8]
+A stock drop. 
+
+00:20:46,976 --> 00:20:50,316 [Speaker 1]
+No, no, no. I'm not asking if you're insider trading. [laughs] 
+
+00:20:50,316 --> 00:20:53,376 [Speaker 8]
+Oh. [laughs] A stock drop. Have I found it too late? Yeah. 
+
+00:20:53,376 --> 00:20:53,496 [Speaker 1]
+Sure. 
+
+00:20:53,496 --> 00:20:54,116 [Speaker 8]
+Yeah, I would say. 
+
+00:20:54,176 --> 00:20:58,396 [Speaker 1]
+Solid. Um, and how do you currently track insider activity or SEC filings? 
+
+00:21:00,536 --> 00:21:04,296 [Speaker 8]
+Um, I, I don't. I'm-- I... Look, so I don't-- I'm not a day trader. 
+
+00:21:04,296 --> 00:21:04,526 [Speaker 1]
+Okay. 
+
+00:21:04,526 --> 00:21:07,676 [Speaker 8]
+I like, you know, have conviction in the stock. 
+
+00:21:07,676 --> 00:21:07,976 [Speaker 1]
+Sure. 
+
+00:21:07,976 --> 00:21:09,716 [Speaker 8]
+I'll buy, I'll hold it. 
+
+00:21:09,716 --> 00:21:13,616 [Speaker 1]
+Solid. Okay. Makes sense. Okay. So imagine that it's March eighteenth. 
+
+00:21:13,616 --> 00:21:13,936 [Speaker 8]
+Mm-hmm. 
+
+00:21:13,936 --> 00:21:18,936 [Speaker 1]
+You own SMCI, Tesla and Nvidia. Everything looks fine. SMCI is up four percent. 
+
+00:21:18,936 --> 00:21:18,956 [Speaker 8]
+Mm-hmm. 
+
+00:21:18,956 --> 00:21:25,276 [Speaker 1]
+Then the next morning, the DOJ unseals an indictment against the co-founder for smuggling two point five billion into-- AI chips into China. 
+
+00:21:25,276 --> 00:21:25,576 [Speaker 8]
+Yeah. 
+
+00:21:25,576 --> 00:21:26,086 [Speaker 1]
+Right? 
+
+00:21:26,086 --> 00:21:26,106 [Speaker 8]
+Yeah. Yeah. 
+
+00:21:26,106 --> 00:21:30,336 [Speaker 1]
+And, um, the stock drops thirty-three percent in the next two days. 
+
+00:21:30,336 --> 00:21:30,436 [Speaker 8]
+Yeah. 
+
+00:21:30,436 --> 00:21:31,836 [Speaker 1]
+But by the time CNBC covers- 
+
+00:21:31,836 --> 00:21:31,886 [Speaker 8]
+Oh, right 
+
+00:21:31,886 --> 00:21:32,276 [Speaker 1]
+...it's too late. 
+
+00:21:32,276 --> 00:21:33,276 [Speaker 8]
+Yeah. Yeah. Yeah. 
+
+00:21:33,276 --> 00:21:35,616 [Speaker 1]
+So this is our product. 
+
+00:21:37,876 --> 00:21:39,536 [Speaker 1]
+So we're calling it nine one one Stock. 
+
+00:21:39,536 --> 00:21:40,236 [Speaker 8]
+Mm-hmm. Mm-hmm. 
+
+00:21:40,236 --> 00:21:54,596 [Speaker 1]
+And, uh, this is what a timeline would look like. So March eighteenth comes along, right? Uh, shakes hands with the CEO, then boom, March nineteenth happens. Three charged with conspiring to unlawfully divert- 
+
+00:21:54,596 --> 00:21:54,616 [Speaker 8]
+Mm-hmm. 
+
+00:21:54,616 --> 00:21:56,616 [Speaker 1]
+You know, these bearish headlines coming. 
+
+00:21:56,616 --> 00:21:56,916 [Speaker 8]
+Mm-hmm. 
+
+00:21:56,916 --> 00:22:03,436 [Speaker 1]
+So we use the Bland API to... The agent makes a call and to say, "Hey, I'm noticing this bearish activity on the market." 
+
+00:22:03,436 --> 00:22:04,196 [Speaker 8]
+Mm-hmm. 
+
+00:22:04,196 --> 00:22:08,756 [Speaker 1]
+"Um, and, uh, I think that we need to, um, 
+
+00:22:10,976 --> 00:22:14,266 [Speaker 1]
+drop the, uh, percentage of stock that you own by fifty percent." 
+
+00:22:14,266 --> 00:22:14,796 [Speaker 8]
+Mm-hmm. 
+
+00:22:14,796 --> 00:22:20,356 [Speaker 1]
+So it calls the phone and, uh, you get a push notification on your phone- 
+
+00:22:20,356 --> 00:22:20,376 [Speaker 8]
+Mm-hmm 
+
+00:22:20,376 --> 00:22:22,336 [Speaker 1]
+...saying, uh, "Do you approve this trade?" 
+
+00:22:22,336 --> 00:22:22,496 [Speaker 8]
+Mm-hmm. 
+
+00:22:22,496 --> 00:22:26,346 [Speaker 1]
+And so you can ask it questions like, "Where did you get this information? Are you a hundred percent sure it's accurate?" 
+
+00:22:26,346 --> 00:22:26,386 [Speaker 8]
+Mm-hmm. 
+
+00:22:26,386 --> 00:22:40,436 [Speaker 1]
+And it'll say like, "Hey, you know, um, like, yes, you know, this is, this is where I got it," da, da, da. And then you can say-- you open up your phone, an agent is requesting authorization. So once you approve it, the stock trade goes through. 
+
+00:22:40,436 --> 00:22:40,876 [Speaker 8]
+Yeah. 
+
+00:22:40,876 --> 00:22:44,796 [Speaker 1]
+And then your friends call you the next day, "I lost so much money," and you say, "No." 
+
+00:22:44,796 --> 00:22:45,176 [Speaker 8]
+Yeah. 
+
+00:22:45,176 --> 00:22:46,476 [Speaker 1]
+Yeah. So that's the idea. 
+
+00:22:46,476 --> 00:22:46,996 [Speaker 8]
+Cool. 
+
+00:22:46,996 --> 00:22:47,056 [Speaker 1]
+Yeah. 
+
+00:22:47,056 --> 00:22:53,936 [Speaker 8]
+That's awesome. So it's just ba-basically proactively... It's, it's looking at all like the, the rumor mill- 
+
+00:22:53,936 --> 00:22:53,946 [Speaker 1]
+Mm-hmm 
+
+00:22:53,946 --> 00:22:55,016 [Speaker 8]
+...like out there. 
+
+00:22:55,016 --> 00:22:55,136 [Speaker 1]
+Yeah. 
+
+00:22:55,136 --> 00:23:05,396 [Speaker 8]
+And it's basically just kinda like proactively kinda analyzing, "Hey, this could have an impact on this stock." It's informing the CEO via... It's calling the CEO? 
+
+00:23:05,396 --> 00:23:05,416 [Speaker 1]
+Yeah. 
+
+00:23:05,416 --> 00:23:07,916 [Speaker 8]
+So it calls the CEO, right? Or it- 
+
+00:23:07,916 --> 00:23:07,925 [Speaker 1]
+Or- 
+
+00:23:07,925 --> 00:23:09,316 [Speaker 8]
+... texts the CEO. 
+
+00:23:09,316 --> 00:23:10,416 [Speaker 1]
+It, it calls you, yeah. 
+
+00:23:10,416 --> 00:23:10,916 [Speaker 8]
+Calls you. 
+
+00:23:10,916 --> 00:23:11,366 [Speaker 1]
+Yeah. Yeah. 
+
+00:23:11,366 --> 00:23:13,036 [Speaker 8]
+And then you're kinda talking to it- 
+
+00:23:13,036 --> 00:23:13,046 [Speaker 1]
+Yeah 
+
+00:23:13,046 --> 00:23:14,336 [Speaker 8]
+...scenarios and everything? 
+
+00:23:14,336 --> 00:23:14,816 [Speaker 1]
+Yes. 
+
+00:23:14,816 --> 00:23:17,916 [Speaker 8]
+And then it'll basically put you to decision- 
+
+00:23:17,916 --> 00:23:17,925 [Speaker 1]
+Yes 
+
+00:23:17,925 --> 00:23:21,476 [Speaker 8]
+...if you wanna execute a trade, and then it'll send you a text to verify it. 
+
+00:23:21,476 --> 00:23:22,056 [Speaker 1]
+Yes. Yes. 
+
+00:23:22,056 --> 00:23:23,226 [Speaker 8]
+Got it. That's it. 
+
+00:23:23,226 --> 00:23:25,796 [Speaker 1]
+Exactly. And it has to have human in the loop. It would be a compliance nightmare if- 
+
+00:23:25,796 --> 00:23:26,236 [Speaker 8]
+Yeah, yeah 
+
+00:23:26,236 --> 00:23:27,536 [Speaker 1]
+...yeah. So- 
+
+00:23:27,536 --> 00:23:27,646 [Speaker 8]
+Yeah. 
+
+00:23:27,646 --> 00:23:35,836 [Speaker 1]
+Um, yeah, human in the loop to maintain security. And, uh, yeah. So just a couple questions for you. Um, if this existed right now, would you use it? 
+
+00:23:37,536 --> 00:23:38,456 [Speaker 8]
+Yeah. 
+
+00:23:38,456 --> 00:23:39,036 [Speaker 1]
+Solid. 
+
+00:23:39,036 --> 00:23:39,176 [Speaker 8]
+Mm-hmm. 
+
+00:23:39,176 --> 00:23:41,675 [Speaker 1]
+And what would you pay monthly for something like this? 
+
+00:23:41,676 --> 00:23:45,906 [Speaker 8]
+Hmm. Well, obviously, I would wanna try it first to see- 
+
+00:23:45,906 --> 00:23:45,906 [Speaker 1]
+Okay 
+
+00:23:45,906 --> 00:23:47,796 [Speaker 8]
+...like how it worked. But- 
+
+00:23:47,796 --> 00:23:47,956 [Speaker 1]
+So- 
+
+00:23:47,956 --> 00:23:48,936 [Speaker 8]
+If it did... 
+
+00:23:50,666 --> 00:23:52,776 [Speaker 8]
+The thing is I'm not a day trader. Like that's- 
+
+00:23:52,776 --> 00:23:52,856 [Speaker 1]
+Yeah 
+
+00:23:52,856 --> 00:23:54,636 [Speaker 8]
+...the thing, right? But, um- 
+
+00:23:54,636 --> 00:23:55,676 [Speaker 1]
+Yeah 
+
+00:23:55,676 --> 00:23:57,146 [Speaker 8]
+...if it provided me like a, 
+
+00:23:58,776 --> 00:24:03,836 [Speaker 8]
+basically a tip on like a stock dropping and it would be a good buy opportunity- 
+
+00:24:03,836 --> 00:24:03,846 [Speaker 1]
+Yeah. Yes 
+
+00:24:03,846 --> 00:24:05,096 [Speaker 8]
+...maybe, right- 
+
+00:24:05,096 --> 00:24:05,106 [Speaker 1]
+Yes 
+
+00:24:05,106 --> 00:24:06,596 [Speaker 8]
+...like I, I would use it for that. 
+
+00:24:06,596 --> 00:24:06,796 [Speaker 1]
+Sure. 
+
+00:24:06,796 --> 00:24:07,116 [Speaker 8]
+Yeah. 
+
+00:24:07,116 --> 00:24:14,156 [Speaker 1]
+So assume that there was a seven-day free trial and that there was plenty of YouTube tutorials, uh, social proof that it worked. 
+
+00:24:14,156 --> 00:24:14,746 [Speaker 8]
+Yeah. Yeah. 
+
+00:24:14,746 --> 00:24:19,576 [Speaker 1]
+And you were convinced that, okay, this is a great buy. If that was the case, what would you pay monthly? 
+
+00:24:19,576 --> 00:24:20,196 [Speaker 8]
+Yeah, I mean... 
+
+00:24:26,236 --> 00:24:30,006 [Speaker 8]
+Uh, I don't know. May- I'd start maybe like twenty, fifty bucks a month type thing. 
+
+00:24:30,006 --> 00:24:30,756 [Speaker 1]
+Yeah. Twenty bucks a month. 
+
+00:24:30,756 --> 00:24:31,136 [Speaker 8]
+Yeah. Yeah. 
+
+00:24:31,196 --> 00:24:36,116 [Speaker 1]
+Okay. Solid. Solid. Okay. And then, uh, if you don't mind me asking, you can make something up if you don't wanna tell me. 
+
+00:24:36,116 --> 00:24:36,316 [Speaker 8]
+Yeah. 
+
+00:24:36,316 --> 00:24:39,376 [Speaker 1]
+Which one of your stocks, uh, would you put on this first? 
+
+00:24:39,376 --> 00:24:46,606 [Speaker 8]
+Hmm.So from the perspective of... 
+
+00:24:48,026 --> 00:24:51,126 [Speaker 8]
+D-- you're asking me which of current-- stocks I currently own? 
+
+00:24:51,126 --> 00:24:53,086 [Speaker 1]
+Uh, yeah. Again, and if you don't wanna tell me, you can just make something up. 
+
+00:24:53,086 --> 00:24:53,705 [Speaker 8]
+Well, well- 
+
+00:24:53,706 --> 00:24:53,986 [Speaker 1]
+Or, or- 
+
+00:24:53,986 --> 00:24:54,606 [Speaker 8]
+It's not that. 
+
+00:24:54,606 --> 00:24:54,696 [Speaker 1]
+Yeah. 
+
+00:24:54,696 --> 00:25:01,186 [Speaker 8]
+It's just that, it's just that I would wanna know which stocks that I don't own is potentially a good buy in public. 
+
+00:25:01,186 --> 00:25:01,626 [Speaker 1]
+Sure. 
+
+00:25:01,626 --> 00:25:01,956 [Speaker 8]
+Right? 
+
+00:25:01,956 --> 00:25:01,966 [Speaker 1]
+Okay. 
+
+00:25:01,966 --> 00:25:05,366 [Speaker 8]
+But, but, but, but like if I-- if you were to kinda like... Um, 
+
+00:25:06,466 --> 00:25:11,546 [Speaker 8]
+so it'd be stocks that I don't have conviction in that are gonna be like long-term bets anymore. 
+
+00:25:11,546 --> 00:25:12,186 [Speaker 1]
+Yeah. 
+
+00:25:12,186 --> 00:25:15,376 [Speaker 8]
+Right? So like, for example, like Salesforce, 
+
+00:25:16,686 --> 00:25:19,196 [Speaker 8]
+you know? I've owned that. [laughs] 
+
+00:25:19,196 --> 00:25:20,166 [Speaker 1]
+Yeah. [laughs] 
+
+00:25:20,166 --> 00:25:23,045 [Speaker 2]
+We could hear what you said and I was just thinking Salesforce. 
+
+00:25:23,046 --> 00:25:23,666 [Speaker 8]
+Yeah. 
+
+00:25:23,666 --> 00:25:24,226 [Speaker 1]
+[laughs] 
+
+00:25:24,226 --> 00:25:24,906 [Speaker 8]
+Yeah, yeah. 
+
+00:25:24,906 --> 00:25:26,406 [Speaker 1]
+That's funny. Yeah. 
+
+00:25:26,406 --> 00:25:26,766 [Speaker 8]
+Like, you know, uh- 
+
+00:25:26,766 --> 00:25:28,746 [Speaker 1]
+They're, they're sliding, right? Because of AI, that kind of thing. 
+
+00:25:28,746 --> 00:25:29,356 [Speaker 8]
+Yeah, yeah. 
+
+00:25:29,356 --> 00:25:29,366 [Speaker 1]
+Yeah. 
+
+00:25:29,366 --> 00:25:30,466 [Speaker 8]
+Well, I mean, like... 
+
+00:25:30,466 --> 00:25:31,746 [Speaker 2]
+That was after... 
+
+00:25:31,746 --> 00:25:33,586 [Speaker 8]
+Yeah. So a-again, that would be an example. 
+
+00:25:33,586 --> 00:25:37,246 [Speaker 1]
+Okay. Okay. Sounds good. So, okay. Okay. Um- 
+
+00:25:37,246 --> 00:25:40,466 [Speaker 2]
+You've been here before. Yeah. I came, like- 
+
+00:25:40,466 --> 00:25:42,686 [Speaker 1]
+Right. Okay. Cool. Understood. So- 
+
+00:25:42,686 --> 00:25:42,806 [Speaker 8]
+Yeah 
+
+00:25:42,806 --> 00:25:48,446 [Speaker 1]
+... appreciate that. And then finally, uh, what's the one thing that would make you say, "I need this right now"? 
+
+00:25:48,446 --> 00:25:49,406 [Speaker 8]
+Hmm. 
+
+00:25:54,966 --> 00:25:59,646 [Speaker 8]
+I mean, look, if, if this could lead me to opportunities- 
+
+00:25:59,646 --> 00:26:00,046 [Speaker 1]
+Yes 
+
+00:26:00,046 --> 00:26:00,966 [Speaker 8]
+... to buy- 
+
+00:26:00,966 --> 00:26:01,306 [Speaker 1]
+Yes 
+
+00:26:01,306 --> 00:26:04,006 [Speaker 8]
+... based on some sort of a, 
+
+00:26:05,066 --> 00:26:12,286 [Speaker 8]
+like, high conviction insight on why this is gonna be a huge bet for the future, and I'm kind of on the fence about it. 
+
+00:26:12,286 --> 00:26:12,296 [Speaker 1]
+Yes. 
+
+00:26:12,296 --> 00:26:15,706 [Speaker 8]
+Like, like, look, NVIDIA's obvious- 
+
+00:26:15,706 --> 00:26:15,716 [Speaker 1]
+Yeah 
+
+00:26:15,716 --> 00:26:18,506 [Speaker 8]
+... but it's kinda not obvious how big they're gonna become. 
+
+00:26:18,506 --> 00:26:18,666 [Speaker 1]
+Yeah. 
+
+00:26:18,666 --> 00:26:19,666 [Speaker 8]
+Right? So- 
+
+00:26:19,666 --> 00:26:19,736 [Speaker 1]
+Yes 
+
+00:26:19,736 --> 00:26:23,836 [Speaker 8]
+... do I wanna kinda put more into NVIDIA or just, like, sit on what I have, right? 
+
+00:26:23,836 --> 00:26:23,836 [Speaker 1]
+Mm-hmm. 
+
+00:26:23,836 --> 00:26:45,886 [Speaker 8]
+Like, um, so that, that could be an opportunity, right? Like Amazon, on one side they're getting disrupted in commerce and, like, AWS is, like, not keeping up with the frontier models, but man, they're deploying robotics all over their thing, and their efficiency's going nuts. And so insights like that, like, are super about... There's so many of these insights on Twitter. 
+
+00:26:45,886 --> 00:26:45,985 [Speaker 1]
+Yeah. 
+
+00:26:45,986 --> 00:26:47,166 [Speaker 8]
+It's very hard to keep up. 
+
+00:26:47,166 --> 00:26:47,626 [Speaker 1]
+Absolutely. 
+
+00:26:47,626 --> 00:26:47,846 [Speaker 8]
+Right? 
+
+00:26:47,846 --> 00:26:47,966 [Speaker 1]
+Yeah. 
+
+00:26:47,966 --> 00:26:50,936 [Speaker 8]
+So if I could distill down, like, you know- 
+
+00:26:50,936 --> 00:26:50,936 [Speaker 1]
+Mm-hmm 
+
+00:26:50,936 --> 00:27:02,146 [Speaker 8]
+... what are the super hot trends that are going-- Like, which companies are likely to lay off a lot of people and, you know, do really, do really well because of AI efficiency? Like, insights like that, 
+
+00:27:03,366 --> 00:27:08,566 [Speaker 8]
+that lead me to kind of like say, "I'm gonna buy this," or, "I'm gonna buy this," I know a lot of people that would buy that. 
+
+00:27:08,566 --> 00:27:09,106 [Speaker 1]
+Excellent. 
+
+00:27:09,106 --> 00:27:21,545 [Speaker 8]
+Right? 'Cause I'd rather proactively know that information than kind of like have to kinda like just go on Twitter and doom scroll the fricking thing. I would rather have a proactive sort of thing saying, "Hey- 
+
+00:27:21,546 --> 00:27:21,786 [Speaker 1]
+Yeah 
+
+00:27:21,786 --> 00:27:27,246 [Speaker 8]
+... there's a set of insights here that lead us to believe that this set of stocks are gonna be long-term bets- 
+
+00:27:27,246 --> 00:27:27,436 [Speaker 1]
+Yeah 
+
+00:27:27,436 --> 00:27:29,406 [Speaker 8]
+... versus not," right? So yeah, I guess that. 
+
+00:27:29,406 --> 00:27:32,726 [Speaker 1]
+Solid. Solid. I appreciate that. Awesome. 
+
+00:27:32,726 --> 00:27:32,906 [Speaker 8]
+Yeah. 
+
+00:27:32,906 --> 00:27:33,306 [Speaker 1]
+Well, cool. 
+
+00:27:33,306 --> 00:27:33,575 [Speaker 8]
+Cool, man. 
+
+00:27:33,575 --> 00:27:33,946 [Speaker 1]
+Appreciate your time. 
+
+00:27:33,946 --> 00:27:33,986 [Speaker 8]
+Yeah. 
+
+00:27:33,986 --> 00:27:39,526 [Speaker 1]
+Thank you. [camera clicking] 
+
+00:27:39,526 --> 00:27:40,226 [Speaker 8]
+Hello. 
+
+00:27:40,226 --> 00:27:40,336 [Speaker 2]
+How's it going? 
+
+00:27:40,336 --> 00:27:41,066 [Speaker 8]
+How's it doing? 
+
+00:27:41,066 --> 00:27:43,126 [Speaker 1]
+Uh, would it be cool if I showed you what we've built so far? 
+
+00:27:43,126 --> 00:27:44,046 [Speaker 2]
+Absolutely. 
+
+00:27:44,046 --> 00:27:44,446 [Speaker 1]
+Awesome. 
+
+00:27:44,446 --> 00:27:45,086 [Speaker 8]
+Let's see. 
+
+00:27:45,086 --> 00:27:51,086 [Speaker 2]
+Okay. What is all this trash on the table? I don't... [laughs] 
+
+00:27:51,086 --> 00:27:51,606 [Speaker 1]
+All right. 
+
+00:27:51,606 --> 00:27:54,626 [Speaker 2]
+This is also mine. I, I had- I'm a slob. 
+
+00:27:54,626 --> 00:27:54,846 [Speaker 1]
+Okay. 
+
+00:27:56,006 --> 00:28:03,306 [Speaker 1]
+So, um, questions for you guys. Number one is, do you invest in individual stocks or mostly index funds? 
+
+00:28:03,366 --> 00:28:03,556 [Speaker 2]
+Both. 
+
+00:28:03,556 --> 00:28:03,886 [Speaker 1]
+Both? 
+
+00:28:03,886 --> 00:28:05,166 [Speaker 2]
+Mostly index for me. 
+
+00:28:05,166 --> 00:28:05,946 [Speaker 1]
+Okay. 
+
+00:28:05,946 --> 00:28:07,646 [Speaker 2]
+Uh, combo. 
+
+00:28:07,646 --> 00:28:07,986 [Speaker 1]
+Okay. 
+
+00:28:07,986 --> 00:28:08,306 [Speaker 2]
+Yeah. 
+
+00:28:08,306 --> 00:28:13,186 [Speaker 1]
+Solid. Um, have you ever been caught off guard by a stock drop, like you found out too late? 
+
+00:28:14,746 --> 00:28:17,606 [Speaker 2]
+I try not to time the market. [laughs] 
+
+00:28:17,606 --> 00:28:17,616 [Speaker 1]
+Yeah. 
+
+00:28:17,616 --> 00:28:17,626 [Speaker 2]
+Um- 
+
+00:28:17,626 --> 00:28:18,046 [Speaker 1]
+Okay 
+
+00:28:18,046 --> 00:28:21,426 [Speaker 2]
+... I, I bought Lucid at its peak and that tanked. 
+
+00:28:21,426 --> 00:28:23,166 [Speaker 1]
+Oh, solid. S-sorry, sorry. [laughs] 
+
+00:28:23,166 --> 00:28:25,306 [Speaker 2]
+When I was trying crypto, I definitely, yeah. 
+
+00:28:25,306 --> 00:28:25,566 [Speaker 1]
+Okay. 
+
+00:28:25,566 --> 00:28:29,946 [Speaker 2]
+I, I benefited from crypto. [laughs] I did not benefit from crypto. Too lazy to try all these things. [laughs] 
+
+00:28:29,946 --> 00:28:38,746 [Speaker 1]
+Got it. Got it. Okay. So, okay, then I guess the question would be, how do you currently track insider activity or SEC filings? 
+
+00:28:38,746 --> 00:28:41,176 [Speaker 2]
+Oh, I, uh, this is exactly what I was talking about earlier. 
+
+00:28:41,176 --> 00:28:41,286 [Speaker 1]
+Yeah. 
+
+00:28:41,286 --> 00:28:41,666 [Speaker 2]
+I forgot. 
+
+00:28:41,666 --> 00:28:42,046 [Speaker 1]
+Yeah. 
+
+00:28:42,046 --> 00:28:44,355 [Speaker 2]
+What I want is-- Okay, this is-- I'll just tell you this really fast. 
+
+00:28:44,355 --> 00:28:44,526 [Speaker 1]
+Yeah. 
+
+00:28:44,526 --> 00:28:45,626 [Speaker 2]
+I don't actually track it, but I- 
+
+00:28:45,626 --> 00:28:45,635 [Speaker 1]
+Yeah 
+
+00:28:45,635 --> 00:28:46,946 [Speaker 2]
+... I'll give you my real quick two cents. 
+
+00:28:46,946 --> 00:28:47,146 [Speaker 1]
+Yeah. 
+
+00:28:47,146 --> 00:28:53,566 [Speaker 2]
+What I want is something where, you know how there was the, uh, Trump ended-- comment about Iran deal? 
+
+00:28:53,566 --> 00:28:54,076 [Speaker 1]
+Yeah. 
+
+00:28:54,076 --> 00:28:57,246 [Speaker 2]
+And 50 minutes before, there was the, a huge volume of trading. 
+
+00:28:57,246 --> 00:28:57,406 [Speaker 1]
+Yeah. 
+
+00:28:57,406 --> 00:28:59,775 [Speaker 2]
+I wanna have an indicator of that huge volume of trading and- 
+
+00:28:59,775 --> 00:28:59,775 [Speaker 1]
+Yeah 
+
+00:28:59,775 --> 00:29:03,646 [Speaker 2]
+... related to oil or... That was, that was also S&P. 
+
+00:29:03,646 --> 00:29:03,825 [Speaker 1]
+Okay. 
+
+00:29:03,825 --> 00:29:05,526 [Speaker 2]
+And just, like, get a little heads-up on that. 
+
+00:29:05,526 --> 00:29:07,446 [Speaker 1]
+And you independently thought this up? 
+
+00:29:07,446 --> 00:29:08,006 [Speaker 2]
+Yeah. 
+
+00:29:08,006 --> 00:29:09,225 [Speaker 1]
+Oh, s- okay. Okay. So that- 
+
+00:29:09,226 --> 00:29:11,686 [Speaker 2]
+He was literally talking to me about this, like, this morning. [laughs] 
+
+00:29:11,686 --> 00:29:14,576 [Speaker 1]
+That leads us to our demo. [laughs] 
+
+00:29:14,576 --> 00:29:15,726 [Speaker 2]
+Yeah. Perfect. It is what it is. Good stuff. 
+
+00:29:15,726 --> 00:29:16,306 [Speaker 1]
+Um, yeah. 
+
+00:29:16,306 --> 00:29:19,226 [Speaker 2]
+This is-- Yeah. I was saying like, "I need to go do this, like, this weekend." [laughs] 
+
+00:29:19,226 --> 00:29:21,726 [Speaker 1]
+Okay. So check this out. We're calling it nine one- 
+
+00:29:21,726 --> 00:29:23,546 [Speaker 2]
+Can you build me a connector to do that? 
+
+00:29:23,546 --> 00:29:25,206 [Speaker 1]
+So we're calling it Nine One One Stock. 
+
+00:29:25,206 --> 00:29:25,386 [Speaker 2]
+Uh-huh. 
+
+00:29:25,386 --> 00:29:45,546 [Speaker 1]
+Okay? So I, uh, so the timeline plays, right? So March 18th comes along. Everything seems fine, right? Super Micro, Jensen Huang sh-shakes hands with their CEO, but then March 19th happens, and then three people are charged with this unlawful smuggling, then, uh, the microcomputer. And then you get a call via the Blend API on your phone- 
+
+00:29:45,546 --> 00:29:45,726 [Speaker 2]
+Mm-hmm 
+
+00:29:45,726 --> 00:30:11,496 [Speaker 1]
+... saying, "Hey, I, I'm noticing this bearish activity on the stock market." Um, and then I'll say, "Wait, wait, wait. Pause. Where did you even get this information? Is it verified?" And it'll tell me like, "Yes, these are my sources. I've used this, I've used this." And then finally, um, it'll give me this: "So the last three times SMCI insiders did this, the stock dropped an average of twelve percent. You own it, and this is worth paying attention to." So then it'll send me a push notification saying, uh, "I'm requesting to drop it by fifty percent," um, 
+
+00:30:12,506 --> 00:30:23,006 [Speaker 1]
+because the CEO did an unscheduled sale, and it was a very high significance sell. So then I get a push notification via Oddzero on my phone saying, "Okay, would you like to approve?" Um, 
+
+00:30:24,206 --> 00:30:31,446 [Speaker 1]
+uh, and then I click Approve. The next day my friend calls me, "I lost so much money in the SMCI." I said, "I didn't, 'cause I used Nine One One Stock." [laughs] 
+
+00:30:31,446 --> 00:30:31,525 [Speaker 2]
+Nice. 
+
+00:30:31,526 --> 00:30:33,226 [Speaker 1]
+I'm just kidding, but, but it's true. Yeah. 
+
+00:30:33,226 --> 00:30:33,266 [Speaker 2]
+[laughs] 
+
+00:30:33,266 --> 00:30:36,766 [Speaker 1]
+So, um, yeah, uh, that's, that's the idea. So- 
+
+00:30:36,766 --> 00:30:37,606 [Speaker 2]
+Mm. Nice. 
+
+00:30:37,606 --> 00:30:38,426 [Speaker 1]
+Okay. So- 
+
+00:30:38,426 --> 00:30:39,646 [Speaker 2]
+Very slick demo. 
+
+00:30:39,646 --> 00:30:45,386 [Speaker 1]
+Thank you. Thank you. I appreciate it. Okay, so questions for you guys. Um, if this existed right now, would you use it?
+
+00:30:47,266 --> 00:30:48,146 [Speaker 9]
+I mean, I said yeah. 
+
+00:30:48,146 --> 00:30:48,466 [Speaker 1]
+Yeah. 
+
+00:30:48,466 --> 00:30:50,906 [Speaker 9]
+If, if I could gear it towards that specific use case that I mentioned. 
+
+00:30:50,906 --> 00:30:51,416 [Speaker 1]
+Okay. Got it. 
+
+00:30:51,416 --> 00:30:54,806 [Speaker 9]
+'Cause we know, we know Trump, we know Trump's gonna have some sort of post that's gonna affect the market- 
+
+00:30:54,806 --> 00:30:54,816 [Speaker 1]
+Yeah 
+
+00:30:54,816 --> 00:30:57,166 [Speaker 9]
+... and they've already been on, on top of that ahead of time, so. 
+
+00:30:57,166 --> 00:31:07,226 [Speaker 1]
+Yeah. Fair enough. This guy sucks with 10 exclamation marks. Yeah. Yeah, no, I'm just kidding. Um, then, uh, okay, so what would you pay monthly, um, for something like this? 
+
+00:31:07,226 --> 00:31:08,626 [Speaker 9]
+Depends on- 
+
+00:31:08,626 --> 00:31:10,246 [Speaker 10]
+Depends on how much you want. Yeah. 
+
+00:31:10,246 --> 00:31:12,716 [Speaker 1]
+Right. So okay, so assume that there's a seven-day free trial. 
+
+00:31:12,716 --> 00:31:12,776 [Speaker 9]
+Mm-hmm. 
+
+00:31:12,776 --> 00:31:21,526 [Speaker 1]
+Assume that there's enough social proof. Assume that there's YouTube tutorials on how I can do something like this. If all of that got there, and you say, "Okay, I wanna buy this," what would you pay? 
+
+00:31:21,526 --> 00:31:21,946 [Speaker 10]
+The 
+
+00:31:26,746 --> 00:31:28,786 [Speaker 10]
+hardest thing, the hardest question yet. 
+
+00:31:28,786 --> 00:31:28,796 [Speaker 1]
+[laughs] 
+
+00:31:28,796 --> 00:31:30,466 [Speaker 9]
+[laughs] It is the hardest question. 
+
+00:31:32,386 --> 00:31:33,946 [Speaker 10]
+Can you join that link I sent you? 
+
+00:31:35,066 --> 00:31:37,285 [Speaker 9]
+What is it i- it's acting as the... 
+
+00:31:38,436 --> 00:31:42,636 [Speaker 9]
+It's, it's making the... You're, you're integrating with, like, a broker, brokerage or something like that? 
+
+00:31:42,636 --> 00:31:42,666 [Speaker 1]
+Uh- 
+
+00:31:42,666 --> 00:31:44,746 [Speaker 9]
+Or, like, that's an idea that you would do? Or- 
+
+00:31:44,746 --> 00:31:55,456 [Speaker 1]
+Yeah. Uh, he was just talking about how he's Merrill Lynch, the, the... one of the guys over there. And, um, so they expose their API. But idea is they would be a very low friction partner. 
+
+00:31:55,456 --> 00:31:55,526 [Speaker 9]
+Mm-hmm. 
+
+00:31:55,526 --> 00:32:11,306 [Speaker 1]
+All I would say is just, like, "Hey, this is what I wanna do based on this." And then, uh, the... it's waiting for my approve, and the approve wouldn't even come until in the call I said, "Okay, okay, I, I'm sold. Uh, so, so I, I think I'm ready for this." Then bing, approve. So yeah, that's the idea. 
+
+00:32:13,526 --> 00:32:17,546 [Speaker 9]
+I mean, if you, if you, if you can make good money on it, then it's like any amount that- 
+
+00:32:17,546 --> 00:32:17,786 [Speaker 1]
+Yeah 
+
+00:32:17,786 --> 00:32:19,305 [Speaker 9]
+... makes you money is, is fine. 
+
+00:32:19,306 --> 00:32:19,786 [Speaker 1]
+Absolutely. 
+
+00:32:19,786 --> 00:32:20,026 [Speaker 9]
+So 
+
+00:32:21,286 --> 00:32:23,126 [Speaker 9]
+if I'm making, if I'm making 100 grand- 
+
+00:32:23,126 --> 00:32:23,386 [Speaker 1]
+Yeah 
+
+00:32:23,386 --> 00:32:24,466 [Speaker 9]
+... [laughs] on a trade, then- 
+
+00:32:24,466 --> 00:32:25,136 [Speaker 1]
+Yeah. 
+
+00:32:25,136 --> 00:32:25,146 [Speaker 9]
+Yeah. 
+
+00:32:25,146 --> 00:32:26,136 [Speaker 1]
+And if you only pay- 
+
+00:32:26,136 --> 00:32:26,616 [Speaker 9]
+[laughs] 
+
+00:32:26,616 --> 00:32:29,656 [Speaker 1]
+S- I, I want you to tell me a number. So I'm intentionally not saying a number. 
+
+00:32:29,656 --> 00:32:30,066 [Speaker 9]
+I know, yeah. 
+
+00:32:30,066 --> 00:32:30,906 [Speaker 1]
+So yeah, tell me. 
+
+00:32:30,906 --> 00:32:34,736 [Speaker 9]
+It almost feels like something that could be, like, a, a percentage as opposed to a monthly subscription. 
+
+00:32:34,736 --> 00:32:34,736 [Speaker 10]
+Yeah, yeah. 
+
+00:32:34,736 --> 00:32:34,746 [Speaker 1]
+Oh. 
+
+00:32:34,746 --> 00:32:35,746 [Speaker 9]
+That's what, that's what I was kind of getting at. 
+
+00:32:35,746 --> 00:32:38,236 [Speaker 1]
+True, but we don't wanna boil the ocean. We don't wanna get greedy. 
+
+00:32:38,236 --> 00:32:38,246 [Speaker 9]
+Yeah. 
+
+00:32:38,246 --> 00:32:42,386 [Speaker 1]
+But I, I understand what you're saying. I understand what you're saying. Yeah. Um, okay. 
+
+00:32:42,386 --> 00:32:44,746 [Speaker 9]
+'Cause it's kind of acting as a brokerage for you at that point. 
+
+00:32:44,746 --> 00:32:44,766 [Speaker 1]
+Yeah. 
+
+00:32:44,766 --> 00:32:48,026 [Speaker 9]
+Like somebody that's actually on, like, on the floor that knows their shit, so. 
+
+00:32:48,026 --> 00:32:49,026 [Speaker 1]
+Right. 
+
+00:32:49,026 --> 00:32:49,306 [Speaker 9]
+Um, 
+
+00:32:50,646 --> 00:32:52,566 [Speaker 9]
+yeah, I wouldn't be able to give you a number, like a monthly. Sure. 
+
+00:32:52,566 --> 00:32:52,726 [Speaker 1]
+Oh. 
+
+00:32:52,726 --> 00:32:53,386 [Speaker 9]
+20 bucks. [laughs] 
+
+00:32:53,386 --> 00:32:55,246 [Speaker 1]
+20. There we go. That, that- 
+
+00:32:55,246 --> 00:32:56,276 [Speaker 9]
+Yeah, easily 20 is, like- 
+
+00:32:56,276 --> 00:32:56,286 [Speaker 1]
+Okay 
+
+00:32:56,286 --> 00:32:57,186 [Speaker 9]
+... fine for a trial for- 
+
+00:32:57,186 --> 00:32:57,316 [Speaker 1]
+That's- 
+
+00:32:57,316 --> 00:32:58,746 [Speaker 9]
+... like, for me to test out for a while. 
+
+00:32:58,746 --> 00:33:00,926 [Speaker 1]
+That's awesome because that's exactly the number that I had in mind. 
+
+00:33:00,926 --> 00:33:01,246 [Speaker 9]
+Okay. [laughs] 
+
+00:33:01,246 --> 00:33:14,036 [Speaker 1]
+'Cause, um, if you think about Netflix, right? One of the big things about Netflix at the beginning is, wait a minute, you can watch $300 worth of movies on a $20 subscription. That's, that's a great deal. You know, if I did the same thing with Red Box, the whole thing would cost me, like, 500 bucks. 
+
+00:33:14,036 --> 00:33:14,106 [Speaker 9]
+Mm. 
+
+00:33:14,106 --> 00:33:20,546 [Speaker 1]
+Right? So, um, if for 20 bucks a month, I can give you that peace of mind, that's value add, right? 
+
+00:33:20,546 --> 00:33:22,086 [Speaker 9]
+Yeah. For sure. 
+
+00:33:22,086 --> 00:33:27,306 [Speaker 1]
+Solid. So okay, so last question for you guys. What's the one thing that would make you say, "I need this right now"? 
+
+00:33:28,766 --> 00:33:31,925 [Speaker 10]
+Picking directly from, like, grabbing it with the- 
+
+00:33:31,926 --> 00:33:33,726 [Speaker 1]
+Bing. Okay. Okay. Uh-huh. 
+
+00:33:36,826 --> 00:33:39,816 [Speaker 9]
+Yeah. I mean, I'd second that. I'd... And also just proof. 
+
+00:33:39,816 --> 00:33:40,326 [Speaker 10]
+[laughs] 
+
+00:33:40,326 --> 00:33:45,646 [Speaker 1]
+Cool. Cool, cool. Okay. So, you know, I would, I would work with my CTO marketing team. Let's say that the social proof- 
+
+00:33:45,646 --> 00:33:45,886 [Speaker 9]
+Yeah 
+
+00:33:45,886 --> 00:33:50,175 [Speaker 1]
+... you know, like, it was there, right? Uh, YouTube tutorials, um, and, uh, 
+
+00:33:51,926 --> 00:33:56,806 [Speaker 1]
+seven-day free trial, you know. Some things that build to... Okay. Okay. 
+
+00:33:56,806 --> 00:34:00,526 [Speaker 9]
+I mean, the other important aspect too would just be security too, since that's- 
+
+00:34:00,526 --> 00:34:00,766 [Speaker 1]
+Sure 
+
+00:34:00,766 --> 00:34:01,906 [Speaker 9]
+... working with a lot of credentials for- 
+
+00:34:03,946 --> 00:34:04,106 [Speaker 1]
+Mm-hmm. Mm-hmm 
+
+00:34:04,106 --> 00:34:04,586 [Speaker 9]
+... for my money. 
+
+00:34:04,586 --> 00:34:05,186 [Speaker 10]
+Yeah. [laughs] 
+
+00:34:05,186 --> 00:34:05,706 [Speaker 1]
+Yeah. That's right. 
+
+00:34:05,706 --> 00:34:06,896 [Speaker 9]
+So that's something I'd be most concerned- 
+
+00:34:06,896 --> 00:34:07,886 [Speaker 10]
+The approval piece is solid. Yeah. 
+
+00:34:07,886 --> 00:34:11,286 [Speaker 1]
+Solid. Okay. Okay. No, I appreciate it. Well, thanks, guys, for your time. 
+
+00:34:11,286 --> 00:34:11,496 [Speaker 9]
+Yeah. Appreciate it. 
+
+00:34:11,496 --> 00:34:12,706 [Speaker 1]
+I really do appreciate it. Yeah. No, thanks. Bye. 
+
+00:34:18,726 --> 00:34:19,146 [Speaker 10]
+Yeah, yeah, yeah. 
+
+00:34:24,146 --> 00:34:24,396 [Speaker 10]
+All right. 
+
+00:34:24,396 --> 00:34:25,446 [Speaker 1]
+All right. How's it going? 
+
+00:34:25,446 --> 00:34:26,026 [Speaker 11]
+How are you, man? 
+
+00:34:26,026 --> 00:34:26,746 [Speaker 1]
+Good, good. Thank you. 
+
+00:34:26,746 --> 00:34:27,716 [Speaker 11]
+Yeah. How's it working? 
+
+00:34:27,716 --> 00:34:30,006 [Speaker 1]
+Um, good, good. So do you mind if I show you? 
+
+00:34:30,006 --> 00:34:30,426 [Speaker 11]
+Yeah, yeah. 
+
+00:34:30,426 --> 00:34:31,656 [Speaker 1]
+Awesome. So, um, 
+
+00:34:32,806 --> 00:34:37,666 [Speaker 1]
+I guess... So my... Okay, so imagine... Because you already have the prelude. 
+
+00:34:37,666 --> 00:34:37,846 [Speaker 11]
+Yeah. 
+
+00:34:37,846 --> 00:34:39,486 [Speaker 1]
+Um, imagine that it's March 18th, right? 
+
+00:34:39,486 --> 00:34:39,675 [Speaker 11]
+Yeah, yeah. 
+
+00:34:39,675 --> 00:34:41,506 [Speaker 1]
+You're on SMCI test line video. 
+
+00:34:41,506 --> 00:34:41,726 [Speaker 11]
+Yeah, yeah. 
+
+00:34:41,726 --> 00:34:42,786 [Speaker 1]
+Everything's fine. 
+
+00:34:42,786 --> 00:34:43,066 [Speaker 11]
+Yeah. 
+
+00:34:43,066 --> 00:34:47,316 [Speaker 1]
+But then the next day, DOJ, unse- DOJ rather, unseals a, the 2.5 billion- 
+
+00:34:47,316 --> 00:34:47,446 [Speaker 11]
+Yeah 
+
+00:34:47,446 --> 00:34:48,406 [Speaker 1]
+... smuggling case. 
+
+00:34:48,406 --> 00:34:48,486 [Speaker 11]
+Mm. 
+
+00:34:48,486 --> 00:34:50,596 [Speaker 1]
+So then 33% drop. 
+
+00:34:50,596 --> 00:34:50,606 [Speaker 11]
+Oh, yeah. 
+
+00:34:50,606 --> 00:34:52,846 [Speaker 1]
+And then see, by the time CNBC covers it, it's 2:30. 
+
+00:34:52,846 --> 00:34:53,466 [Speaker 11]
+Yeah, yeah. 
+
+00:34:53,466 --> 00:34:53,666 [Speaker 1]
+So- 
+
+00:34:53,666 --> 00:34:54,926 [Speaker 11]
+The market's already moving. 
+
+00:34:54,926 --> 00:35:00,366 [Speaker 1]
+Exactly. So that goes to our demo. So like I mentioned, we're calling it 911 stock. 
+
+00:35:00,366 --> 00:35:00,396 [Speaker 11]
+Yeah. 
+
+00:35:00,396 --> 00:35:01,226 [Speaker 1]
+So you already stock. 
+
+00:35:01,226 --> 00:35:01,826 [Speaker 11]
+Yeah. Yeah. 
+
+00:35:01,826 --> 00:35:02,466 [Speaker 1]
+The timeline goes in. 
+
+00:35:02,466 --> 00:35:03,326 [Speaker 11]
+Yes. Yeah. That's it. 
+
+00:35:03,326 --> 00:35:04,425 [Speaker 1]
+And, um- 
+
+00:35:04,425 --> 00:35:06,425 [Speaker 11]
+The one we've shipped now is, like, smaller 
+
+00:35:06,425 --> 00:35:07,396 [Speaker 1]
+... so, you know- 
+
+00:35:07,396 --> 00:35:07,396 [Speaker 11]
+Yeah 
+
+00:35:07,396 --> 00:35:08,935 [Speaker 1]
+... March 18th, everything seems fine. 
+
+00:35:08,935 --> 00:35:08,985 [Speaker 11]
+Yeah. 
+
+00:35:08,985 --> 00:35:10,486 [Speaker 1]
+March 19th comes along. 
+
+00:35:10,486 --> 00:35:10,666 [Speaker 11]
+Yeah. 
+
+00:35:10,666 --> 00:35:13,226 [Speaker 1]
+And, uh, the bland API gives him a call. 
+
+00:35:13,226 --> 00:35:13,416 [Speaker 11]
+Yeah, yeah. 
+
+00:35:13,416 --> 00:35:16,666 [Speaker 1]
+Gives me a call saying, "Hey, this bearish activity is happening- 
+
+00:35:16,666 --> 00:35:16,766 [Speaker 11]
+Yeah 
+
+00:35:16,766 --> 00:35:17,046 [Speaker 1]
+... on, uh- 
+
+00:35:17,046 --> 00:35:17,266 [Speaker 11]
+Yeah, yeah 
+
+00:35:17,266 --> 00:35:23,846 [Speaker 1]
+... this stock." And so then I'll say, "Wait, wait, wait, pause, pause, pause. Um, where are you getting this information? Is it verified?" And it'll tell me, "Yes." 
+
+00:35:23,846 --> 00:35:23,856 [Speaker 11]
+Okay. 
+
+00:35:23,856 --> 00:35:24,926 [Speaker 1]
+"This was verified through this." 
+
+00:35:24,926 --> 00:35:25,646 [Speaker 11]
+And then it's verified. 
+
+00:35:25,646 --> 00:35:28,026 [Speaker 1]
+So, right. And so now it's going through the pipeline. 
+
+00:35:28,026 --> 00:35:28,375 [Speaker 11]
+Mm-hmm. 
+
+00:35:28,375 --> 00:35:32,546 [Speaker 1]
+And then it'll e- eventually just tell me this, "SMCI CEO just sold 2.1 million in stock." 
+
+00:35:32,546 --> 00:35:32,956 [Speaker 11]
+Yeah. 
+
+00:35:32,956 --> 00:35:37,166 [Speaker 1]
+"That's his first thing. So the last time this happened, it was a 12% drop average." 
+
+00:35:37,166 --> 00:35:37,286 [Speaker 11]
+Mm. 
+
+00:35:37,286 --> 00:35:42,626 [Speaker 1]
+"But you own this, so it's worth paying attention to." And so then I'll say, "You know what? Okay. Sounds good. Sounds good." 
+
+00:35:42,626 --> 00:35:42,986 [Speaker 11]
+Mm. 
+
+00:35:42,986 --> 00:35:51,986 [Speaker 1]
+And in that moment, my phone goes bing, and I get a notification saying, "Requesting authorization to drop the shares by 50%," and there's like, "Answer." 
+
+00:35:51,986 --> 00:35:52,186 [Speaker 11]
+Mm-hmm. 
+
+00:35:52,186 --> 00:35:52,746 [Speaker 1]
+And then, um, 
+
+00:35:54,686 --> 00:35:57,946 [Speaker 1]
+um, uh, I, I click approve. 
+
+00:35:57,946 --> 00:35:58,076 [Speaker 11]
+Mm-hmm. 
+
+00:35:58,076 --> 00:36:02,086 [Speaker 1]
+And I drop it. Next day, my friend calls me and says, "I just lost so much money." 
+
+00:36:02,086 --> 00:36:02,146 [Speaker 11]
+[laughs] 
+
+00:36:02,146 --> 00:36:04,266 [Speaker 1]
+I said, "No, I didn't 'cause I used 911 stock." 
+
+00:36:04,266 --> 00:36:05,016 [Speaker 11]
+Yeah, yeah. Nice. 
+
+00:36:05,016 --> 00:36:05,616 [Speaker 1]
+So yeah. That's the idea. 
+
+00:36:05,616 --> 00:36:07,625 [Speaker 11]
+That's perfect. That's gonna be good, man. Well done. 
+
+00:36:07,686 --> 00:36:08,206 [Speaker 1]
+Thank you. Thank you. 
+
+00:36:08,206 --> 00:36:08,216 [Speaker 11]
+Congrats. 
+
+00:36:08,216 --> 00:36:08,216 [Speaker 1]
+Thank you, man. 
+
+00:36:08,216 --> 00:36:08,986 [Speaker 11]
+That's really well done. 
+
+00:36:08,986 --> 00:36:10,236 [Speaker 1]
+So cheers. Appreciate it. So, um- 
+
+00:36:10,236 --> 00:36:11,186 [Speaker 11]
+What was the stack to build it? 
+
+00:36:12,346 --> 00:36:15,686 [Speaker 1]
+So the stack to build it was, um- 
+
+00:36:15,686 --> 00:36:20,286 [Speaker 2]
+Please open the Audio Guardian app and tap Approve to confirm 
+
+00:36:20,286 --> 00:36:21,846 [Speaker 11]
+Yes. Thank you. 
+
+00:36:21,846 --> 00:36:23,206 [Speaker 12]
+Have you got enough of the tools- 
+
+00:36:23,206 --> 00:36:23,316 [Speaker 2]
+You're welcome 
+
+00:36:23,316 --> 00:36:23,646 [Speaker 12]
+... we include? 
+
+00:36:23,646 --> 00:36:24,186 [Speaker 1]
+Yeah. 
+
+00:36:24,186 --> 00:36:24,206 [Speaker 2]
+Have a good one. 
+
+00:36:24,206 --> 00:36:24,846 [Speaker 1]
+Five of them actually. 
+
+00:36:24,846 --> 00:36:25,106 [Speaker 12]
+Nice. 
+
+00:36:25,106 --> 00:36:26,246 [Speaker 1]
+So and we're using you guys as well. 
+
+00:36:26,246 --> 00:36:27,196 [Speaker 12]
+Oh, nice. Amazing. 
+
+00:36:27,196 --> 00:36:29,866 [Speaker 1]
+And so, okay, just a few questions for you. 
+
+00:36:29,866 --> 00:36:30,086 [Speaker 12]
+Yeah. 
+
+00:36:30,086 --> 00:36:33,526 [Speaker 1]
+So if this existed right now, would you use it? 
+
+00:36:33,526 --> 00:36:41,226 [Speaker 12]
+I mean, yeah. If, if you have the... If you get, if you get live alerts to your, like, your phone call just to say you need some... you need to do something, yeah, for sure. 
+
+00:36:41,226 --> 00:36:41,456 [Speaker 1]
+Awesome. 
+
+00:36:41,456 --> 00:36:45,446 [Speaker 12]
+'Cause that's, 'cause, like, that's the time every second counts, right? 
+
+00:36:45,446 --> 00:36:45,636 [Speaker 1]
+Yeah. 
+
+00:36:45,636 --> 00:36:52,375 [Speaker 12]
+And that's how quickly the market moves, or even these days, people manipulate them before. So it's like [laughs] you need to, you need to get on it. So yeah, it's cool. 
+
+00:36:52,375 --> 00:36:52,386 [Speaker 1]
+Cool. 
+
+00:36:52,386 --> 00:36:54,486 [Speaker 12]
+Yeah. So, like, yeah, should think about, 
+
+00:36:55,566 --> 00:36:56,086 [Speaker 12]
+you know- 
+
+00:36:56,086 --> 00:36:56,566 [Speaker 1]
+That's awesome. 
+
+00:36:56,566 --> 00:36:56,826 [Speaker 12]
+Right. 
+
+00:36:56,826 --> 00:36:57,486 [Speaker 1]
+Thank you. Cheers. Cheers. 
+
+00:36:57,486 --> 00:36:58,026 [Speaker 12]
+Well done, guys. 
+
+00:36:58,026 --> 00:36:59,276 [Speaker 1]
+And appreciate it. Appreciate it. 
+
+00:36:59,276 --> 00:36:59,286 [Speaker 12]
+Yeah. 
+
+00:36:59,286 --> 00:37:02,526 [Speaker 1]
+And so what would you pay monthly for something like this? 
+
+00:37:02,526 --> 00:37:05,206 [Speaker 12]
+I mean, it's... 
+
+00:37:06,386 --> 00:37:07,426 [Speaker 1]
+Per call? 
+
+00:37:07,486 --> 00:37:15,686 [Speaker 12]
+Yeah, yeah. Well, it's interesting. You can, um, you could either do, you could either pay monthly for it, or you could say that you, um, you do revenue share on the savings they make. 
+
+00:37:15,686 --> 00:37:17,016 [Speaker 1]
+Yeah. But see, that, that's the-
+
+00:37:17,618 --> 00:37:19,048 [Speaker 12]
+We don't want to boil the ocean as well. 
+
+00:37:19,048 --> 00:37:19,058 [Speaker 1]
+Yeah. 
+
+00:37:19,058 --> 00:37:20,248 [Speaker 12]
+We want to boil the lake, right? 
+
+00:37:20,248 --> 00:37:20,358 [Speaker 1]
+Yeah. 
+
+00:37:20,358 --> 00:37:22,038 [Speaker 12]
+We don't wanna look, look like we're getting greedy. 
+
+00:37:22,038 --> 00:37:22,278 [Speaker 1]
+Yeah, yeah. 
+
+00:37:22,278 --> 00:37:25,218 [Speaker 12]
+So it's like... Yeah. But, but see- 
+
+00:37:25,218 --> 00:37:33,008 [Speaker 1]
+But then maybe you can, um, you could do something like you-- there, there is a small monthly fee, and then, and then your customers can, like, give you a donation or something. 
+
+00:37:33,008 --> 00:37:33,037 [Speaker 12]
+No. 
+
+00:37:33,038 --> 00:37:34,868 [Speaker 1]
+I don't know. Like, you can have this kind of like- 
+
+00:37:34,868 --> 00:37:34,868 [Speaker 12]
+Uh-huh. 
+
+00:37:34,868 --> 00:37:36,418 [Speaker 1]
+-this like giving loop- 
+
+00:37:36,418 --> 00:37:36,528 [Speaker 12]
+Yeah. 
+
+00:37:36,528 --> 00:37:37,558 [Speaker 1]
+-or something like that maybe. 
+
+00:37:37,558 --> 00:37:38,228 [Speaker 12]
+Um. 
+
+00:37:38,228 --> 00:37:42,598 [Speaker 1]
+'Cause, like, if you save people hundreds of thousands, they can chuck you, you know. 
+
+00:37:42,598 --> 00:37:42,898 [Speaker 12]
+Solid. 
+
+00:37:42,898 --> 00:37:43,618 [Speaker 2]
+Give us twenty. 
+
+00:37:43,618 --> 00:37:45,058 [Speaker 12]
+Yeah. [laughs] 
+
+00:37:45,058 --> 00:37:45,568 [Speaker 1]
+Exactly. 
+
+00:37:45,568 --> 00:37:49,038 [Speaker 12]
+Right. But you see, that would be-- Yeah, I, I understand what you're saying. Solid, solid. Makes sense. 
+
+00:37:49,038 --> 00:37:52,238 [Speaker 1]
+But no, no. I mean, what you're saying is it's a, it's a subscription model obviously. 
+
+00:37:52,238 --> 00:37:54,778 [Speaker 12]
+Yeah. 'Cause the way I think about it, right, Netflix. 
+
+00:37:54,778 --> 00:37:55,078 [Speaker 1]
+Yeah. 
+
+00:37:55,078 --> 00:37:56,998 [Speaker 12]
+One of the biggest draws for Net- Netflix in the beginning was- 
+
+00:37:56,998 --> 00:37:58,118 [Speaker 1]
+Yeah. Or, or- 
+
+00:37:58,118 --> 00:38:06,538 [Speaker 12]
+Yeah. So I guess that is what I'm thinking about, like what-- who you could integrate with. 'Cause maybe-- probably not Robinhood because they have to be neutral. 
+
+00:38:06,538 --> 00:38:07,098 [Speaker 1]
+Okay. 
+
+00:38:07,098 --> 00:38:11,498 [Speaker 12]
+I would say so. They can't be giving... 'Cause that's-- 'cause this m-this does manipulate the market- 
+
+00:38:11,498 --> 00:38:11,878 [Speaker 1]
+Yeah. 
+
+00:38:11,878 --> 00:38:12,218 [Speaker 12]
+-really. 
+
+00:38:12,218 --> 00:38:12,558 [Speaker 1]
+Right. 
+
+00:38:12,558 --> 00:38:15,798 [Speaker 12]
+So that's the only... Like, that's one-- To commercialize it, you'd have to think- 
+
+00:38:15,798 --> 00:38:15,878 [Speaker 1]
+Yeah. 
+
+00:38:15,878 --> 00:38:21,977 [Speaker 12]
+-about... 'Cause also, if it did hallucinate, and it called someone at the wrong time, and they sold at the wrong point or whatever, then you'd be like kind of fucked. 
+
+00:38:21,978 --> 00:38:22,258 [Speaker 1]
+Yeah. [laughs] 
+
+00:38:22,258 --> 00:38:23,048 [Speaker 12]
+So, yeah. [laughs] 
+
+00:38:23,048 --> 00:38:24,358 [Speaker 1]
+But that's why we have human in the loop. 
+
+00:38:24,358 --> 00:38:24,608 [Speaker 12]
+Yeah, yeah. 
+
+00:38:24,608 --> 00:38:25,798 [Speaker 1]
+'Cause it's odd zero, right? 
+
+00:38:25,798 --> 00:38:26,358 [Speaker 12]
+Yeah, yeah. 
+
+00:38:26,358 --> 00:38:28,788 [Speaker 1]
+So it never executes a trade unless I press the button. 
+
+00:38:28,788 --> 00:38:29,198 [Speaker 12]
+Cool. Yeah, yeah. 
+
+00:38:29,198 --> 00:38:29,498 [Speaker 1]
+So. 
+
+00:38:29,498 --> 00:38:33,998 [Speaker 12]
+Yeah. So make sure you, um, make sure you-- in the demo, it's really clear why that exists. 
+
+00:38:33,998 --> 00:38:34,178 [Speaker 1]
+Yes. 
+
+00:38:34,178 --> 00:38:34,778 [Speaker 12]
+Yeah, yeah. 
+
+00:38:34,778 --> 00:38:34,928 [Speaker 1]
+Okay. So- 
+
+00:38:34,928 --> 00:38:47,778 [Speaker 12]
+'Cause that... Yeah, you need to be... 'Cause double-check like what the SEC rules are on stuff like this as well, just so that you can say like, "We've, we've put this alt zero in so that we're in line with like the regulators and stuff like that." So it makes it seem like you've thought of everything. Yeah. 
+
+00:38:47,778 --> 00:38:49,257 [Speaker 1]
+Okay. Okay, sounds good. 
+
+00:38:49,258 --> 00:38:49,668 [Speaker 12]
+Yeah. 
+
+00:38:49,668 --> 00:38:51,168 [Speaker 1]
+And then if you don't mind- 
+
+00:38:51,168 --> 00:38:55,348 [Speaker 12]
+'Cause you, 'cause you have to be... 'Cause again, I'm like-- again, I'm from the UK, so I don't know all the rules. 
+
+00:38:55,348 --> 00:38:55,358 [Speaker 1]
+Yeah. 
+
+00:38:55,358 --> 00:38:56,098 [Speaker 12]
+But there's stuff on like 
+
+00:38:57,198 --> 00:39:01,278 [Speaker 12]
+for-- to, to buy, um, securities like this, you have to be an accredited investor, isn't it? 
+
+00:39:01,278 --> 00:39:01,438 [Speaker 1]
+Oh, okay. 
+
+00:39:01,438 --> 00:39:02,928 [Speaker 12]
+There's like rules around all that kind of stuff, so. 
+
+00:39:02,928 --> 00:39:03,438 [Speaker 1]
+Yeah. 
+
+00:39:03,438 --> 00:39:07,238 [Speaker 12]
+But when you've, when you... Like, maybe that's your ICP, right? 
+
+00:39:07,238 --> 00:39:07,438 [Speaker 1]
+Yeah. 
+
+00:39:07,438 --> 00:39:13,858 [Speaker 12]
+Is like accredited investors. So just have a think about when you present this, like what are the, all the other things. And do some Claude research. 
+
+00:39:13,858 --> 00:39:14,138 [Speaker 1]
+Yeah. 
+
+00:39:14,138 --> 00:39:19,718 [Speaker 12]
+And just be like, what are, what are the things that we should be like considering to like make it a holistic presentation? Yeah. 
+
+00:39:19,718 --> 00:39:21,208 [Speaker 1]
+Nice. Solid. Okay. 
+
+00:39:21,208 --> 00:39:21,238 [Speaker 12]
+Yeah. 
+
+00:39:21,238 --> 00:39:23,278 [Speaker 1]
+So la-last question for you- 
+
+00:39:23,278 --> 00:39:23,428 [Speaker 12]
+Yeah. 
+
+00:39:23,428 --> 00:39:27,958 [Speaker 1]
+-would be what's one thing that would make you s-- want to-- make you say rather, "I need this right now"? 
+
+00:39:30,278 --> 00:39:30,898 [Speaker 12]
+Getting burned. 
+
+00:39:32,038 --> 00:39:33,698 [Speaker 1]
+[laughs] Yeah. Fair. Fair. 
+
+00:39:33,698 --> 00:39:33,768 [Speaker 12]
+Yeah. [laughs] 
+
+00:39:33,768 --> 00:39:34,418 [Speaker 1]
+Yeah. Um. 
+
+00:39:34,418 --> 00:39:35,138 [Speaker 12]
+I think... [laughs] 
+
+00:39:35,138 --> 00:39:36,627 [Speaker 1]
+Good answer. Yeah. Fair enough. Fair enough. Yeah. 
+
+00:39:36,627 --> 00:39:40,358 [Speaker 12]
+That's all it would be. It would be a like, "Shit," like, "Fuck, I need something." 
+
+00:39:40,358 --> 00:39:42,657 [Speaker 1]
+And, and you could have used 911 stock. 
+
+00:39:42,658 --> 00:39:43,098 [Speaker 12]
+Yeah. 
+
+00:39:43,098 --> 00:39:43,138 [Speaker 1]
+So. 
+
+00:39:43,138 --> 00:39:51,238 [Speaker 12]
+Yeah, exactly. Yeah. Yeah. You miss a quick... There's some-- 'cause I mean... So interestingly, uh, so Anthropic, there was a leak on their new model today. 
+
+00:39:51,238 --> 00:39:52,038 [Speaker 1]
+Oh, sure. 
+
+00:39:52,038 --> 00:39:54,338 [Speaker 12]
+And, um, loads of cyber stocks have dropped. 
+
+00:39:54,338 --> 00:39:55,098 [Speaker 1]
+Oh. 
+
+00:39:55,098 --> 00:40:03,138 [Speaker 12]
+So, and, and a use case for this could be, oh, Anthropic have just released a, a new model. There's some kind of context about- 
+
+00:40:03,138 --> 00:40:03,248 [Speaker 1]
+Yeah. 
+
+00:40:03,248 --> 00:40:08,198 [Speaker 12]
+-cybersecurity companies being vulnerable now. That, um... Cool. 
+
+00:40:08,198 --> 00:40:08,608 [Speaker 1]
+Yeah. 
+
+00:40:08,608 --> 00:40:11,618 [Speaker 12]
+Um, so think about, think about like real world use cases you can talk about. 
+
+00:40:14,298 --> 00:40:15,118 [Speaker 1]
+Awesome. Awesome. Cool. 
+
+00:40:15,118 --> 00:40:18,597 [Speaker 12]
+Yeah. 'Cause the cybersecurity mo-market has moved a lot today because of that, so. 
+
+00:40:18,598 --> 00:40:19,818 [Speaker 1]
+Yeah. Yeah. Absolutely. 
+
+00:40:19,818 --> 00:40:20,258 [Speaker 12]
+Yeah. 
+
+00:40:20,258 --> 00:40:20,458 [Speaker 1]
+Awesome. 
+
+00:40:20,458 --> 00:40:20,978 [Speaker 12]
+Well, well done, man. 
+
+00:40:20,978 --> 00:40:23,078 [Speaker 1]
+Thank you. Thank you. Cheers. Excuse me. 
+
+00:40:24,878 --> 00:40:37,138 [Speaker 1]
+Hello. How's it going? 
+
+00:40:37,138 --> 00:40:37,918 [Speaker 13]
+Fine. Thanks. 
+
+00:40:37,918 --> 00:40:41,698 [Speaker 1]
+Would, would it be okay if I to-told you a bit about what we're building? Is that okay? 
+
+00:40:41,698 --> 00:40:41,718 [Speaker 13]
+Yeah. 
+
+00:40:41,718 --> 00:40:43,978 [Speaker 1]
+Awesome. Awesome. So... Okay. 
+
+00:40:45,978 --> 00:40:55,678 [Speaker 1]
+So, um, just a few questions for you guys first. Uh, for, for y'all first actually. Um, do you invest in individual stocks or mainly in index funds? 
+
+00:40:58,118 --> 00:40:58,858 [Speaker 1]
+Okay. 
+
+00:40:58,858 --> 00:40:59,778 [Speaker 13]
+I do a bit of both. 
+
+00:40:59,778 --> 00:41:03,138 [Speaker 1]
+Bit of both? Solid. Okay. And have you ever been, um, 
+
+00:41:04,538 --> 00:41:04,958 [Speaker 1]
+um, 
+
+00:41:06,978 --> 00:41:09,658 [Speaker 1]
+uh, caught off guard, um, 
+
+00:41:10,678 --> 00:41:13,338 [Speaker 1]
+by a stock drop or like you found out too late? 
+
+00:41:14,958 --> 00:41:19,338 [Speaker 13]
+Um, I mean, yeah, definitely. I seem to always find out after it's- 
+
+00:41:19,338 --> 00:41:19,928 [Speaker 1]
+Sure. [laughs] 
+
+00:41:19,928 --> 00:41:20,678 [Speaker 13]
+-fallen quite a bit. 
+
+00:41:20,678 --> 00:41:23,258 [Speaker 1]
+Right. Right. Fair. Fair. Okay. Um, 
+
+00:41:25,638 --> 00:41:29,458 [Speaker 1]
+so how do you currently track insider activity for SEC filings? 
+
+00:41:31,638 --> 00:41:31,918 [Speaker 1]
+Mm-hmm. 
+
+00:41:34,638 --> 00:41:35,418 [Speaker 1]
+Right. Okay. 
+
+00:41:37,178 --> 00:41:39,738 [Speaker 1]
+Okay. Right. [laughs] Okay. 
+
+00:41:39,738 --> 00:41:41,418 [Speaker 13]
+Yeah, I mean, I basically don't. 
+
+00:41:41,418 --> 00:41:42,418 [Speaker 1]
+Okay. Solid. Solid. 
+
+00:41:42,418 --> 00:41:43,618 [Speaker 13]
+Unless it's like very... [laughs] 
+
+00:41:43,618 --> 00:41:47,898 [Speaker 1]
+Okay. So that leads us to, uh, a demo. So, 
+
+00:41:49,678 --> 00:41:58,658 [Speaker 1]
+so, okay, imagine that it's, you know, March eighteenth, right? You own SMCI, Tesla and Nvidia. Everything looks fine, and SMCI is up four percent. 
+
+00:42:00,178 --> 00:42:08,378 [Speaker 1]
+Then the next morning, the DOJ unseals an indictment against the co-founder for smuggling two point five billion in AI chips to China, right? And, uh, the stock drops, 
+
+00:42:09,598 --> 00:42:09,718 [Speaker 1]
+um, 
+
+00:42:13,418 --> 00:42:21,698 [Speaker 1]
+uh, thirty-three percent in two days, and by the time CNBC covers it, it's too late. Okay? So enter what we're calling 911 stock. 
+
+00:42:21,698 --> 00:42:22,238 [Speaker 13]
+Okay. 
+
+00:42:22,238 --> 00:43:34,830 [Speaker 1]
+So you own these, uh, stocks, right? Then you click Play Timeline. Or I click Play Timeline. So March eighteenth comes along. Then, uh, Super Micro, uh, Dell have... Everything looks fine. Jensen Huang shakes hands with the CEO. Then March nineteenth comes along. Now three people are charged with this conspiracy. Then US charges three. So these are the headlines that the AI can figure out, and so it s- it gives you a call using the Bland API saying, "Hey, um, I'm noticing this bearish activity on the stock market." Um, and I say, "Wait, wait, wait. Pause. Where did you get this information? Is it verified?" And it tells me, "Yes, I'm looking at these sources. Um, it's telling me, but last time this happened, the stock dropped an average of twelve percent over thirty days. It's worth paying attention to." So I say, "Okay. Okay, fair enough. I, I, I, I... I'm game. Let's do it." And so the moment I say that, my phone goes bing, and the agent, uh, is requesting authorization to reduce my stock p-portfolio by fifty percent in this company. And, um-Then I say, "Okay, so it's human in the loop." So I just, I click approve, and it executes the back. Next day I get a call from my friend saying, "I lost so much money." And I say, "I didn't 'cause I used the algorithm." [laughs] So, um, uh, yeah, that's, that's sort of the idea. 
+
+00:43:34,830 --> 00:43:38,530 [Speaker 14]
+What are you using to let it actually execute the trade? 
+
+00:43:38,590 --> 00:43:57,750 [Speaker 1]
+Um, right now we are doing a combination of Wizard of Oz and, um, real like... So we're writing actual, uh, trans-actions to the ghost, uh, backend. Um, so that's, that's what we're doing. But, um, yeah. Yeah. 
+
+00:43:57,750 --> 00:44:02,170 [Speaker 14]
+Interesting. And then how... It sounds like it's, you know, if it's 
+
+00:44:03,310 --> 00:44:13,230 [Speaker 14]
+say Justin goes in and says, "I wanna track these four," it sounds like a, like a decent amount of historical data it would need to track to see if these things have been meaningful in the past. 
+
+00:44:13,230 --> 00:44:15,780 [Speaker 1]
+Right. Right. So you're... The trust factor, right? 
+
+00:44:15,780 --> 00:44:15,830 [Speaker 14]
+Uh-huh. 
+
+00:44:15,830 --> 00:44:16,630 [Speaker 1]
+Is that what you're saying? 
+
+00:44:16,630 --> 00:44:20,330 [Speaker 14]
+Or just that, um, you know, for this stock specifically, like- 
+
+00:44:20,330 --> 00:44:20,420 [Speaker 1]
+Yeah 
+
+00:44:20,420 --> 00:44:21,510 [Speaker 14]
+... this has happened before. 
+
+00:44:21,510 --> 00:44:21,680 [Speaker 1]
+Mm-hmm. 
+
+00:44:21,680 --> 00:44:27,390 [Speaker 14]
+Is it just, you know, doing a web query to see what ha-has happened the last week and pull dip in the stock? 
+
+00:44:27,450 --> 00:44:39,830 [Speaker 1]
+Yeah. Yeah. Yahoo Finance probably is where we're gonna go for that. So it'll look at the graph, and it'll just make a story with a few sentences on the graph. So, um, so just, yeah, a few questions for you, for you all. Um, 
+
+00:44:41,210 --> 00:44:43,250 [Speaker 1]
+if this existed right now, would you use it? 
+
+00:44:45,490 --> 00:44:46,880 [Speaker 14]
+I just wonder if I would let it do, 
+
+00:44:47,990 --> 00:44:49,420 [Speaker 14]
+execute the trade on its own. 
+
+00:44:49,420 --> 00:44:49,430 [Speaker 1]
+Sure. 
+
+00:44:49,430 --> 00:44:51,870 [Speaker 14]
+But I would use it for the information. 
+
+00:44:51,870 --> 00:44:53,410 [Speaker 13]
+Yeah. I would like the alerting. 
+
+00:44:53,410 --> 00:45:07,010 [Speaker 1]
+Sure. The... It would be human in the loop. So until... You'd get a ox zero push notification saying, um, like, "Would you like to execute this trade?" And no trade is executed until you click it through. But- 
+
+00:45:07,010 --> 00:45:09,800 [Speaker 15]
+Is anyone here from the Bland team? 
+
+00:45:09,800 --> 00:45:10,850 [Speaker 1]
+Yeah. Yeah. Okay. That's very... 
+
+00:45:13,090 --> 00:45:13,650 [Speaker 15]
+Bland. 
+
+00:45:16,670 --> 00:45:27,890 [Speaker 15]
+Would all the sponsor judges, can I have one representative from each company please come see me at the front? Sponsor judges, one representative from each company. Thank you. 
+
+00:45:29,410 --> 00:45:30,630 [Speaker 1]
+Okay. So 
+
+00:45:32,730 --> 00:45:35,810 [Speaker 1]
+w-what would you pay a month for this product? 
+
+00:45:35,810 --> 00:45:40,110 [Speaker 13]
+Good question. Probably not a lot, honestly. 
+
+00:45:41,530 --> 00:45:41,569 [Speaker 1]
+Okay. 
+
+00:45:41,570 --> 00:45:44,640 [Speaker 13]
+I'm, I'm more likely to just ride out the stock mar-stock market. 
+
+00:45:44,640 --> 00:45:44,650 [Speaker 1]
+Okay. 
+
+00:45:44,650 --> 00:45:48,190 [Speaker 13]
+So, like, I'd have to be pretty confident before I would sell. 
+
+00:45:48,190 --> 00:45:49,090 [Speaker 1]
+Yeah. 
+
+00:45:49,090 --> 00:45:49,310 [Speaker 13]
+Um, 
+
+00:45:50,950 --> 00:45:55,300 [Speaker 13]
+so just based on that, I probably... Like, it doesn't have a lot of value, you know? 
+
+00:45:55,300 --> 00:45:55,390 [Speaker 1]
+Yeah. Yeah. 
+
+00:45:55,390 --> 00:45:55,570 [Speaker 13]
+Um, 
+
+00:45:57,290 --> 00:45:57,890 [Speaker 13]
+but I don't know. I mean, 
+
+00:45:59,170 --> 00:46:02,099 [Speaker 13]
+I'd maybe pay five dollars a month for something like this. 
+
+00:46:04,310 --> 00:46:08,190 [Speaker 1]
+Okay. So, and, uh, what's one thing that would make you say, "I need this right now"? 
+
+00:46:11,570 --> 00:46:16,670 [Speaker 13]
+Um, I don't know. 
+
+00:46:20,790 --> 00:46:30,130 [Speaker 13]
+[clears throat] Yeah. I don't, I don't have a good answer. I feel like I would want some, like, success story behind it before I'd be, like, that interested in it. 
+
+00:46:30,130 --> 00:46:54,470 [Speaker 1]
+Sure. Okay. So assume, you know, seven-day free trial that, uh, the work with, you know, my CTO, marketing director to, uh, you know, create a public awareness, you know, campaign, YouTube tutorials about, you know, how to use the app. So all that put together, let's say you got to the yes point, right? Is there another feature that would or that, that would get you to that point, uh, 
+
+00:46:55,910 --> 00:46:56,440 [Speaker 1]
+and, uh, 
+
+00:46:58,030 --> 00:46:58,150 [Speaker 1]
+yeah. 
+
+00:47:03,050 --> 00:47:06,319 [Speaker 13]
+Yeah. I don't know. I'd be, I'd be happy with... Like, I like the alerting idea a lot. 
+
+00:47:06,319 --> 00:47:06,330 [Speaker 1]
+Okay. 
+
+00:47:06,330 --> 00:47:15,090 [Speaker 13]
+Like, I feel like that's just like, like, hey, stocks that you are invested in have meaningful information, early indicators in the news. 
+
+00:47:15,090 --> 00:47:15,370 [Speaker 1]
+Yeah. 
+
+00:47:15,370 --> 00:47:16,940 [Speaker 13]
+I would like that, that alert. 
+
+00:47:16,940 --> 00:47:17,010 [Speaker 1]
+Right. 
+
+00:47:17,010 --> 00:47:18,300 [Speaker 13]
+It'd be hard for me to, 
+
+00:47:19,730 --> 00:47:25,390 [Speaker 13]
+yeah, to want it to, like, act much beyond, beyond that, and I wouldn't wanna pay a lot for it. 
+
+00:47:25,390 --> 00:47:25,910 [Speaker 1]
+Mm-hmm. 
+
+00:47:25,910 --> 00:47:30,160 [Speaker 13]
+But I don't think it's missing anything. Like, yeah, I would just want the alert, I guess. I'd be happy with that. 
+
+00:47:30,160 --> 00:47:34,630 [Speaker 1]
+Okay. Fair. So awesome. Awesome. Well, cool. No, I appreciate it. 
+
+00:47:34,630 --> 00:47:35,090 [Speaker 13]
+Yeah. 
+
+00:47:35,090 --> 00:47:35,810 [Speaker 1]
+Thanks for your time. 
+
+00:47:35,810 --> 00:47:36,130 [Speaker 13]
+No problem. 
+
+00:47:36,130 --> 00:47:36,500 [Speaker 1]
+Thank you. 
+
+00:47:36,500 --> 00:47:42,030 [Speaker 16]
+So how... You're using Ghost just to record the, the actions or? 
+
+00:47:42,030 --> 00:47:44,830 [Speaker 1]
+Yeah. As of right now, just, just for the hackathon purposes. 
+
+00:47:44,830 --> 00:47:44,990 [Speaker 16]
+Yeah. 
+
+00:47:44,990 --> 00:47:50,770 [Speaker 1]
+We got less than an hour left to build. Yeah. But, um, but yeah, um... 
+
+00:47:50,770 --> 00:47:51,210 [Speaker 16]
+Are you, 
+
+00:47:52,390 --> 00:47:54,810 [Speaker 16]
+are you scraping real data and storing it or what are you- 
+
+00:47:54,810 --> 00:48:02,830 [Speaker 1]
+Uh, yeah. I, I s- For the SMCI example, I got, like, ten proper news sites, and I just fed the data through. Yeah. 
+
+00:48:02,830 --> 00:48:03,680 [Speaker 16]
+Cool. 
+
+00:48:03,680 --> 00:48:03,710 [Speaker 1]
+Yeah. Cool. 
+
+00:48:03,710 --> 00:48:04,320 [Speaker 16]
+All right. Good luck. 
+
+00:48:04,320 --> 00:48:04,810 [Speaker 1]
+Awesome. Thank you. 
+
+00:48:13,910 --> 00:48:14,270 [Speaker 1]
+All right. 
+
+00:48:14,270 --> 00:48:14,730 [Speaker 14]
+Okay. 
+
+00:48:14,730 --> 00:48:16,850 [Speaker 1]
+Yeah. I got all kinds of useful, um, 
+
+00:48:17,990 --> 00:48:19,330 [Speaker 1]
+s- uh- 
+
+00:48:19,330 --> 00:48:20,230 [Speaker 14]
+I, I think we need to

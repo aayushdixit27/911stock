@@ -1,12 +1,29 @@
-import type { Signal } from "@/lib/signals";
+// Shared state for SSE and other routes
+// Note: This is in-memory state, scoped per server instance
+// For multi-user scoping, we track the last user ID
 
-let _lastSignal: Signal | null = null;
+let _lastSignal: {
+  id: string;
+  ticker: string;
+  companyName: string;
+  insider: string;
+  role: string;
+  action: string;
+  shares: number;
+  price_per_share: number;
+  total_value: number;
+  date: string;
+  filed: string;
+  scheduled_10b5_1: boolean;
+  last_transaction_months_ago: number;
+  position_reduced_pct: number;
+} | null = null;
 
-export function setLastSignal(signal: Signal): void {
+export function setLastSignal(signal: typeof _lastSignal): void {
   _lastSignal = signal;
 }
 
-export function getLastSignal(): Signal | null {
+export function getLastSignal(): typeof _lastSignal {
   return _lastSignal;
 }
 

@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
+import { auth } from "@/lib/auth";
 import { fetchLatestSignal } from "@/lib/edgar";
 import { fetchNewsSentiment } from "@/lib/news";
-import { scoreSignal, getHistoricalPattern, getWatchlist } from "@/lib/signals";
+import { scoreSignal, getHistoricalPattern } from "@/lib/signals";
 import { analyzeSignal } from "@/lib/gemini";
 import { makeOutboundCall } from "@/lib/bland";
 import {
@@ -10,17 +11,30 @@ import {
   markSignalAlerted,
   insertAlert,
   newId,
+  getWatchlist,
+  getPortfolio,
   type DBSignal,
 } from "@/lib/db";
 import { setLastSignal } from "@/lib/state";
 import type { Signal } from "@/lib/edgar";
 
 export async function POST(): Promise<NextResponse> {
+  // Check authentication
+  const session = await auth();
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  const userId = session.user.id;
+
   try {
     // 1. Get watched tickers from watchlist
-    const watchlist = getWatchlist();
-    const tickers = watchlist.stocks;
-    const phone = watchlist.phone;
+    const watchlistItems = await getWatchlist(userId);
+    const tickers = watchlistItems.map((w) => w.ticker);
+    const phone = process.env.MY_PHONE_NUMBER;
+
+    if (tickers.length === 0) {
+      return NextResponse.json({ found: false, reason: "no tickers in watchlist" });
+    }
 
     // 2. Fetch latest signal from EDGAR
     const signal: Signal | null = await fetchLatestSignal(tickers);
@@ -30,11 +44,33 @@ export async function POST(): Promise<NextResponse> {
       return NextResponse.json({ found: false });
     }
 
+    // Get user's portfolio for context-aware scoring
+    const portfolio = await getPortfolio(userId);
+    const position = portfolio.find((p) => p.ticker === signal.ticker);
+    const userContext = position ? {
+      positionShares: position.shares,
+      avgCost: position.avg_cost,
+      riskTolerance: "moderate" as const,
+    } : {
+      positionShares: 0,
+      riskTolerance: "moderate" as const,
+    };
+
     // 4. Fetch news sentiment
     const newsSentiment = await fetchNewsSentiment(signal.ticker);
 
-    // 5. Score the signal
-    const score = scoreSignal(signal, newsSentiment);
+    // 5. Score the signal with user context
+    const score = scoreSignal(
+      {
+        scheduled_10b5_1: signal.scheduled_10b5_1,
+        role: signal.role,
+        last_transaction_months_ago: signal.last_transaction_months_ago,
+        position_reduced_pct: signal.position_reduced_pct,
+        total_value: signal.total_value,
+      },
+      newsSentiment,
+      userContext
+    );
 
     // 6. Score too low — skip
     if (score < 5) {
@@ -55,7 +91,8 @@ export async function POST(): Promise<NextResponse> {
 
     // 9. Map Signal → DBSignal and insert (ON CONFLICT DO NOTHING handles duplicates)
     const dbSignal: DBSignal = {
-      id: signal.id,
+      id: `${userId}-${signal.id}`,
+      user_id: userId,
       ticker: signal.ticker,
       company_name: signal.companyName,
       insider: signal.insider,
@@ -72,6 +109,7 @@ export async function POST(): Promise<NextResponse> {
       score,
       explanation,
       alerted: false,
+      edgar_filing_id: signal.id,
     };
 
     try {
@@ -86,8 +124,8 @@ export async function POST(): Promise<NextResponse> {
     // 11. Check if already alerted
     let alreadyAlerted = false;
     try {
-      const existing = await getLatestSignal(signal.ticker);
-      if (existing && existing.id === signal.id && existing.alerted) {
+      const existing = await getLatestSignal(userId, signal.ticker);
+      if (existing && existing.id === dbSignal.id && existing.alerted) {
         alreadyAlerted = true;
       }
     } catch (dbErr) {
@@ -98,14 +136,14 @@ export async function POST(): Promise<NextResponse> {
     let callId: string | null = null;
     let alerted = false;
 
-    if (score >= 7 && !alreadyAlerted) {
+    if (score >= 7 && !alreadyAlerted && phone && phone !== "+1XXXXXXXXXX") {
       try {
         const callResult = await makeOutboundCall(phone, explanation, signal);
         callId = callResult.callId;
         alerted = true;
 
         try {
-          await markSignalAlerted(signal.id);
+          await markSignalAlerted(userId, dbSignal.id);
         } catch (dbErr) {
           console.error("[poll] DB markSignalAlerted failed:", dbErr);
         }
@@ -113,11 +151,11 @@ export async function POST(): Promise<NextResponse> {
         try {
           await insertAlert({
             id: newId(),
-            signal_id: signal.id,
+            signal_id: dbSignal.id,
             ticker: signal.ticker,
             call_id: callId,
             explanation,
-          });
+          }, userId);
         } catch (dbErr) {
           console.error("[poll] DB insertAlert failed:", dbErr);
         }
