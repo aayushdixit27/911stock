@@ -15,6 +15,8 @@ const PUBLIC_PATHS = [
   "/api/user/onboarding",
   "/_next",
   "/favicon.ico",
+  "/gtm",
+  "/stack",
 ];
 
 export function middleware(request: NextRequest) {
@@ -37,7 +39,9 @@ export function middleware(request: NextRequest) {
     pathname.startsWith("/api/user/onboarding") ||
     pathname.startsWith("/_next/") ||
     pathname.startsWith("/api/stripe/webhook") ||
-    pathname.startsWith("/api/migrate")
+    pathname.startsWith("/api/migrate") ||
+    pathname.startsWith("/gtm") ||
+    pathname.startsWith("/stack")
   );
 
   if (isPublicPath) {
