@@ -1,4 +1,4 @@
-# Deep Agents Hackathon - RSAC 2026: Session Refresh
+# 911Stock — Session Refresh
 
 > Drop this into any new Claude Code session to get fully up to speed instantly.
 
@@ -6,432 +6,216 @@
 
 ## What This Is
 
-A hackathon happening **March 27, 2026** at **AWS Builder Loft** (525 Market St, SF). Organized by **tokens&**. Theme: **Context Engineering** -- build autonomous, self-improving AI agents.
-
-**Coding window:** 11:00 AM - 4:30 PM PT (5.5 hours)
-**Team size:** Max 4
-**Total prizes:** $17,850+
-
----
-
-## The Challenge (Exact Wording)
-
-> **Build agents that don't just think -- they act.**
-> Build infrastructure for autonomous, self-improving AI agents that can tap into real-time data sources, make sense of what they find, and take meaningful action without human intervention.
-> Showcase how they **continuously learn and improve** as they operate -- creating solutions that feel **alive, adaptive, and built for real-world impact**.
-
----
-
-## Judging Criteria
-
-| Criterion | What Judges Want |
-|---|---|
-| **Autonomy** | Agent acts on real-time data without manual intervention |
-| **Idea** | Solves a meaningful problem with real-world value |
-| **Technical Implementation** | How well was it built |
-| **Tool Use** | Effectively uses **at least 3 sponsor tools** |
-| **Presentation (Demo)** | 3-minute demo |
-
-**Submission:** 3-min demo video, public GitHub repo, skill on shipables.dev, Devpost project page. No pre-existing projects.
-
----
-
-## Prize Tracks
-
-| Track | Prize | Sponsor |
-|---|---|---|
-| Auth0 for AI Agents | $1,750 (3 winners) | Auth0 |
-| Airbyte: Conquer with Context | $1,000 / $500 / $250 + job interview (1st) | Airbyte |
-| Macroscope | $1,000 (1-2 winners) | Macroscope |
-| Kiro | 42K subscription credits (3 winners) | AWS/Kiro |
-| Senso.ai | $3,000 in credits (3 winners) | Senso.ai |
-| Aerospike APIs | $650 (3 winners) | Aerospike |
-| Ghost (by TigerData) — Best Use of Ghost | $1,998 cash + $500/member Visa gift card (1 team) | Ghost (ghost.build) |
-| Overmind Builders | $651 + mystery prize (2 winners) | Overmind |
-| TrueFoundry AI Gateway | $600 (1 winner) | TrueFoundry |
-| Bland (Most Ab-Norm-al) | $500 (1 winner) | Bland AI |
-
----
-
-## Sponsors: What They Do (Quick Reference)
-
-| Sponsor | What It Does | Use It For | Key API/Install |
-|---|---|---|---|
-| **Amazon Bedrock** | LLM platform + agent orchestration | Multi-agent supervisor, Claude reasoning, tool use, RAG, guardrails | `boto3` / Bedrock SDK |
-| **Kiro** | AWS agentic IDE (VS Code fork) | Spec-driven dev, agent hooks, autonomous coding | kiro.dev |
-| **Auth0** | Identity & auth for AI agents | OAuth Token Vault (30+ services), async approval (CIBA), fine-grained auth for RAG | auth0.com/ai, LangChain/LlamaIndex SDKs |
-| **Bland AI** | Voice AI phone calls | Outbound/inbound calls, mid-call function calling, voice cloning | MCP: `https://docs.bland.ai/mcp`, CLI: `bland`, API: `POST api.bland.ai/v1/calls` |
-| **Airbyte** | 52 data connectors for agents | Real-time SaaS data (CRM, Slack, Jira, Gmail, Stripe...) inside agent loop | `npx skills add airbytehq/airbyte-agent-connectors` |
-| **Aerospike** | Real-time multi-model DB | Sub-ms vector search, agent memory, state store, graph | Python SDK, LangChain extension |
-| **TrueFoundry** | Deploy & observe agents | Kubernetes deploy, OpenTelemetry traces, AI Gateway, RBAC | truefoundry.com |
-| **Overmind** | Agent supervision & safety | Real-time monitoring, drift detection, RL optimization | overmind.so |
-| **Macroscope** | Code understanding engine | AST analysis, dependency graphs, AI code review, Q&A | macroscope.com API |
-| **Ghost** | First DB for agents (by TigerData) | Agent creates/forks/queries Postgres DBs freely, CLI+MCP only | ghost.build, `curl -fsSL https://install.ghost.build \| sh`, `ghost mcp install` |
-| **TigerData** | Agentic Postgres (ex-Timescale) | Instant DB forks, MCP server, BM25 + vector search | tigerdata.com |
-| **Tavily** | AI search API | Web research, deep research, domain/time filtering | tavily.com, LangChain/MCP |
-| **Letta** | Stateful agents (ex-MemGPT) | Persistent memory: core/archival/recall tiers | letta.com, open-source |
-
----
-
-## Installed Tools
-
-### gstack (Garry Tan's Claude Code factory)
-- **Location:** `~/.claude/skills/gstack`
-- **Key commands:** `/office-hours`, `/plan-ceo-review`, `/plan-eng-review`, `/review`, `/qa`, `/ship`, `/browse`, `/cso`, `/investigate`, `/retro`
-- **Troubleshoot:** `cd ~/.claude/skills/gstack && ./setup`
-
-### Bland AI (Voice Calls)
-- **MCP Server:** Added via `claude mcp add bland-ai --transport http https://docs.bland.ai/mcp` (INSTALLED)
-- **CLI:** `bland` command (v0.2.5 INSTALLED globally via `npm install -g bland-cli`)
-- **Shipable:** spencerjsmall/bland-ai on shipables.dev
-- **Docs:** docs.bland.ai
-- **API Key needed:** Set `BLAND_API_KEY` env var (get from bland.ai dashboard)
-- **Quick call:** `POST https://api.bland.ai/v1/calls` with `phone_number`, `prompt`, `voice`
-
-### Ghost (Agent Database by TigerData)
-- **CLI:** `ghost` (v0.4.5 INSTALLED at `~/.local/bin/ghost`)
-- **MCP:** `ghost mcp install` (installed for Claude Code)
-- **Login:** `ghost login` (GitHub OAuth)
-- **Create DB:** `ghost create` → returns ID + connection string
-- **Fork DB:** `ghost fork <id>` → copy-on-write clone
-- **Query:** `ghost sql <id> "SELECT * FROM signals"`
-- **Free tier:** 100 compute hours/month, 1TB storage, unlimited DBs + forks
-- **Website:** ghost.build
-
-### Airbyte Agent Connectors
-- **Location:** `~/.claude/skills/airbyte`
-- **52 connectors:** airtable, amazon-ads, amplitude, asana, chargebee, clickup, confluence, facebook-marketing, freshdesk, github, gitlab, gmail, gong, google-ads, google-analytics, google-drive, greenhouse, harvest, hubspot, incident-io, intercom, jira, klaviyo, linear, linkedin-ads, mailchimp, monday, notion, orb, paypal, pinterest, pylon, salesforce, sendgrid, sentry, shopify, slack, snapchat-marketing, stripe, tiktok-marketing, twilio, typeform, woocommerce, zendesk-chat, zendesk-support, zendesk-talk, zoho-crm, and more
-- **Install connectors:** `pip install airbyte-agent-<name>` (e.g. `airbyte-agent-slack`)
-- **Docs:** docs.airbyte.com/ai-agents
-- **Platform:** app.airbyte.ai (free trial)
-
----
-
-## Key People
-
-### Speakers
-| Name | Company | Role |
-|---|---|---|
-| Jon Turdiev | AWS | Sr. Solutions Architect, Startups |
-| Spencer Small | Bland AI | Head of Engineering |
-| Lucas Beeler | Aerospike | Solutions Architect |
-| Sai Krishna | TrueFoundry | Dev Rel |
-| Tyler Edwards | Overmind | CEO (ex-MI5/MI6/GCHQ) |
-| Rob Bishop | Macroscope | Co-founder |
-| Fred Patton | Auth0 | Sr. Developer Advocate |
-| Ajay Kulkarni | TigerData | CEO (ex-Timescale) |
-| Pedro Lopez | Airbyte | Sr. Software Engineer |
-
-### Judges (27 total -- key ones)
-| Name | Role | What They Care About |
-|---|---|---|
-| Jon Turdiev | AWS SA | Architecture quality, AWS integration |
-| Rakesh Kumar | AWS GTM | Business value, market potential (finance background) |
-| Juhi Parekh | AI PM @ Turing | Product sense, UX (built 0-to-1 at Apple, Amazon, Samsung) |
-| Spencer Small | Bland Engineering | Voice AI creativity |
-| Tyler Edwards | Overmind CEO | Agent safety, supervision (intelligence community) |
-| Akhat Rakishev | Overmind CTO | ML infra, optimization (ex-Monzo) |
-| Divyarani Raghupatruni | Alacriti Sr. Dir. Product | Data orchestration, fintech (ex-Block/Square) |
-| Sahil Sachdeva | LinkedIn SWE | System design, scalability |
-| Devansh Jain | Letta Research | Agent memory, statefulness |
-| Sofia Guzowski | Tavily | Web search/research quality |
-| Rob Bishop | Macroscope Co-founder | Code understanding, AST analysis |
-| Pedro Lopez | Airbyte SWE | Data pipeline integration |
-
----
-
-## THE BUILD: 911Stock
-
-> "911 for your stocks. It watches your portfolio 24/7 and calls you when something matters."
+**911Stock** is an insider trading alert service for retail investors. It monitors SEC Form 4 filings and delivers plain-English alerts to your phone via RCS/SMS within minutes of the filing. Built at the Deep Agents Hackathon (RSAC 2026, March 27) and now pivoting to a real product.
 
 **Repo:** https://github.com/aayushdixit27/911stock
-**Full build plan:** See `plan.md` for chunk-by-chunk task breakdown with Person A/B split.
-**Stack:** Next.js (App Router) + TypeScript + Tailwind CSS
+**Live (hackathon version):** https://911stock.vercel.app
+**Team:** Aayush Dixit (CEO), Bunyasit Fang "Big" (CTO)
 
-### What It Does
-An autonomous agent that monitors SEC filings and insider transactions for YOUR specific portfolio. When it detects something significant, it writes a plain-English analysis, stores the signal in its own Ghost database, and calls your phone to explain what it means for YOU. You can also call it back and ask questions.
+---
 
-### The Hero Moment (UPDATED)
-You walk on stage, show the dashboard with SMCI, TSLA, NVDA in your watchlist. Press **Play Timeline**. News scrolls through — Mar 18, everything calm, SMCI at $42.50 +4.2%. Then Mar 19 hits: DOJ indictment, Reuters, Bloomberg. SMCI drops to $39.10. The agent **automatically** fires the pipeline — no button click. Phone rings. The AI says:
+## Current Status (as of April 2, 2026)
 
-> "Hey, this is 911Stock. I'm watching SMCI for you. The co-founder was just charged with smuggling $2.5 billion of AI servers to China. The stock is already down 8% after hours. Based on 3 similar events in SMCI's history, the average 30-day decline is 12%. Want me to reduce your position by 50%?"
+### Pivot: Web Dashboard → RCS-First
 
-You say "Yes." Auth0 CIBA approval → trade executes in Ghost DB → resolution screen shows live trade confirmation with order ID, before/after position, estimated savings. Then you hand the judge your phone: "Call 911Stock. Ask it anything."
+The hackathon demo was a Next.js web dashboard with AI phone calls. We're pivoting to **RCS messaging via Twilio** as the primary product. No app install needed. 82% US reach. SMS fallback.
 
-### The One Sentence That IS The Product
-The plain-English explanation generator is the product. Everything else is infrastructure to deliver it.
+**Approved design doc:** `~/.gstack/projects/aayushdixit27-911stock/aayushdixit-main-design-20260401-140000.md`
 
-### Stock Data APIs (Free, No Paid Subscription)
+### Key Decisions Made
 
-| Source | What It Gives You | Setup | Key Needed? |
-|---|---|---|---|
-| **yfinance** | Insider transactions, prices, news (DataFrame) | `pip install yfinance` (2 min) | No |
-| **Finnhub** | Insider trades JSON, sentiment, WebSocket prices | `pip install finnhub-python` (5 min) | Free (60 calls/min) |
-| **SEC EDGAR** | Raw Form 4 XML, authoritative source | requests + xml parsing (15 min) | No (set User-Agent) |
+| Decision | Detail |
+|----------|--------|
+| **Drop Auth0** | Too heavyweight. RCS buttons handle trade approval. |
+| **Drop Telegram** | Only 9% US penetration. RCS is 82% with no app install. |
+| **Drop iMessage bots** | Unofficial Apple APIs, account ban risk. |
+| **Pricing: $99/year** | Front-loads cash, qualifies serious users. Stripe Checkout on own site (keep 97%). |
+| **Narrowest wedge** | SEC Form 4 alerts + plain-English context via RCS. No trade execution in MVP. |
+| **LLM: Gemini → Claude** | Better financial reasoning, data privacy. Config change via TrueFoundry gateway. |
+| **Voice: Bland → Retell** | 22% cheaper, 33% faster, better voice quality. Later phase. |
+| **Background: node-cron → Inngest** | Durable workflows with retries. Later phase. |
 
-**Fastest path:** `pip install yfinance finnhub-python`
-```python
-import yfinance as yf
-ticker = yf.Ticker("NVDA")
-insider_df = ticker.insider_transactions  # Done. DataFrame.
-```
+### Product Thesis
 
-### Sponsor Integration (5 tools)
+**911Stock is a latency product, not an information product.** The data is public (SEC EDGAR). The analysis is commoditized (LLMs). The value is delivering the right signal to the user's lock screen within minutes of the filing.
 
-| Sponsor | What We Build (Real) | What We WoZ | Prize Track |
-|---|---|---|---|
-| **Bland AI** | Outbound call + inbound agent | — | $500 |
-| **Auth0** | CIBA approval flow (or WoZ) | Login screen | $1,750 |
-| **Ghost** | Real Postgres DB: watchlists, signals, patterns, learnings, alerts | — | $1,998 + $500/member |
-| **Overmind** | Agent supervision, traces, policy compliance (or screenshot) | — | $651 |
-| **Airbyte** | — | Narrative only ("data pipeline") | $1,000 |
-| **TrueFoundry** | Agent audit trail (or screenshot) | — | $600 |
+No existing competitor uses messaging as primary delivery. All 10+ products are web dashboards with email.
 
-**Key change:** Ghost DB (ghost.build) replaces both Aerospike AND Ghost CMS. One real Postgres DB instead of two fakes. Biggest single cash prize. TrueFoundry added as 6th sponsor per judge request.
+### ICP
 
-### Prize Tracks
-- Ghost ($1,998 + $500/member Visa gift card) — **biggest cash prize, real integration**
-- Auth0 ($1,750)
-- Airbyte ($1,000/$500/$250 + job interview)
-- Overmind ($651 + mystery prize)
-- Bland ($500 "Most Ab-Norm-al")
-- **Total potential: up to $5,899+**
+Retail investors with individual stock positions, sub-$100K portfolios, who don't have institutional-grade coverage. Active traders and day traders are high-intent. NOT passive index fund holders.
 
-### Build Status (as of ~5:00 PM)
+---
 
-| Chunk | Status | What Was Built |
-|---|---|---|
-| A1: Setup | DONE | CTO scaffolded Next.js app |
-| A2: Watchlist | DONE | Two-column dashboard: watchlist + news timeline, add/remove stocks, sensitivity dropdowns |
-| A3: Dashboard | DONE | Pipeline steps, ink takeover agent analysis, phone ringing, Auth0 Guardian polling |
-| A4: Resolution | DONE | Compact layout: trade confirmation + Overmind/Ghost merged, still watching inline |
-| A5: Auth0 CIBA UX | DONE | Trade details card, CIBA Guardian push, Vercel Edge middleware fix |
-| A6: Polish | DONE | Page transitions, loading spinners, focus states, responsive grids, hover states |
-| NEW: News Timeline | DONE | Manual Next Day button, 6 days real SMCI news, auto-trigger call on Mar 19 |
-| NEW: Trade Execution | DONE | Portfolio positions, /api/execute-trade, live trade confirmation on resolution page |
-| NEW: Live Prices | DONE | Stock prices update per day as timeline plays (SMCI $42.50→$28.48→$24.10) |
-| NEW: Verified Sources | DONE | Ink panel with SEC Form 4, DOJ press release, Reuters — clickable links |
-| NEW: Smart Call Agent | DONE | Cites sources, personal position ($42,500), handles "hold on", custom voice |
-| NEW: Auth0 Login | DONE | Auth0 server-side session, CIBA Guardian push notifications |
-| NEW: Ghost DB (real) | DONE | Real Postgres via TigerData — DATABASE_URL connected |
-| NEW: Settings Page | DONE | CTO added /settings page |
-| NEW: EDGAR Integration | DONE | CTO built real SEC EDGAR Form 4 parsing in lib/edgar.ts |
-| NEW: DB Migrations | DONE | CTO added /api/migrate for Ghost DB schema |
-| FIX: Timeline skip | DONE | Rewrote reveal logic — plain setInterval, no stale closures |
-| FIX: Tailwind/CSS | DONE | Removed duplicate classes, fixed Turbopack resolution |
-| FIX: Vercel deploy | DONE | Auth0 can't run in Edge — middleware now passthrough, auth server-side |
-| FIX: Resolution layout | DONE | Tightened spacing, merged Overmind+Ghost, inline still watching |
+## Architecture
 
-**Design:** MARK → Crimson Pro + Inter + IBM Plex Mono, fire gradient, ink/paper ground, terracotta accents
-
-**Demo Flow:**
-1. Show dashboard with SMCI, TSLA, NVDA watchlist
-2. Click "Start — Mar 18" → calm news, SMCI +4.2%
-3. Click "Next Day — Mar 19" → DOJ indictment, Reuters, Super Micro IR reveal
-4. All events shown → 2s pause → agent auto-calls CTO's phone
-5. Phone on speaker → agent cites DOJ, references your $42,500 position
-6. Say "Yes" → Auth0 CIBA → trade executes → resolution screen
-
-**Judge Feedback Applied:**
-- "How do you know?" → Agent cites DOJ, Reuters, SEC Form 4 proactively + verified sources panel
-- "Sounds like a scam" → Auth0 CIBA human-in-the-loop, sources on dashboard
-- "I'd want to verify" → Agent handles "hold on" gracefully, stays on line
-- "What about my specific holdings?" → Call says "You hold 1,000 shares worth $42,500"
-- "Tiered pricing" → Free until first call, then monthly (narrative)
-- "Social proof" → TrueFoundry audit trail for transparency
-- "You should make a product" → Multiple judges gave green flags
-
-**Next: Real-Time Mode** — polling SEC EDGAR + news APIs to detect signals live (not just simulated timeline)
-
-**Env vars configured:** Bland, Auth0 (domain, client, secret, audience, user sub, secret), Overmind, TrueFoundry, Gemini, Ghost DB (DATABASE_URL + ID), APP_BASE_URL
-
-### Build Plan (2-person split — see plan.md for full chunk details)
+### Current (Hackathon — still deployed on Vercel)
 
 ```
-Person A (Product/UX):                    Person B (CTO/Backend):
-  A1: Project setup (15 min)                B1: Ghost DB + Bland outbound (30 min)
-  A2: Watchlist screen (30 min)             B2: Signal detection + Claude (30 min)
-  A3: Dashboard screen (30 min)             B3: SSE streaming (15 min)
-  A4: Resolution screen (20 min)            B4: Auth0 CIBA backend (30 min)
-  A5: Auth0 CIBA UX (20 min)               B5: Bland inbound agent (20 min)
-  A6: Polish + demo prep (30 min)           B6: Overmind supervision (15 min)
-                                            B7: Ghost self-improvement (15 min)
-                                            B8: Wire + test (15 min)
-
-Shared: S1 smoke test | S2 rehearsals | S3 submission
+Next.js 16 (App Router) + React 19 + Tailwind CSS 4
+├── Frontend: Watchlist, dashboard, resolution, settings, GTM page, Stack page
+├── Backend: API routes (trigger, signal, analyze, call, trade, etc.)
+├── Database: Ghost DB (Postgres) — signals, alerts, trades, portfolio, agent_learnings
+├── Auth: Auth.js (next-auth) with email/password + Google OAuth
+├── Trading: Alpaca Paper Trading API
+├── Voice: Bland AI (outbound calls)
+├── LLM: Gemini via TrueFoundry gateway
+├── SEC Data: EDGAR API (Form 4 XML parsing) + Alpha Vantage (news sentiment)
+└── Agent: Overclaw Python service (port 8001)
 ```
 
-### 3-Minute Demo Script (UPDATED)
+### Target (RCS Pivot)
 
 ```
-0:00-0:20  PROBLEM
-           "I own SMCI, Tesla, and NVIDIA. March 19th, the DOJ
-           charged SMCI's co-founder with smuggling $2.5 billion
-           of AI chips to China. By the time CNBC covered it,
-           the stock had already dropped 33%."
+EDGAR Poller (60s cron, Node.js standalone)
+  → New Form 4 detected
+  → Signal scoring (score >= 7 triggers alert)
+  → LLM generates 2-sentence context (Gemini/Claude)
+  → Store in Ghost DB
+  → For each user watching this ticker:
+    → Twilio RCS rich card (SMS fallback)
 
-0:20-0:40  SOLUTION
-           [Show dashboard — watchlist + news timeline]
-           "This is 911Stock. It watches real news sources for
-           your specific holdings. Watch what happens."
-           [Press Play Timeline]
-
-0:40-1:40  AUTONOMY
-           [Timeline plays — Mar 18 calm, SMCI $42.50]
-           "Mar 18, everything's fine..."
-           [Mar 19 hits — DOJ, Reuters, Bloomberg flood in]
-           "Mar 19. The agent detects it immediately."
-           [Auto-triggers — no button press]
-           [Dashboard streams — pipeline running]
-           "It's scanning, matching patterns, generating analysis..."
-           [Phone rings] "And there it is. Calling automatically."
-
-1:40-2:10  HERO MOMENT
-           [Phone on speaker] AI explains the situation.
-           "Want me to reduce your position by 50%?" Say "Yes."
-           [Auth0 CIBA approval → trade executes in Ghost DB]
-           [Resolution: order ID, 1000→500 shares, est. savings]
-
-2:10-2:40  DEPTH
-           "5 sponsor tools. Bland AI for the call. Auth0 CIBA —
-           the agent can't trade without permission. Ghost DB —
-           the agent's own database, it wrote that trade.
-           Overmind supervising every decision. Real news. Real
-           analysis. Real trade execution."
-
-2:40-3:00  CLOSE
-           [Hand judge the phone] "Call 911Stock. Ask it anything."
-           "If you owned SMCI on March 18th, this call would have
-           saved you $5,000. 911Stock. Your portfolio, watched."
+Landing page (Next.js on Vercel or static)
+  → Phone input + ticker picker
+  → Stripe Checkout ($99/year)
+  → OTP verification (Twilio Verify)
 ```
 
 ---
 
-## 911Stock Architecture
+## Repo Layout
 
 ```
-BRAIN:    Claude (Anthropic API) -- signal analysis + plain-English generation
-DATA:     yfinance + Finnhub (insider transactions, prices, news)
-MEMORY:   Ghost DB (ghost.build) -- watchlists, signals, patterns, learnings
-VOICE:    Bland AI -- outbound alert calls + inbound Q&A
-AUTH:     Auth0 (CIBA) -- agent asks permission before executing trades
-SHIELD:   Overmind -- agent supervision, policy compliance, traces
-FRONTEND: Next.js (App Router) + Tailwind CSS
+web/
+├── src/app/
+│   ├── page.tsx              # Landing page (unauthenticated) / Dashboard (authenticated)
+│   ├── page-client.tsx       # Client-side dashboard component
+│   ├── dashboard/            # Live pipeline dashboard (SSE)
+│   ├── resolution/           # Trade confirmation
+│   ├── settings/             # Auth0 Guardian (being removed)
+│   ├── gtm/                  # Internal: GTM strategy from judge feedback
+│   ├── stack/                # Internal: Stack audit, action items, build sessions
+│   ├── onboarding/           # CTO's SaaS onboarding flow
+│   ├── subscribe/            # NEW: Landing page for RCS alerts (being built)
+│   └── api/                  # 19+ API routes
+├── src/lib/
+│   ├── edgar.ts              # SEC EDGAR Form 4 parser (reusable)
+│   ├── signals.ts            # Signal scoring engine 0-10 (reusable)
+│   ├── gemini.ts             # LLM analysis via TrueFoundry (reusable)
+│   ├── bland.ts              # Voice calls (being replaced by Retell)
+│   ├── alpaca.ts             # Brokerage trading (Phase 3)
+│   ├── auth0-ciba.ts         # Being removed
+│   ├── auth.ts               # Auth.js v5 config
+│   ├── stripe.ts             # Stripe billing (lazy-init for Vercel build)
+│   ├── db.ts                 # Ghost DB schema + queries
+│   └── news.ts               # Alpha Vantage news sentiment
+├── src/components/
+│   ├── Nav.tsx               # Navigation (CTO's SaaS version)
+│   ├── NewsTimeline.tsx      # Real news timeline
+│   └── GuardianEnroll.tsx    # Being removed
+└── src/middleware.ts         # Auth middleware (/gtm and /stack are public)
+
+overclaw/
+├── agents/signal_agent.py    # Python agent for signal analysis
+└── server.py                 # HTTP server (port 8001)
 ```
 
 ---
 
-## Product Design Rules (from PRODUCT-DESIGN-PLAYBOOK.md)
+## Design System (MARK)
 
-### The 3 Laws
+Formalized in `DESIGN.md` at repo root.
 
-1. **ONE problem, ONE persona, ONE hero moment.** Don't let 8 sponsor integrations dilute your story. The #1 feedback from every mentor/judge: "You're mixing too many problems and solutions."
-2. **Wizard of Oz the hard parts.** Polish the demo experience. Fake what you can't build in 5.5 hours. "AI with Claude Code Wizard-of-Oz's things so well -- fake databases, live data, animations. That is WAY more valuable than actually building the real thing."
-3. **Benefits, not mechanisms.** Lead with pain and payoff. Save architecture for last 30 seconds.
-   - Bad: "We use Bedrock multi-agent orchestration with Aerospike HNSW vector indexes"
-   - Good: "Your security team sleeps through the night. The agent finds and fixes vulnerabilities before attackers exploit them."
+| Role | Font | Usage |
+|------|------|-------|
+| Display | Crimson Pro (italic, 500) | Headlines, titles |
+| Body | Inter (400-600) | Body copy, UI text |
+| Data | IBM Plex Mono (400-600) | Tickers, prices, labels, badges |
 
-### The Hero Moment Test
+| Color | Hex | Usage |
+|-------|-----|-------|
+| Paper | #fafaf9 | Page background |
+| Ink | #1a1a18 | Primary text, dark buttons |
+| Orange | #ea4c00 | CTA, accent, urgency (used sparingly) |
+| Terra | #c45c2e | Secondary actions |
+| Ember | #dc2626 | Alert dots, danger |
 
-> "If it's not FUCK YES, it's FUCK NO."
-
-Your demo needs ONE moment where judges lean forward. Signs you nailed it:
-- "Can I use this now?" / "Is this on GitHub?"
-- Judge asks follow-up questions about architecture (they're planning to use it)
-- Pulling out phone to show someone
-
-Signs you didn't:
-- "That's cool" with no follow-up
-- "I can see how someone would use this" (redirection = rejection)
-- Polite nodding without enthusiasm
-
-### Three Screens, Not Thirty
-
-Build 3 screens that capture the full journey:
-1. **The hook** -- the problem, live, painful
-2. **The action** -- the agent DOES the thing autonomously
-3. **The resolution** -- user FEELS the value (fix deployed, call made, threat gone)
-
-### The Half-Day Rule
-
-> "If you can't build and test this with a real customer in a half day, you're not pushing hard enough on Wizard-of-Oz thinking."
-
-You literally have half a day. Prototype anything in 4 hours. Ask: do I actually need to build this technically, or can I fake the backend and show the experience?
-
-### Talk to Sponsors First
-
-The playbook says the biggest insights come from the first 10 minutes of conversation, not from building. **Talk to 1-2 sponsors/judges in the first hour.** Ask what problems they see. Adapt before you code.
+Aesthetic: Editorial/magazine. Restrained color (one accent). Aggressive simplicity.
 
 ---
 
-## The 3-Minute Demo Formula
-
-```
-0:00-0:25  PROBLEM    "Every day, [AUDIENCE] faces [PROBLEM]. [PAINFUL STAT]."
-0:25-0:45  SOLUTION   "[AGENT] does [WHAT] autonomously." Show the UI.
-0:45-1:45  AUTONOMY   Trigger agent. Step back. Let it run. Narrate, don't touch.
-1:45-2:15  WOW        Phone rings / PR appears / threat neutralized. ONE moment.
-2:15-2:45  DEPTH      Flash TrueFoundry trace. "N sponsor tools working together."
-2:45-3:00  CLOSE      "What took [TIME] now takes [SECONDS]. [AGENT NAME]."
-```
-
-**Key rules:**
-- Live demo > slides
-- Show the agent LEARNING ("it's smarter now than when it started")
-- 3:00 hard stop
-- Have a backup video recording
-
----
-
-## The Context Engineering Winning Formula
-
-Map directly to the challenge language:
-1. **"Tap into real-time data sources"** -- yfinance/Finnhub insider transactions + SEC filings
-2. **"Make sense of what they find"** -- Claude analysis + Ghost DB historical pattern matching
-3. **"Take meaningful action"** -- Bland AI phone calls + Auth0 CIBA trade approval
-4. **"Continuously learn and improve"** -- Ghost DB stores signals + outcomes; agent queries its own history
-5. **"Alive, adaptive, real-world impact"** -- Live demo, real SMCI March 19 data, phone rings on stage
-
----
-
-## Project Files
-
-| File | What It Contains |
-|---|---|
-| `Research.md` | Full deep dive on every sponsor, speaker, judge, prize track |
-| `Ideas.md` | 5 ideas with architectures, sponsor maps, demo scripts, comparison matrix |
-| `Harry Potter Guide to Deep Agents.md` | 13-chapter story guide, Shire to Mount Doom difficulty progression |
-| `LOTR Guide to Deep Agents.md` | 13-chapter Fellowship guide, every sponsor mapped to Middle-earth |
-| `PRODUCT-DESIGN-PLAYBOOK.md` | IDEO framework, hero moment test, UX research, one-problem rule, Wizard of Oz prototyping |
-| `Event Info.md` | Raw event page from Luma |
-| `plan.md` | Full build plan: tech stack, project structure, chunks, Person A/B split, demo script |
-| `Talking to judges.m4a.txt` | Transcript of sponsor/judge conversations (Airbyte, Overmind, Auth0) |
-| `Improvement Ideas.md` | Inbound call expansion idea |
-| `names.md` | Project name: 911Stock |
-| `CLAUDE.md` | Claude Code project config with gstack skills |
-| `refresh.md` | This file |
-
----
-
-## Quick Start for New Session
+## Environment Variables
 
 ```bash
-# You're in:
-cd "/Users/aayushdixit/Downloads/Votal Docs/Deep Agents Hackathon - RSAC 2026"
+# Auth (Auth.js)
+NEXTAUTH_SECRET=
+NEXTAUTH_URL=
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
 
-# Tools are installed at:
-# ~/.claude/skills/gstack     (29 skills: /office-hours, /review, /qa, /ship, etc.)
-# ~/.claude/skills/airbyte    (52 connectors: slack, github, salesforce, etc.)
+# Database
+DATABASE_URL=                # Ghost DB (ghost.build)
 
-# Read the full research:
-cat Research.md
+# LLM
+TRUEFOUNDRY_API_KEY=
+GEMINI_API_KEY=
 
-# Read the 5 ideas:
-cat Ideas.md
+# Voice (being replaced)
+BLAND_API_KEY=
+MY_PHONE_NUMBER=+1...
 
-# Start building:
-# /office-hours    -- reframe your idea
-# /plan-ceo-review -- challenge scope
-# /plan-eng-review -- lock architecture
-# Then code, /review, /qa, /ship
+# Trading
+ALPACA_API_KEY=
+ALPACA_API_SECRET=
+
+# Payments
+STRIPE_SECRET_KEY=
+STRIPE_PRICE_PREMIUM=
+
+# App
+NEXT_PUBLIC_URL=https://911stock.vercel.app
+ALPHA_VANTAGE_KEY=           # Optional: news sentiment
 ```
+
+---
+
+## Internal Pages (temporary, remove before public launch)
+
+- `/gtm` — Go-to-market strategy synthesized from 27 judge conversations
+- `/stack` — Stack audit, RCS pivot plan, action items, build session splits, payment comparison
+
+Both are public (no auth required via middleware exception).
+
+---
+
+## What's Being Built Right Now
+
+### 1-Hour Build Session Split
+
+**Big (CTO):**
+- Twilio RCS/SMS setup
+- EDGAR → alert pipeline (standalone Node script)
+- Context generation (wire Gemini)
+- End-to-end test: real Form 4 → real SMS
+
+**Aayush (CEO):**
+- `/subscribe` landing page (headline, phone input, ticker picker, Stripe)
+- Alert copy (RCS/SMS message templates)
+- Text 10 people with alert screenshot
+
+### Success Metrics
+- Week 1: Real Form 4 → real SMS/RCS on phone < 5 min
+- Week 2: Landing page live, 50 free beta users
+- Week 4: First $99/year payment from a non-friend
+- Month 2: 100 paying users ($9,900 ARR)
+
+---
+
+## Key Files to Read First
+
+1. `DESIGN.md` — Full design system
+2. `CLAUDE.md` — Project config + skill routing
+3. `web/src/lib/edgar.ts` — SEC EDGAR parser (core, reusable)
+4. `web/src/lib/signals.ts` — Signal scoring engine (core, reusable)
+5. `web/src/app/stack/page.tsx` — Current action items and decisions
+6. `web/src/app/gtm/page.tsx` — GTM strategy from judge feedback
