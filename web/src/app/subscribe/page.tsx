@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 const POPULAR_TICKERS = [
   "AAPL", "TSLA", "NVDA", "SMCI", "GOOGL", "AMZN", "META", "MSFT",
@@ -9,6 +10,10 @@ const POPULAR_TICKERS = [
 export default function SubscribePage() {
   const [phone, setPhone] = useState("");
   const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const searchParams = useSearchParams();
+  const status = searchParams.get("status");
 
   function toggleTicker(ticker: string) {
     setSelected((prev) => {
@@ -329,7 +334,72 @@ export default function SubscribePage() {
           })}
         </div>
 
+        {status === "success" && (
+          <div
+            style={{
+              width: "100%",
+              padding: "1rem",
+              borderRadius: 6,
+              background: "rgba(34,197,94,0.08)",
+              border: "1px solid rgba(34,197,94,0.2)",
+              textAlign: "center",
+              marginBottom: "1rem",
+              fontFamily: "var(--font-body)",
+              fontSize: "0.875rem",
+              color: "#15803d",
+            }}
+          >
+            You&apos;re in! Watch your phone for alerts.
+          </div>
+        )}
+
+        {error && (
+          <div
+            style={{
+              width: "100%",
+              padding: "0.75rem 1rem",
+              borderRadius: 6,
+              background: "rgba(220,38,38,0.08)",
+              border: "1px solid rgba(220,38,38,0.2)",
+              textAlign: "center",
+              marginBottom: "1rem",
+              fontFamily: "var(--font-body)",
+              fontSize: "0.875rem",
+              color: "var(--ember)",
+            }}
+          >
+            {error}
+          </div>
+        )}
+
         <button
+          disabled={loading || selected.size === 0 || !phone.trim()}
+          onClick={async () => {
+            setError("");
+            setLoading(true);
+            try {
+              const res = await fetch("/api/subscribe", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  phone: phone.trim(),
+                  tickers: Array.from(selected),
+                }),
+              });
+              const data = await res.json();
+              if (!res.ok) {
+                setError(data.error || "Something went wrong");
+                return;
+              }
+              if (data.url) {
+                window.location.href = data.url;
+              }
+            } catch {
+              setError("Something went wrong. Try again.");
+            } finally {
+              setLoading(false);
+            }
+          }}
           style={{
             width: "100%",
             fontFamily: "var(--font-body)",
@@ -339,14 +409,20 @@ export default function SubscribePage() {
             padding: "1rem",
             border: "none",
             borderRadius: 6,
-            background: "var(--orange)",
+            background: loading || selected.size === 0 || !phone.trim()
+              ? "var(--ink-30)"
+              : "var(--orange)",
             color: "var(--white)",
-            cursor: "pointer",
-            boxShadow: "0 4px 14px rgba(234,76,0,0.25)",
-            transition: "transform 0.15s, box-shadow 0.15s",
+            cursor: loading || selected.size === 0 || !phone.trim()
+              ? "not-allowed"
+              : "pointer",
+            boxShadow: loading || selected.size === 0 || !phone.trim()
+              ? "none"
+              : "0 4px 14px rgba(234,76,0,0.25)",
+            transition: "transform 0.15s, box-shadow 0.15s, background 0.15s",
           }}
         >
-          Start free trial
+          {loading ? "Redirecting to checkout…" : "Start free trial"}
         </button>
         <p
           style={{
