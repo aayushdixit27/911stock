@@ -17,6 +17,7 @@ const PUBLIC_PATHS = [
   "/favicon.ico",
   "/gtm",
   "/stack",
+  "/subscribe",
 ];
 
 export function middleware(request: NextRequest) {
@@ -41,7 +42,8 @@ export function middleware(request: NextRequest) {
     pathname.startsWith("/api/stripe/webhook") ||
     pathname.startsWith("/api/migrate") ||
     pathname.startsWith("/gtm") ||
-    pathname.startsWith("/stack")
+    pathname.startsWith("/stack") ||
+    pathname.startsWith("/subscribe")
   );
 
   if (isPublicPath) {
