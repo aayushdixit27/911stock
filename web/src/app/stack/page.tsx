@@ -40,6 +40,68 @@ export default function StackPage() {
           </a>
         </header>
 
+        {/* 1-Hour Build Session */}
+        <section style={{ marginBottom: "2rem", background: "var(--orange)", borderRadius: "8px", padding: "2rem", color: "var(--white)" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "1rem" }}>
+            <span style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 700, letterSpacing: "0.1em", color: "var(--white)", background: "rgba(255,255,255,0.2)", padding: "0.25rem 0.6rem", borderRadius: "3px" }}>
+              NOW
+            </span>
+            <span style={{ fontFamily: "var(--font-mono)", fontSize: "11px", color: "rgba(255,255,255,0.6)" }}>
+              1-Hour Build Session
+            </span>
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1px", borderRadius: "6px", overflow: "hidden", marginBottom: "1.25rem" }}>
+            <div style={{ background: "rgba(0,0,0,0.2)", padding: "1.5rem" }}>
+              <p style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 600, letterSpacing: "0.1em", color: "rgba(255,255,255,0.5)", marginBottom: "0.75rem" }}>
+                BIG (CTO) &mdash; BACKEND
+              </p>
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.625rem" }}>
+                {[
+                  { time: "0\u201315", task: "Twilio setup \u2014 account, RCS sender (or SMS if pending), install SDK" },
+                  { time: "15\u201340", task: "EDGAR \u2192 alert pipeline \u2014 extract edgar.ts + signals.ts into standalone Node script, 60s cron, filter score \u2265 7, send SMS" },
+                  { time: "40\u201355", task: "Context generation \u2014 wire Gemini to generate 2-sentence plain-English context per signal" },
+                  { time: "55\u201360", task: "Test e2e \u2014 real Form 4 \u2192 real SMS on your phone" },
+                ].map((item) => (
+                  <div key={item.time} style={{ display: "flex", gap: "0.625rem", alignItems: "baseline" }}>
+                    <span style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 600, color: "rgba(255,255,255,0.4)", whiteSpace: "nowrap", minWidth: "40px" }}>{item.time}</span>
+                    <span style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", color: "rgba(255,255,255,0.85)", lineHeight: 1.5 }}>{item.task}</span>
+                  </div>
+                ))}
+              </div>
+              <p style={{ fontFamily: "var(--font-mono)", fontSize: "11px", color: "rgba(255,255,255,0.4)", marginTop: "1rem", borderTop: "1px solid rgba(255,255,255,0.1)", paddingTop: "0.75rem" }}>
+                Goal: real SEC filing &rarr; real text on Big&apos;s phone &lt; 5 min
+              </p>
+            </div>
+
+            <div style={{ background: "rgba(0,0,0,0.2)", padding: "1.5rem" }}>
+              <p style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 600, letterSpacing: "0.1em", color: "rgba(255,255,255,0.5)", marginBottom: "0.75rem" }}>
+                AAYUSH (CEO) &mdash; LANDING + COPY
+              </p>
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.625rem" }}>
+                {[
+                  { time: "0\u201320", task: "Landing page \u2014 /subscribe with headline, phone input, ticker picker (up to 5)" },
+                  { time: "20\u201335", task: "Alert copy \u2014 write RCS/SMS templates: welcome, alert format, confirmation. Give Big the strings." },
+                  { time: "35\u201350", task: "Stripe Checkout \u2014 set up account, $99/year price, checkout button on landing page" },
+                  { time: "50\u201360", task: "Text 10 people \u2014 screenshot alert format, send to friends who own stocks" },
+                ].map((item) => (
+                  <div key={item.time} style={{ display: "flex", gap: "0.625rem", alignItems: "baseline" }}>
+                    <span style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 600, color: "rgba(255,255,255,0.4)", whiteSpace: "nowrap", minWidth: "40px" }}>{item.time}</span>
+                    <span style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", color: "rgba(255,255,255,0.85)", lineHeight: 1.5 }}>{item.task}</span>
+                  </div>
+                ))}
+              </div>
+              <p style={{ fontFamily: "var(--font-mono)", fontSize: "11px", color: "rgba(255,255,255,0.4)", marginTop: "1rem", borderTop: "1px solid rgba(255,255,255,0.1)", paddingTop: "0.75rem" }}>
+                Goal: landing page live with Stripe. 10 people texted.
+              </p>
+            </div>
+          </div>
+
+          <p style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", color: "rgba(255,255,255,0.6)", textAlign: "center" }}>
+            Last 5 min: connect landing page sign-ups to alert pipeline via shared Ghost DB table
+          </p>
+        </section>
+
         {/* Design Doc Summary */}
         <section style={{ marginBottom: "2rem", background: "var(--ink)", borderRadius: "8px", padding: "2rem", color: "var(--white)" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "1rem" }}>
