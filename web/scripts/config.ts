@@ -1,6 +1,3 @@
-/** Tickers to poll. Each entry maps to a CIK in edgar.ts */
-export const WATCHED_TICKERS = ["SMCI", "TSLA", "NVDA"] as const;
-
 /** Minimum signal score (0-10) to trigger an alert */
 export const ALERT_THRESHOLD = 7;
 

@@ -1,10 +1,9 @@
 import {
-  WATCHED_TICKERS,
   ALERT_THRESHOLD,
   POLL_INTERVAL_MS,
   REQUIRED_ENV_VARS,
 } from "./config";
-import { fetchRecentForm4s } from "../src/lib/edgar";
+import { fetchForm4Feed } from "../src/lib/edgar";
 import { scoreSignal } from "../src/lib/signals";
 import { analyzeSignal } from "../src/lib/gemini";
 import { getSql, migrate, insertSignal, newId } from "../src/lib/db";
@@ -23,7 +22,6 @@ function validateEnv(): void {
 async function main() {
   validateEnv();
   console.log("[poller] Starting EDGAR poller...");
-  console.log(`[poller] Watching tickers: ${WATCHED_TICKERS.join(", ")}`);
   console.log(`[poller] Alert threshold: ${ALERT_THRESHOLD}/10`);
   console.log(`[poller] Poll interval: ${POLL_INTERVAL_MS / 1000}s`);
 
@@ -52,45 +50,66 @@ async function main() {
 
 async function pollCycle(): Promise<void> {
   console.log(`[poller] ── Poll cycle started at ${new Date().toISOString()} ──`);
-  let newSignalsFound = 0;
+  const filings = await fetchForm4Feed();
+  console.log(`[poller] Fetched ${filings.length} Form 4 filing(s) from EDGAR feed`);
 
-  for (const ticker of WATCHED_TICKERS) {
-    try {
-      const filings = await fetchRecentForm4s(ticker);
-      if (filings.length === 0) {
-        console.log(`[poller] ${ticker}: no recent Form 4 filings`);
-        continue;
-      }
+  const watchedTickers = await getWatchedTickers();
+  if (watchedTickers.length === 0) {
+    console.log("[poller] No tickers in any user's watchlist, skipping");
+    return;
+  }
 
-      for (const filing of filings) {
-        const exists = await isFilingProcessed(ticker, filing.id);
-        if (exists) {
-          console.log(`[poller] ${ticker}: skipping duplicate ${filing.id}`);
-          continue;
-        }
+  console.log(`[poller] Watching ${watchedTickers.length} ticker(s): ${watchedTickers.join(", ")}`);
 
-        console.log(
-          `[poller] ${ticker}: new filing detected — ${filing.insider} (${filing.role}) ${filing.action} ${filing.shares} shares`
-        );
-        newSignalsFound++;
+  const relevantFilings = filings.filter((f) => watchedTickers.includes(f.ticker));
+  if (relevantFilings.length === 0) {
+    console.log("[poller] No filings for watched tickers");
+    return;
+  }
 
-        const score = scoreSignal(filing);
-        console.log(`[poller] ${ticker}: score ${score}/10`);
+  console.log(`[poller] ${relevantFilings.length} relevant filing(s) found`);
 
-        if (score >= ALERT_THRESHOLD) {
-          await processHighScoreSignal(filing, score);
-        } else {
-          console.log(
-            `[poller] ${ticker}: score ${score} below threshold ${ALERT_THRESHOLD}, skipping alert`
-          );
-        }
-      }
-    } catch (err) {
-      console.error(`[poller] Error polling ${ticker}:`, err);
+  for (const filing of relevantFilings) {
+    const exists = await isFilingProcessed(filing.ticker, filing.id);
+    if (exists) {
+      console.log(`[poller] ${filing.ticker}: skipping duplicate ${filing.id}`);
+      continue;
+    }
+
+    console.log(
+      `[poller] ${filing.ticker}: new filing — ${filing.insider} (${filing.role}) ${filing.action} ${filing.shares} shares`
+    );
+
+    const score = scoreSignal(filing);
+    console.log(`[poller] ${filing.ticker}: score ${score}/10`);
+
+    if (score >= ALERT_THRESHOLD) {
+      await processHighScoreSignal(filing, score);
+    } else {
+      console.log(
+        `[poller] ${filing.ticker}: score ${score} below threshold ${ALERT_THRESHOLD}, skipping`
+      );
     }
   }
 
-  console.log(`[poller] ── Poll cycle complete: ${newSignalsFound} new filing(s) found ──`);
+  console.log(`[poller] ── Poll cycle complete ──`);
+}
+
+/** Get all unique tickers from the watchlist table */
+async function getWatchedTickers(): Promise<string[]> {
+  const sql = getSql();
+  if (!sql) return [];
+  try {
+    const rows = await sql<{ ticker: string }[]>`
+      SELECT DISTINCT UPPER(TRIM(ticker)) AS ticker
+      FROM watchlist
+      WHERE ticker IS NOT NULL AND TRIM(ticker) <> ''
+    `;
+    return rows.map((r) => r.ticker);
+  } catch (err) {
+    console.error("[poller] Failed to get watched tickers:", err);
+    return [];
+  }
 }
 
 async function isFilingProcessed(ticker: string, edgarFilingId: string): Promise<boolean> {
@@ -106,7 +125,7 @@ async function isFilingProcessed(ticker: string, edgarFilingId: string): Promise
 }
 
 async function processHighScoreSignal(
-  filing: Awaited<ReturnType<typeof fetchRecentForm4s>>[number],
+  filing: Awaited<ReturnType<typeof fetchForm4Feed>>[number],
   score: number
 ): Promise<void> {
   const ticker = filing.ticker;

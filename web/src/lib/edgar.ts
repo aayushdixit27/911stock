@@ -250,3 +250,86 @@ export async function fetchLatestSignal(tickers: string[]): Promise<Signal | nul
   }
   return null
 }
+
+export async function fetchForm4Feed(): Promise<Signal[]> {
+  const feedUrl =
+    "https://www.sec.gov/cgi-bin/browse-edgar?action=getcurrent&type=4&dateb=&owner=include&count=40&search_text=&action=getcompany&output=atom"
+
+  const decodeXmlEntities = (value: string): string =>
+    value
+      .replace(/<!\[CDATA\[([\s\S]*?)\]\]>/gi, "$1")
+      .replace(/&lt;/g, "<")
+      .replace(/&gt;/g, ">")
+      .replace(/&quot;/g, '"')
+      .replace(/&#39;/g, "'")
+      .replace(/&amp;/g, "&")
+
+  const extractTag = (xml: string, tag: string): string => {
+    const match = new RegExp(`<${tag}[^>]*>([\\s\\S]*?)</${tag}>`, "i").exec(xml)
+    return match ? decodeXmlEntities(match[1].trim()) : ""
+  }
+
+  const feedHeaders = {
+    ...EDGAR_HEADERS,
+    Accept: "application/atom+xml",
+  }
+
+  let atomRaw = ""
+  try {
+    const res = await fetch(feedUrl, { headers: feedHeaders })
+    if (!res.ok) {
+      console.warn(`[edgar] HTTP ${res.status} for ${feedUrl}`)
+      return []
+    }
+    atomRaw = await res.text()
+  } catch (err) {
+    console.warn(`[edgar] fetch error for ${feedUrl}:`, err)
+    return []
+  }
+
+  const entries = Array.from(atomRaw.matchAll(/<entry>([\s\S]*?)<\/entry>/gi), (match) => match[1])
+  if (entries.length === 0) return []
+
+  const signals: Signal[] = []
+
+  for (const entry of entries) {
+    const title = extractTag(entry, "title")
+    const updated = extractTag(entry, "updated")
+    const summary = extractTag(entry, "summary")
+    const content = extractTag(entry, "content")
+    const combined = [title, summary, content].join("\n")
+
+    const cikMatch = combined.match(/\bCIK(?:\s*[:=])?\s*(\d{10})\b/i) ?? combined.match(/\b(\d{10})\b/)
+    const accessionMatch = combined.match(/\b(\d{10}-\d{2}-\d{6})\b/)
+    const primaryDocMatch =
+      content.match(/href="[^"]*\/([^\/"?]+\.xml)(?:\?[^"]*)?"/i) ??
+      content.match(/>\s*([^<>\s]+\.xml)\s*</i) ??
+      combined.match(/\b([^\s<>"']+\.xml)\b/i)
+
+    if (!cikMatch || !accessionMatch || !primaryDocMatch) {
+      console.warn("[edgar] Skipping Atom entry with missing CIK/accession/XML document")
+      continue
+    }
+
+    const cik = cikMatch[1]
+    const accession = accessionMatch[1]
+    const primaryDoc = primaryDocMatch[1].split("/").pop() || primaryDocMatch[1]
+    const cikInt = parseInt(cik, 10)
+    const accessionPath = accessionToPath(accession)
+    const filingDate = (() => {
+      const match = updated.match(/\d{4}-\d{2}-\d{2}/)
+      return match ? match[0] : updated
+    })()
+    const xmlUrl = `https://www.sec.gov/Archives/edgar/data/${cikInt}/${accessionPath}/${primaryDoc}`
+
+    await delay(200)
+
+    const xmlRaw = await safeFetch(xmlUrl, false)
+    if (typeof xmlRaw !== "string") continue
+
+    const signal = parseForm4Xml(xmlRaw, "", filingDate, accession)
+    if (signal) signals.push(signal)
+  }
+
+  return signals
+}
