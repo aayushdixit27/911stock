@@ -209,7 +209,11 @@ export async function fetchRecentForm4s(ticker: string): Promise<Signal[]> {
   for (const idx of form4Indices) {
     const accession = accessionNumber[idx]       // e.g. "0001234567-26-001234"
     const fDate = filingDate[idx]
-    const primaryDoc = primaryDocument[idx]
+    // primaryDocument may include XSLT prefix like "xslF345X05/file.xml" — strip it
+    const primaryDocRaw = primaryDocument[idx]
+    const primaryDoc = primaryDocRaw.includes("/")
+      ? primaryDocRaw.split("/").pop()!
+      : primaryDocRaw
 
     const accessionPath = accessionToPath(accession)
     // CIK without leading zeros for the archive path

@@ -180,7 +180,11 @@ export async function fetchRecentForm4s(ticker: string): Promise<Signal[]> {
   for (const idx of form4Indices) {
     const accession = recent.accessionNumber[idx];
     const fDate = recent.filingDate[idx];
-    const primaryDoc = recent.primaryDocument[idx];
+    // primaryDocument may include XSLT prefix like "xslF345X05/file.xml" — strip it
+    const primaryDocRaw = recent.primaryDocument[idx];
+    const primaryDoc = primaryDocRaw.includes("/")
+      ? primaryDocRaw.split("/").pop()!
+      : primaryDocRaw;
     const accessionPath = accessionToPath(accession);
     const cikInt = parseInt(cik, 10);
     const xmlUrl = `https://www.sec.gov/Archives/edgar/data/${cikInt}/${accessionPath}/${primaryDoc}`;
