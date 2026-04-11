@@ -524,6 +524,17 @@ export async function migrate(): Promise<void> {
     WHERE price_after_7d IS NULL OR price_after_30d IS NULL
   `;
 
+  // Telegram chat ID for alert delivery
+  await sql`
+    ALTER TABLE users
+    ADD COLUMN IF NOT EXISTS telegram_chat_id TEXT
+  `;
+
+  await sql`
+    CREATE INDEX IF NOT EXISTS users_telegram_chat_id_idx ON users(telegram_chat_id)
+    WHERE telegram_chat_id IS NOT NULL
+  `;
+
   _migrated = true;
 }
 
