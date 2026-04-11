@@ -5,6 +5,7 @@ import "dotenv/config";
 import { fetchRecentForm4s, SUPPORTED_TICKERS, type Signal } from "./edgar.js";
 import { scoreSignal, getHistoricalPattern } from "./score.js";
 import { analyzeSignal } from "./analyze.js";
+import { migrate, upsertUser, getWatchlist, addToWatchlist, removeFromWatchlist } from "./db.js";
 
 const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 if (!BOT_TOKEN) {
@@ -13,9 +14,6 @@ if (!BOT_TOKEN) {
 }
 
 const API = `https://api.telegram.org/bot${BOT_TOKEN}`;
-
-// In-memory watchlists per chat — swap for DB later
-const watchlists = new Map<number, Set<string>>();
 
 // ── Telegram API helpers ──────────────────────────────────────────────────────
 
@@ -76,12 +74,12 @@ function formatSignal(signal: Signal, score: number, analysis?: string): string 
   return msg;
 }
 
-function formatWatchlist(chatId: number): string {
-  const tickers = watchlists.get(chatId);
-  if (!tickers || tickers.size === 0) {
+async function formatWatchlist(chatId: number): Promise<string> {
+  const tickers = await getWatchlist(chatId);
+  if (tickers.length === 0) {
     return "Your watchlist is empty. Use /watch TSLA to add tickers.";
   }
-  return `<b>Your watchlist</b>\n${[...tickers].map((t) => `• <code>${t}</code>`).join("\n")}\n\nUse /check TICKER to check latest filings.`;
+  return `<b>Your watchlist</b>\n${tickers.map((t) => `• <code>${t}</code>`).join("\n")}\n\nUse /check TICKER to check latest filings.`;
 }
 
 // ── Command handlers ──────────────────────────────────────────────────────────
@@ -135,29 +133,25 @@ async function handleCheck(chatId: number, ticker: string) {
 async function handleWatch(chatId: number, ticker: string) {
   const upper = ticker.toUpperCase();
 
-  if (!watchlists.has(chatId)) watchlists.set(chatId, new Set());
-  const list = watchlists.get(chatId)!;
-
-  if (list.size >= 5) {
+  const added = await addToWatchlist(chatId, upper);
+  if (!added) {
     await sendMessage(chatId, "You can watch up to 5 tickers. Use /unwatch to remove one first.");
     return;
   }
 
-  list.add(upper);
-  await sendMessage(chatId, `✅ Added <b>${upper}</b> to your watchlist.\n\n${formatWatchlist(chatId)}`);
+  await sendMessage(chatId, `✅ Added <b>${upper}</b> to your watchlist.\n\n${await formatWatchlist(chatId)}`);
 }
 
 async function handleUnwatch(chatId: number, ticker: string) {
   const upper = ticker.toUpperCase();
-  const list = watchlists.get(chatId);
 
-  if (!list || !list.has(upper)) {
+  const removed = await removeFromWatchlist(chatId, upper);
+  if (!removed) {
     await sendMessage(chatId, `<b>${upper}</b> is not in your watchlist.`);
     return;
   }
 
-  list.delete(upper);
-  await sendMessage(chatId, `Removed <b>${upper}</b>.\n\n${formatWatchlist(chatId)}`);
+  await sendMessage(chatId, `Removed <b>${upper}</b>.\n\n${await formatWatchlist(chatId)}`);
 }
 
 async function handleHelp(chatId: number) {
@@ -184,6 +178,7 @@ async function handleMessage(chatId: number, text: string) {
 
   switch (cmd) {
     case "/start":
+      await upsertUser(chatId);
       await sendMessage(
         chatId,
         `👋 <b>Welcome to 911Stock!</b>\n\nI monitor SEC Form 4 insider trading filings and alert you when something matters.\n\nTry: /check TSLA\n\nType /help for all commands.`
@@ -211,7 +206,7 @@ async function handleMessage(chatId: number, text: string) {
       await handleUnwatch(chatId, arg);
       break;
     case "/watchlist":
-      await sendMessage(chatId, formatWatchlist(chatId));
+      await sendMessage(chatId, await formatWatchlist(chatId));
       break;
     case "/help":
       await handleHelp(chatId);
@@ -226,6 +221,9 @@ async function handleMessage(chatId: number, text: string) {
 
 async function main() {
   console.log("[911stock-bot] Starting...");
+
+  // Create telegram tables if they don't exist
+  await migrate();
 
   // Register commands with BotFather
   await fetch(`${API}/setMyCommands`, {

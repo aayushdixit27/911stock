@@ -21,7 +21,7 @@ export type Signal = {
 
 // CIK map — padded to 10 digits
 const CIK_MAP: Record<string, string> = {
-  SMCI: "0001096343",
+  SMCI: "0001375365",
   TSLA: "0001318605",
   NVDA: "0001045810",
 }
