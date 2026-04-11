@@ -290,37 +290,39 @@ export async function fetchForm4Feed(): Promise<Signal[]> {
   const entries = Array.from(atomRaw.matchAll(/<entry>([\s\S]*?)<\/entry>/gi), (match) => match[1])
   if (entries.length === 0) return []
 
+  // Deduplicate: each filing appears twice (once for Reporting owner, once for Issuer)
+  const seenAccessions = new Set<string>()
   const signals: Signal[] = []
 
   for (const entry of entries) {
     const title = extractTag(entry, "title")
     const updated = extractTag(entry, "updated")
     const summary = extractTag(entry, "summary")
-    const content = extractTag(entry, "content")
-    const combined = [title, summary, content].join("\n")
+    const link = extractTag(entry, "link")
+    const id = extractTag(entry, "id")
+    const combined = [title, summary, link, id].join("\n")
 
-    const cikMatch = combined.match(/\bCIK(?:\s*[:=])?\s*(\d{10})\b/i) ?? combined.match(/\b(\d{10})\b/)
+    // Extract accession number: "0001769628-26-000160"
     const accessionMatch = combined.match(/\b(\d{10}-\d{2}-\d{6})\b/)
-    const primaryDocMatch =
-      content.match(/href="[^"]*\/([^\/"?]+\.xml)(?:\?[^"]*)?"/i) ??
-      content.match(/>\s*([^<>\s]+\.xml)\s*</i) ??
-      combined.match(/\b([^\s<>"']+\.xml)\b/i)
-
-    if (!cikMatch || !accessionMatch || !primaryDocMatch) {
-      console.warn("[edgar] Skipping Atom entry with missing CIK/accession/XML document")
-      continue
-    }
-
-    const cik = cikMatch[1]
+    if (!accessionMatch) continue
     const accession = accessionMatch[1]
-    const primaryDoc = primaryDocMatch[1].split("/").pop() || primaryDocMatch[1]
+
+    // Dedup by accession
+    if (seenAccessions.has(accession)) continue
+    seenAccessions.add(accession)
+
+    // Extract CIK from title: "4 - Venturo Brian M (0002058067) (Reporting)"
+    const cikMatch = title.match(/\((\d{10})\)/)
+    if (!cikMatch) continue
+    const cik = cikMatch[1]
     const cikInt = parseInt(cik, 10)
+
+    // Filing date from <updated>
+    const filingDate = updated.match(/\d{4}-\d{2}-\d{2}/)?.[0] ?? updated
+
+    // Form 4 XML is always at form4.xml in the same directory
     const accessionPath = accessionToPath(accession)
-    const filingDate = (() => {
-      const match = updated.match(/\d{4}-\d{2}-\d{2}/)
-      return match ? match[0] : updated
-    })()
-    const xmlUrl = `https://www.sec.gov/Archives/edgar/data/${cikInt}/${accessionPath}/${primaryDoc}`
+    const xmlUrl = `https://www.sec.gov/Archives/edgar/data/${cikInt}/${accessionPath}/form4.xml`
 
     await delay(200)
 
