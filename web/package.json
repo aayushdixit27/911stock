@@ -6,7 +6,8 @@
     "dev": "bash -c 'bash ../overclaw/start.sh & next dev'",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "poller": "tsx scripts/poller.ts"
   },
   "dependencies": {
     "@ai-sdk/google": "^3.0.53",
