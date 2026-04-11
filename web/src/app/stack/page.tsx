@@ -6,16 +6,28 @@ export default function StackPage() {
     padding: "1.5rem",
   };
 
-  const taskItem = (owner: string, task: string, i: number) => (
-    <div key={i} style={{ display: "flex", alignItems: "baseline", gap: "0.75rem", padding: "0.5rem 0" }}>
-      <span style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 600, letterSpacing: "0.08em", color: owner === "CTO" ? "var(--orange)" : owner === "CEO" ? "var(--terra)" : "var(--ink-50)", background: owner === "CTO" ? "rgba(234,76,0,0.08)" : owner === "CEO" ? "rgba(196,92,46,0.08)" : "var(--paper)", padding: "0.15rem 0.4rem", borderRadius: "2px", whiteSpace: "nowrap" }}>
-        {owner}
-      </span>
-      <span style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", color: "var(--ink-70)", lineHeight: 1.6 }}>
-        {task}
-      </span>
-    </div>
+  const sectionLabel = (text: string) => (
+    <p style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--orange)", marginBottom: "0.5rem" }}>
+      {text}
+    </p>
   );
+
+  const statusBadge = (status: "working" | "partial" | "broken" | "missing" | "done" | "blocked") => {
+    const colors = {
+      working: { bg: "rgba(34,197,94,0.08)", text: "#15803d" },
+      done: { bg: "rgba(34,197,94,0.08)", text: "#15803d" },
+      partial: { bg: "rgba(217,119,6,0.08)", text: "#b45309" },
+      broken: { bg: "rgba(220,38,38,0.08)", text: "#dc2626" },
+      missing: { bg: "rgba(220,38,38,0.08)", text: "#dc2626" },
+      blocked: { bg: "rgba(220,38,38,0.08)", text: "#dc2626" },
+    };
+    const c = colors[status];
+    return (
+      <span style={{ fontFamily: "var(--font-mono)", fontSize: "9px", fontWeight: 700, letterSpacing: "0.08em", color: c.text, background: c.bg, padding: "0.15rem 0.4rem", borderRadius: "2px", textTransform: "uppercase" }}>
+        {status}
+      </span>
+    );
+  };
 
   return (
     <main style={{ minHeight: "100vh", background: "var(--paper)", padding: "3rem 2rem" }}>
@@ -32,7 +44,10 @@ export default function StackPage() {
               </span>
             </div>
             <p style={{ fontFamily: "var(--font-display)", fontSize: "var(--text-lg)", fontStyle: "italic", color: "var(--ink-50)", fontWeight: 400 }}>
-              Stack &amp; Roadmap
+              Technical Audit &amp; Roadmap
+            </p>
+            <p style={{ fontFamily: "var(--font-mono)", fontSize: "11px", color: "var(--ink-30)", marginTop: "0.25rem" }}>
+              Updated Apr 11, 2026
             </p>
           </div>
           <a href="/" style={{ fontFamily: "var(--font-mono)", fontSize: "11px", color: "var(--ink-30)", padding: "0.5rem 0.875rem", border: "1px solid var(--ink-08)", borderRadius: "4px", textDecoration: "none", whiteSpace: "nowrap" }}>
@@ -40,92 +55,31 @@ export default function StackPage() {
           </a>
         </header>
 
-        {/* 1-Hour Build Session */}
-        <section style={{ marginBottom: "2rem", background: "var(--orange)", borderRadius: "8px", padding: "2rem", color: "var(--white)" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "1rem" }}>
-            <span style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 700, letterSpacing: "0.1em", color: "var(--white)", background: "rgba(255,255,255,0.2)", padding: "0.25rem 0.6rem", borderRadius: "3px" }}>
-              NOW
-            </span>
-            <span style={{ fontFamily: "var(--font-mono)", fontSize: "11px", color: "rgba(255,255,255,0.6)" }}>
-              1-Hour Build Session
-            </span>
-          </div>
+        {/* ═══════════════════════════════════════════ */}
+        {/* EXECUTIVE SUMMARY                          */}
+        {/* ═══════════════════════════════════════════ */}
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1px", borderRadius: "6px", overflow: "hidden", marginBottom: "1.25rem" }}>
-            <div style={{ background: "rgba(0,0,0,0.2)", padding: "1.5rem" }}>
-              <p style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 600, letterSpacing: "0.1em", color: "rgba(255,255,255,0.5)", marginBottom: "0.75rem" }}>
-                BIG (CTO) &mdash; BACKEND
-              </p>
-              <div style={{ display: "flex", flexDirection: "column", gap: "0.625rem" }}>
-                {[
-                  { time: "0\u201315", task: "Twilio setup \u2014 account, RCS sender (or SMS if pending), install SDK" },
-                  { time: "15\u201340", task: "EDGAR \u2192 alert pipeline \u2014 extract edgar.ts + signals.ts into standalone Node script, 60s cron, filter score \u2265 7, send SMS" },
-                  { time: "40\u201355", task: "Context generation \u2014 wire Gemini to generate 2-sentence plain-English context per signal" },
-                  { time: "55\u201360", task: "Test e2e \u2014 real Form 4 \u2192 real SMS on your phone" },
-                ].map((item) => (
-                  <div key={item.time} style={{ display: "flex", gap: "0.625rem", alignItems: "baseline" }}>
-                    <span style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 600, color: "rgba(255,255,255,0.4)", whiteSpace: "nowrap", minWidth: "40px" }}>{item.time}</span>
-                    <span style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", color: "rgba(255,255,255,0.85)", lineHeight: 1.5 }}>{item.task}</span>
-                  </div>
-                ))}
-              </div>
-              <p style={{ fontFamily: "var(--font-mono)", fontSize: "11px", color: "rgba(255,255,255,0.4)", marginTop: "1rem", borderTop: "1px solid rgba(255,255,255,0.1)", paddingTop: "0.75rem" }}>
-                Goal: real SEC filing &rarr; real text on Big&apos;s phone &lt; 5 min
-              </p>
-            </div>
-
-            <div style={{ background: "rgba(0,0,0,0.2)", padding: "1.5rem" }}>
-              <p style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 600, letterSpacing: "0.1em", color: "rgba(255,255,255,0.5)", marginBottom: "0.75rem" }}>
-                AAYUSH (CEO) &mdash; LANDING + COPY
-              </p>
-              <div style={{ display: "flex", flexDirection: "column", gap: "0.625rem" }}>
-                {[
-                  { time: "0\u201320", task: "Landing page \u2014 /subscribe with headline, phone input, ticker picker (up to 5)" },
-                  { time: "20\u201335", task: "Alert copy \u2014 write RCS/SMS templates: welcome, alert format, confirmation. Give Big the strings." },
-                  { time: "35\u201350", task: "Stripe Checkout \u2014 set up account, $99/year price, checkout button on landing page" },
-                  { time: "50\u201360", task: "Text 10 people \u2014 screenshot alert format, send to friends who own stocks" },
-                ].map((item) => (
-                  <div key={item.time} style={{ display: "flex", gap: "0.625rem", alignItems: "baseline" }}>
-                    <span style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 600, color: "rgba(255,255,255,0.4)", whiteSpace: "nowrap", minWidth: "40px" }}>{item.time}</span>
-                    <span style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", color: "rgba(255,255,255,0.85)", lineHeight: 1.5 }}>{item.task}</span>
-                  </div>
-                ))}
-              </div>
-              <p style={{ fontFamily: "var(--font-mono)", fontSize: "11px", color: "rgba(255,255,255,0.4)", marginTop: "1rem", borderTop: "1px solid rgba(255,255,255,0.1)", paddingTop: "0.75rem" }}>
-                Goal: landing page live with Stripe. 10 people texted.
-              </p>
-            </div>
-          </div>
-
-          <p style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", color: "rgba(255,255,255,0.6)", textAlign: "center" }}>
-            Last 5 min: connect landing page sign-ups to alert pipeline via shared Ghost DB table
-          </p>
-        </section>
-
-        {/* Design Doc Summary */}
         <section style={{ marginBottom: "2rem", background: "var(--ink)", borderRadius: "8px", padding: "2rem", color: "var(--white)" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "1rem" }}>
-            <span style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 700, letterSpacing: "0.1em", color: "#22c55e", background: "rgba(34,197,94,0.15)", padding: "0.25rem 0.6rem", borderRadius: "3px" }}>
-              APPROVED
-            </span>
-            <span style={{ fontFamily: "var(--font-mono)", fontSize: "11px", color: "rgba(255,255,255,0.4)" }}>
-              Design doc &middot; Apr 1, 2026 &middot; /office-hours
+            <span style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 700, letterSpacing: "0.1em", color: "var(--orange)", background: "rgba(234,76,0,0.15)", padding: "0.25rem 0.6rem", borderRadius: "3px" }}>
+              EXECUTIVE SUMMARY
             </span>
           </div>
 
           <h2 style={{ fontFamily: "var(--font-display)", fontSize: "var(--text-2xl)", fontWeight: 500, fontStyle: "italic", color: "var(--white)", lineHeight: 1.3, marginBottom: "0.75rem" }}>
-            911Stock is a latency product, not an information product.
+            The website works as a hackathon demo. It does not work as a product.
           </h2>
-          <p style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-base)", color: "rgba(255,255,255,0.7)", lineHeight: 1.7, marginBottom: "1.25rem" }}>
-            The data is public (SEC EDGAR). The analysis is commoditized (LLMs). The value is delivering the right signal to the user&apos;s lock screen within minutes of the filing.
-            No existing competitor uses messaging as primary delivery. All 10+ products are web dashboards with email. The gap is wide open.
+          <p style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-base)", color: "rgba(255,255,255,0.7)", lineHeight: 1.7, marginBottom: "1.5rem" }}>
+            Core flows (auth, watchlist, signal streaming, Alpaca trading, Stripe billing) function end-to-end.
+            But there is no automated SEC monitoring, no real alert delivery, and the &ldquo;accuracy&rdquo; stats are always 0%.
+            The product thesis &mdash; delivering alerts faster than anyone &mdash; has no implementation yet.
           </p>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "1px", borderRadius: "6px", overflow: "hidden", marginBottom: "1.25rem" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "1px", borderRadius: "6px", overflow: "hidden", marginBottom: "1.5rem" }}>
             {[
-              { label: "Wedge", value: "SEC Form 4 alerts via RCS", sub: "Plain-English context, no trade execution" },
-              { label: "Price", value: "$99/year", sub: "Stripe Checkout, keep 97%" },
-              { label: "Target", value: "<$100K portfolios", sub: "Individual stock holders underserved by brokerages" },
+              { label: "Status", value: "Hackathon demo", sub: "80% UI complete, 20% demo scaffolding" },
+              { label: "Pivot", value: "Telegram-first", sub: "SMS blocked by A2P registration (~10 days)" },
+              { label: "Next milestone", value: "Telegram bot MVP", sub: "Real Form 4 → real Telegram alert" },
             ].map((item) => (
               <div key={item.label} style={{ background: "rgba(255,255,255,0.05)", padding: "1rem" }}>
                 <p style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 600, letterSpacing: "0.1em", color: "rgba(255,255,255,0.35)", marginBottom: "0.375rem" }}>{item.label}</p>
@@ -135,217 +89,254 @@ export default function StackPage() {
             ))}
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1px", borderRadius: "6px", overflow: "hidden", marginBottom: "1.25rem" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1px", borderRadius: "6px", overflow: "hidden" }}>
             {[
-              { label: "Week 1", goal: "Real Form 4 \u2192 real SMS/RCS on your phone < 5 min" },
-              { label: "Week 2", goal: "Landing page live, 50 free beta users" },
-              { label: "Week 4", goal: "First $99/year payment from a non-friend" },
-              { label: "Month 2", goal: "100 paying users ($9,900 ARR)" },
-            ].map((m) => (
-              <div key={m.label} style={{ background: "rgba(255,255,255,0.05)", padding: "0.75rem 1rem", display: "flex", alignItems: "baseline", gap: "0.75rem" }}>
-                <span style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 600, color: "var(--orange)", whiteSpace: "nowrap" }}>{m.label}</span>
-                <span style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", color: "rgba(255,255,255,0.6)" }}>{m.goal}</span>
+              { label: "Completed", items: "Landing page, alert templates, Stripe Checkout ($99/yr w/ trial), MARK design system" },
+              { label: "Blocked", items: "Twilio A2P registration (~10 days), toll-free verification" },
+              { label: "Next up", items: "Telegram bot, web dashboard with real data, EDGAR poller" },
+              { label: "Revenue", items: "$99/year. Stripe test mode live. 14-day free trial." },
+            ].map((item) => (
+              <div key={item.label} style={{ background: "rgba(255,255,255,0.05)", padding: "0.75rem 1rem" }}>
+                <span style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 600, color: "var(--orange)", marginRight: "0.5rem" }}>{item.label}</span>
+                <span style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", color: "rgba(255,255,255,0.6)", lineHeight: 1.5 }}>{item.items}</span>
               </div>
             ))}
           </div>
-
-          <p style={{ fontFamily: "var(--font-display)", fontSize: "var(--text-base)", fontStyle: "italic", color: "rgba(255,255,255,0.5)" }}>
-            Assignment: Text 10 people who own stocks. Show them the alert. Ask: &ldquo;Would you pay $99/year?&rdquo; If 5+ say yes, start building.
-          </p>
         </section>
 
-        {/* Action Items */}
-        <section style={{ marginBottom: "2rem" }}>
-          <p style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--orange)", marginBottom: "0.5rem" }}>
-            Action Items
+        {/* ═══════════════════════════════════════════ */}
+        {/* KEY DECISIONS                              */}
+        {/* ═══════════════════════════════════════════ */}
+
+        <section style={{ ...card, marginBottom: "2rem", padding: "2rem" }}>
+          {sectionLabel("Key Decisions")}
+          <p style={{ fontFamily: "var(--font-display)", fontSize: "var(--text-xl)", fontStyle: "italic", color: "var(--ink)", marginBottom: "1.25rem", lineHeight: 1.4 }}>
+            What changed and why.
           </p>
-          <p style={{ fontFamily: "var(--font-display)", fontSize: "var(--text-xl)", fontStyle: "italic", color: "var(--ink)", marginBottom: "1rem", lineHeight: 1.4 }}>
-            RCS-first via Twilio. No app install. 82% US reach. Ship fast.
+          <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+            {[
+              { decision: "Telegram-first (SMS on roadmap)", why: "Twilio requires A2P 10DLC registration for local numbers and toll-free verification — both take 10+ days. Telegram bot API is free, instant, no approval needed.", date: "Apr 11" },
+              { decision: "Keep web dashboard", why: "Originally planned to rip it out. But web dashboard is 80% functional and gives us a product while Telegram bot is built.", date: "Apr 11" },
+              { decision: "Drop RCS as primary channel", why: "RCS via Twilio has same registration requirements as SMS. No advantage over SMS if both are blocked.", date: "Apr 11" },
+              { decision: "$99/year via Stripe (live)", why: "Stripe Checkout with 14-day trial is wired to /subscribe. Test mode keys deployed to Vercel.", date: "Apr 3" },
+              { decision: "Drop Auth0", why: "Too heavyweight. Messaging handles approval. NextAuth sufficient for web.", date: "Mar 31" },
+              { decision: "MARK design system", why: "Editorial/magazine aesthetic. Crimson Pro + Inter + IBM Plex Mono. One orange accent.", date: "Apr 2" },
+            ].map((d) => (
+              <div key={d.decision} style={{ padding: "0.75rem 0", borderBottom: "1px solid var(--ink-08)" }}>
+                <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: "1rem" }}>
+                  <span style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", fontWeight: 600, color: "var(--ink)" }}>{d.decision}</span>
+                  <span style={{ fontFamily: "var(--font-mono)", fontSize: "10px", color: "var(--ink-30)", whiteSpace: "nowrap" }}>{d.date}</span>
+                </div>
+                <p style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", color: "var(--ink-50)", lineHeight: 1.5, marginTop: "0.25rem" }}>{d.why}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ═══════════════════════════════════════════ */}
+        {/* WEBSITE AUDIT                              */}
+        {/* ═══════════════════════════════════════════ */}
+
+        <section style={{ marginBottom: "2rem" }}>
+          {sectionLabel("Website Audit")}
+          <p style={{ fontFamily: "var(--font-display)", fontSize: "var(--text-xl)", fontStyle: "italic", color: "var(--ink)", marginBottom: "1.25rem", lineHeight: 1.4 }}>
+            What works, what&apos;s broken, what&apos;s missing.
           </p>
 
-          {/* Week 1 */}
+          {/* Pages */}
+          <div style={{ ...card, marginBottom: "0.75rem", padding: "1.75rem" }}>
+            <p style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 600, letterSpacing: "0.1em", color: "var(--ink-30)", marginBottom: "1rem" }}>PAGES</p>
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+              {[
+                { page: "/", name: "Home / Dashboard", status: "working" as const, note: "Landing (unauth) shows marketing. Dashboard (auth) has watchlist + live prices from Yahoo Finance." },
+                { page: "/subscribe", name: "Subscribe", status: "working" as const, note: "Landing page with Stripe Checkout. Phone input + ticker picker. 14-day trial, $99/year." },
+                { page: "/dashboard", name: "Signal Pipeline", status: "partial" as const, note: "SSE streaming works but requires manual trigger. Falls back to hardcoded SMCI demo data." },
+                { page: "/feed", name: "Signal Feed", status: "working" as const, note: "Paginated signals from DB. Shows empty state if no signals generated yet." },
+                { page: "/settings", name: "Settings", status: "working" as const, note: "All toggles functional — notifications, risk tolerance, Stripe billing, Alpaca OAuth." },
+                { page: "/resolution", name: "Trade Resolution", status: "partial" as const, note: "Displays real trade data but Overmind trace and savings estimate are hardcoded." },
+                { page: "/onboarding", name: "Onboarding", status: "working" as const, note: "3-step wizard: tickers, notifications, risk tolerance. All persisted to DB." },
+                { page: "/accuracy", name: "Accuracy Report", status: "broken" as const, note: "Queries signal_outcomes table which is always empty. Shows 0% accuracy." },
+              ].map((p) => (
+                <div key={p.page} style={{ display: "flex", alignItems: "baseline", gap: "0.75rem", padding: "0.5rem 0", borderBottom: "1px solid var(--ink-08)" }}>
+                  <span style={{ fontFamily: "var(--font-mono)", fontSize: "var(--text-sm)", color: "var(--ink)", minWidth: "110px" }}>{p.page}</span>
+                  {statusBadge(p.status)}
+                  <span style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", color: "var(--ink-50)", lineHeight: 1.5 }}>{p.note}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Core Pipeline */}
+          <div style={{ ...card, marginBottom: "0.75rem", padding: "1.75rem" }}>
+            <p style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 600, letterSpacing: "0.1em", color: "var(--ink-30)", marginBottom: "1rem" }}>CORE PIPELINE</p>
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+              {[
+                { component: "EDGAR Parser", status: "partial" as const, note: "Fetches Form 4 XML from SEC. Only 3 hardcoded CIKs (SMCI, TSLA, NVDA). Placeholder metrics for position reduction %." },
+                { component: "Signal Scoring", status: "working" as const, note: "0-10 scoring engine. Factors: 10b5-1 plan, insider role, transaction value, position reduction, news sentiment." },
+                { component: "LLM Analysis", status: "working" as const, note: "Gemini via TrueFoundry generates 2-sentence plain-English context. No fallback if gateway fails." },
+                { component: "Automated Polling", status: "missing" as const, note: "No cron, no scheduler. Everything is manual HTTP trigger. Need Vercel Crons, Inngest, or external scheduler." },
+                { component: "Alert Delivery", status: "blocked" as const, note: "Twilio SMS blocked by A2P registration. Telegram bot not yet built. Bland AI configured but untested." },
+                { component: "Accuracy Tracking", status: "broken" as const, note: "signal_outcomes table exists but never populated. /api/accuracy/check exists but needs external cron + CRON_SECRET." },
+              ].map((c) => (
+                <div key={c.component} style={{ display: "flex", alignItems: "baseline", gap: "0.75rem", padding: "0.5rem 0", borderBottom: "1px solid var(--ink-08)" }}>
+                  <span style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", fontWeight: 600, color: "var(--ink)", minWidth: "140px" }}>{c.component}</span>
+                  {statusBadge(c.status)}
+                  <span style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", color: "var(--ink-50)", lineHeight: 1.5 }}>{c.note}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* External Services */}
+          <div style={{ ...card, padding: "1.75rem" }}>
+            <p style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 600, letterSpacing: "0.1em", color: "var(--ink-30)", marginBottom: "1rem" }}>EXTERNAL SERVICES</p>
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+              {[
+                { service: "SEC EDGAR", status: "working" as const, note: "Free, public API. No auth needed. 5 req/s rate limit respected." },
+                { service: "Ghost DB (Postgres)", status: "working" as const, note: "Timescale Cloud. Auto-migration. 11 tables, all user-scoped." },
+                { service: "Stripe", status: "working" as const, note: "Test mode. Checkout, webhooks, portal all functional. $99/yr price created." },
+                { service: "Gemini (TrueFoundry)", status: "working" as const, note: "Signal explanation generation. API key configured." },
+                { service: "Alpaca", status: "working" as const, note: "Paper trading. OAuth flow complete. Trade execution functional for premium users." },
+                { service: "Twilio", status: "blocked" as const, note: "Account active, toll-free number purchased. Blocked by A2P 10DLC + toll-free verification." },
+                { service: "Bland AI", status: "partial" as const, note: "API key configured. Phone call script has hardcoded fabricated content — dangerous for real use." },
+                { service: "Auth0", status: "partial" as const, note: "CIBA configured but being deprecated. Keep for now, remove later." },
+                { service: "Yahoo Finance", status: "working" as const, note: "Free stock quotes. Used by accuracy check and live price display." },
+              ].map((s) => (
+                <div key={s.service} style={{ display: "flex", alignItems: "baseline", gap: "0.75rem", padding: "0.5rem 0", borderBottom: "1px solid var(--ink-08)" }}>
+                  <span style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", fontWeight: 600, color: "var(--ink)", minWidth: "140px" }}>{s.service}</span>
+                  {statusBadge(s.status)}
+                  <span style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", color: "var(--ink-50)", lineHeight: 1.5 }}>{s.note}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ═══════════════════════════════════════════ */}
+        {/* WHAT NEEDS TO HAPPEN                       */}
+        {/* ═══════════════════════════════════════════ */}
+
+        <section style={{ marginBottom: "2rem" }}>
+          {sectionLabel("What Needs to Happen")}
+          <p style={{ fontFamily: "var(--font-display)", fontSize: "var(--text-xl)", fontStyle: "italic", color: "var(--ink)", marginBottom: "1rem", lineHeight: 1.4 }}>
+            Ordered by impact. Ship the alert loop first.
+          </p>
+
+          {/* Phase 1 */}
           <div style={{ ...card, borderLeft: "4px solid var(--orange)", padding: "1.75rem", marginBottom: "0.75rem" }}>
             <div style={{ display: "flex", alignItems: "baseline", gap: "0.75rem", marginBottom: "0.75rem" }}>
-              <span style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 700, letterSpacing: "0.1em", color: "var(--orange)", background: "rgba(234,76,0,0.08)", padding: "0.2rem 0.5rem", borderRadius: "3px" }}>WEEK 1</span>
-              <span style={{ fontFamily: "var(--font-display)", fontSize: "var(--text-lg)", fontWeight: 500, fontStyle: "italic", color: "var(--ink)" }}>RCS Bot MVP</span>
+              <span style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 700, letterSpacing: "0.1em", color: "var(--orange)", background: "rgba(234,76,0,0.08)", padding: "0.2rem 0.5rem", borderRadius: "3px" }}>PHASE 1</span>
+              <span style={{ fontFamily: "var(--font-display)", fontSize: "var(--text-lg)", fontWeight: 500, fontStyle: "italic", color: "var(--ink)" }}>Alert Loop (Telegram)</span>
             </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.375rem" }}>
               {[
-                { o: "CTO", t: "Set up Twilio RCS + SMS fallback, carrier approval for verified sender" },
-                { o: "CTO", t: "Port signal scoring engine + EDGAR monitor to standalone Python service" },
-                { o: "CTO", t: "RCS rich cards with action buttons for trade approval (Sell 50% / Hold / Details)" },
-                { o: "CTO", t: "Connect Alpaca trade execution to RCS reply callback" },
-                { o: "CEO", t: "Write alert copy \u2014 rich card format, confirmation messages, welcome message" },
-                { o: "CEO", t: "Set up Stripe Checkout landing page (911stock.com/subscribe) \u2014 keep 97%" },
-              ].map((item, i) => taskItem(item.o, item.t, i))}
+                "Create Telegram bot via @BotFather — get token",
+                "Build EDGAR poller — standalone Node script, 60s interval, filter score >= 7",
+                "Expand CIK map beyond 3 tickers — dynamic lookup or DB table",
+                "Wire Gemini to generate context for each qualifying signal",
+                "Send Telegram message using alert templates (docs/alert-templates.md)",
+                "Deploy poller as separate process (not inside Next.js)",
+                "End-to-end test: real Form 4 → real Telegram message",
+              ].map((task, i) => (
+                <div key={i} style={{ display: "flex", alignItems: "baseline", gap: "0.5rem", padding: "0.375rem 0" }}>
+                  <span style={{ fontFamily: "var(--font-mono)", fontSize: "10px", color: "var(--ink-30)" }}>{String(i + 1).padStart(2, "0")}</span>
+                  <span style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", color: "var(--ink-70)", lineHeight: 1.5 }}>{task}</span>
+                </div>
+              ))}
             </div>
           </div>
 
-          {/* Week 2 */}
+          {/* Phase 2 */}
           <div style={{ ...card, borderLeft: "4px solid var(--terra)", padding: "1.75rem", marginBottom: "0.75rem" }}>
             <div style={{ display: "flex", alignItems: "baseline", gap: "0.75rem", marginBottom: "0.75rem" }}>
-              <span style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 700, letterSpacing: "0.1em", color: "var(--terra)", background: "rgba(196,92,46,0.08)", padding: "0.2rem 0.5rem", borderRadius: "3px" }}>WEEK 2</span>
-              <span style={{ fontFamily: "var(--font-display)", fontSize: "var(--text-lg)", fontWeight: 500, fontStyle: "italic", color: "var(--ink)" }}>Agent Swarm + Payments</span>
+              <span style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 700, letterSpacing: "0.1em", color: "var(--terra)", background: "rgba(196,92,46,0.08)", padding: "0.2rem 0.5rem", borderRadius: "3px" }}>PHASE 2</span>
+              <span style={{ fontFamily: "var(--font-display)", fontSize: "var(--text-lg)", fontWeight: 500, fontStyle: "italic", color: "var(--ink)" }}>Make Website Real</span>
             </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.375rem" }}>
               {[
-                { o: "CTO", t: "Multi-source agent swarm \u2014 EDGAR, news APIs, social sentiment in parallel" },
-                { o: "CTO", t: "Per-user notification agents \u2014 spawn per watchlist, filter by sensitivity" },
-                { o: "CTO", t: "Ghost DB \u2014 store signals, trades, agent learnings for pattern matching" },
-                { o: "CEO", t: "Stripe webhook \u2192 activation flow (payment \u2192 onboarding link)" },
-                { o: "CEO", t: "Onboarding: user adds tickers, sets sensitivity, connects Alpaca" },
-                { o: "CEO", t: "Record demo video of full loop: RCS alert \u2192 approve \u2192 trade confirmed" },
-              ].map((item, i) => taskItem(item.o, item.t, i))}
+                "Replace NewsTimeline demo component with real signal feed from /api/feed",
+                "Fix accuracy tracking — populate signal_outcomes, set up daily cron for /api/accuracy/check",
+                "Remove hardcoded SMCI fallback data from dashboard SSE",
+                "Make sensitivity dropdown persist to DB (currently UI-only)",
+                "Wire risk tolerance to actually filter signal scoring",
+                "Clean up Bland AI call script — remove fabricated DOJ content",
+                "Remove dead integrations: TrueFoundry (unused), GuardianEnroll component",
+              ].map((task, i) => (
+                <div key={i} style={{ display: "flex", alignItems: "baseline", gap: "0.5rem", padding: "0.375rem 0" }}>
+                  <span style={{ fontFamily: "var(--font-mono)", fontSize: "10px", color: "var(--ink-30)" }}>{String(i + 1).padStart(2, "0")}</span>
+                  <span style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", color: "var(--ink-70)", lineHeight: 1.5 }}>{task}</span>
+                </div>
+              ))}
             </div>
           </div>
 
-          {/* Week 3-4 */}
+          {/* Phase 3 */}
           <div style={{ ...card, borderLeft: "4px solid var(--ink-15)", padding: "1.75rem" }}>
             <div style={{ display: "flex", alignItems: "baseline", gap: "0.75rem", marginBottom: "0.75rem" }}>
-              <span style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 700, letterSpacing: "0.1em", color: "var(--ink-30)", background: "var(--paper)", padding: "0.2rem 0.5rem", borderRadius: "3px" }}>WEEK 3-4</span>
-              <span style={{ fontFamily: "var(--font-display)", fontSize: "var(--text-lg)", fontWeight: 500, fontStyle: "italic", color: "var(--ink)" }}>Scale + Monetize</span>
+              <span style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 700, letterSpacing: "0.1em", color: "var(--ink-30)", background: "var(--paper)", padding: "0.2rem 0.5rem", borderRadius: "3px" }}>PHASE 3</span>
+              <span style={{ fontFamily: "var(--font-display)", fontSize: "var(--text-lg)", fontWeight: 500, fontStyle: "italic", color: "var(--ink)" }}>SMS + Scale</span>
             </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.375rem" }}>
               {[
-                { o: "CTO", t: "Switch Bland AI \u2192 Retell AI for optional voice call tier (22% cheaper, better voice)" },
-                { o: "CTO", t: "Switch node-cron \u2192 Inngest for durable background jobs with retries" },
-                { o: "CTO", t: "SnapTrade integration \u2014 connect any brokerage, not just Alpaca" },
-                { o: "CEO", t: "Launch pricing tiers: Free (alerts only) / $20 (full RCS bot) / $50 (voice calls)" },
-                { o: "CEO", t: "Seed 50 beta users from hackathon contacts + judge referrals" },
-                { o: "BOTH", t: "Rip out web dashboard, Auth0, Vercel \u2014 RCS is the product" },
-              ].map((item, i) => taskItem(item.o, item.t, i))}
-            </div>
-          </div>
-        </section>
-
-        {/* Why RCS */}
-        <section style={{ ...card, marginBottom: "2rem", padding: "2rem" }}>
-          <p style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--ink-30)", marginBottom: "0.75rem" }}>
-            Why RCS over Telegram / iMessage
-          </p>
-          <p style={{ fontFamily: "var(--font-display)", fontSize: "var(--text-xl)", fontStyle: "italic", color: "var(--ink)", marginBottom: "1.25rem", lineHeight: 1.4 }}>
-            No app install. Rich buttons. Works on iPhone + Android. 82% US reach.
-          </p>
-          <div style={{ borderRadius: "6px", overflow: "hidden", border: "1px solid var(--ink-08)", marginBottom: "1rem" }}>
-            <div style={{ display: "grid", gridTemplateColumns: "1.2fr 0.7fr 0.7fr 0.7fr 1fr", background: "var(--paper)", padding: "0.5rem 1rem" }}>
-              {["Channel", "US reach", "App install", "Rich buttons", "Cost/msg"].map((h) => (
-                <span key={h} style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--ink-30)" }}>{h}</span>
-              ))}
-            </div>
-            {[
-              { ch: "RCS (Twilio)", reach: "82%", install: "No", buttons: "Yes", cost: "$0.01\u2013$0.02", best: true },
-              { ch: "Telegram", reach: "9%", install: "Yes", buttons: "Yes", cost: "Free", best: false },
-              { ch: "iMessage (BlueBubbles)", reach: "60%", install: "No", buttons: "No", cost: "Free + Mac", best: false },
-              { ch: "SMS fallback", reach: "100%", install: "No", buttons: "No", cost: "$0.0079", best: false },
-            ].map((row) => (
-              <div key={row.ch} style={{ display: "grid", gridTemplateColumns: "1.2fr 0.7fr 0.7fr 0.7fr 1fr", padding: "0.625rem 1rem", background: "var(--white)", borderTop: "1px solid var(--ink-08)" }}>
-                <span style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", fontWeight: row.best ? 600 : 400, color: row.best ? "var(--ink)" : "var(--ink-30)" }}>
-                  {row.ch}
-                  {row.best && <span style={{ fontFamily: "var(--font-mono)", fontSize: "9px", fontWeight: 700, color: "var(--orange)", marginLeft: "0.5rem" }}>REC</span>}
-                </span>
-                <span style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", fontWeight: row.best ? 600 : 400, color: row.best ? "var(--orange)" : "var(--ink-30)" }}>{row.reach}</span>
-                <span style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", color: row.install === "No" ? "var(--ink-50)" : "var(--ink-30)" }}>{row.install}</span>
-                <span style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", color: row.buttons === "Yes" ? "var(--ink-50)" : "var(--ink-30)" }}>{row.buttons}</span>
-                <span style={{ fontFamily: "var(--font-mono)", fontSize: "var(--text-sm)", color: "var(--ink-30)" }}>{row.cost}</span>
-              </div>
-            ))}
-          </div>
-          <p style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", fontStyle: "italic", color: "var(--ink-30)" }}>
-            iMessage bots use unofficial Apple APIs &mdash; account ban risk. Telegram only 9% US penetration.
-            RCS is the only option with rich UX, zero friction, and legal safety.
-          </p>
-        </section>
-
-        {/* Payment Methods */}
-        <section style={{ ...card, marginBottom: "2rem", padding: "2rem" }}>
-          <p style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--ink-30)", marginBottom: "0.75rem" }}>
-            Payment Methods
-          </p>
-          <p style={{ fontFamily: "var(--font-display)", fontSize: "var(--text-xl)", fontStyle: "italic", color: "var(--ink)", marginBottom: "1.25rem", lineHeight: 1.4 }}>
-            How we collect $20/mo &mdash; and how much we keep.
-          </p>
-          <div style={{ borderRadius: "6px", overflow: "hidden", border: "1px solid var(--ink-08)" }}>
-            <div style={{ display: "grid", gridTemplateColumns: "1.2fr 0.8fr 0.8fr 1.5fr", background: "var(--paper)", padding: "0.625rem 1rem" }}>
-              {["Method", "You keep", "Fee", "How it works"].map((h) => (
-                <span key={h} style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--ink-30)" }}>{h}</span>
-              ))}
-            </div>
-            {[
-              { method: "Stripe Checkout", keep: "~97%", keepAmt: "$19.42", fee: "2.9% + $0.30", how: "Landing page \u2192 Subscribe \u2192 Stripe bills \u2192 bot activates", best: true },
-              { method: "Crypto (TON/USDC)", keep: "~100%", keepAmt: "$20.00", fee: "Gas only", how: "Wallet payment, one-tap", best: false },
-              { method: "Lemon Squeezy", keep: "~95%", keepAmt: "$19.00", fee: "5%", how: "They handle global sales tax/VAT", best: false },
-            ].map((row) => (
-              <div key={row.method} style={{ display: "grid", gridTemplateColumns: "1.2fr 0.8fr 0.8fr 1.5fr", padding: "0.75rem 1rem", background: "var(--white)", borderTop: "1px solid var(--ink-08)", alignItems: "baseline" }}>
-                <span style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", fontWeight: 600, color: row.best ? "var(--ink)" : "var(--ink-50)" }}>
-                  {row.method}
-                  {row.best && <span style={{ fontFamily: "var(--font-mono)", fontSize: "9px", fontWeight: 700, color: "var(--orange)", marginLeft: "0.5rem" }}>REC</span>}
-                </span>
-                <span style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", fontWeight: 600, color: row.best ? "var(--orange)" : "var(--ink-30)" }}>
-                  {row.keep} <span style={{ fontFamily: "var(--font-mono)", fontSize: "11px", color: "var(--ink-30)", fontWeight: 400 }}>({row.keepAmt})</span>
-                </span>
-                <span style={{ fontFamily: "var(--font-mono)", fontSize: "var(--text-sm)", color: "var(--ink-30)" }}>{row.fee}</span>
-                <span style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", color: "var(--ink-50)", lineHeight: 1.5 }}>{row.how}</span>
-              </div>
-            ))}
-          </div>
-          <p style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", fontStyle: "italic", color: "var(--ink-30)", marginTop: "0.75rem" }}>
-            Sell on your own site to avoid app store cuts. User pays &rarr; gets activation link.
-          </p>
-        </section>
-
-        {/* Tech Swaps */}
-        <section style={{ marginBottom: "2rem" }}>
-          <p style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--ink-30)", marginBottom: "0.5rem" }}>
-            Tech Swaps
-          </p>
-          <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
-            {[
-              {
-                title: "Auth0 \u2192 Drop entirely",
-                priority: "DONE" as const,
-                reason: "RCS handles approval via rich card buttons. No CIBA, no Guardian, no middleware.",
-              },
-              {
-                title: "Voice: Bland AI \u2192 Retell AI",
-                priority: "HIGH" as const,
-                reason: "22% cheaper ($0.07 vs $0.09/min), 33% faster (500ms vs 800ms), natural voice. Fixes \u201Csounds like a scam\u201D feedback.",
-              },
-              {
-                title: "Background Jobs: node-cron \u2192 Inngest",
-                priority: "HIGH" as const,
-                reason: "Durable workflows with retries + dead-letter queues. node-cron is in-memory \u2014 jobs vanish on restart.",
-              },
-              {
-                title: "LLM: Gemini \u2192 Claude",
-                priority: "MEDIUM" as const,
-                reason: "83% accuracy on financial modeling. Never trains on user data. Config change via TrueFoundry gateway.",
-              },
-            ].map((s) => (
-              <div key={s.title} style={{ ...card, padding: "1rem 1.5rem", borderLeft: s.priority === "DONE" ? "4px solid var(--ink)" : s.priority === "HIGH" ? "4px solid var(--orange)" : "4px solid var(--terra)" }}>
-                <div style={{ display: "flex", alignItems: "baseline", gap: "0.75rem" }}>
-                  <span style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 700, letterSpacing: "0.1em", color: s.priority === "DONE" ? "var(--ink-50)" : s.priority === "HIGH" ? "var(--orange)" : "var(--terra)", background: s.priority === "DONE" ? "var(--paper)" : s.priority === "HIGH" ? "rgba(234,76,0,0.08)" : "rgba(196,92,46,0.08)", padding: "0.2rem 0.5rem", borderRadius: "3px" }}>
-                    {s.priority}
-                  </span>
-                  <span style={{ fontFamily: "var(--font-display)", fontSize: "var(--text-base)", fontWeight: 500, fontStyle: "italic", color: "var(--ink)" }}>
-                    {s.title}
-                  </span>
+                "Complete Twilio A2P 10DLC registration (submit forms, wait ~10 days)",
+                "Buy local number, wire SMS as second delivery channel alongside Telegram",
+                "Switch Bland AI → Retell AI for voice tier (22% cheaper, better quality)",
+                "Switch to Inngest for durable background jobs with retries",
+                "SnapTrade integration — connect any brokerage, not just Alpaca",
+                "Launch pricing tiers: Free (Telegram alerts) / $99 (SMS + web) / $199 (voice calls)",
+              ].map((task, i) => (
+                <div key={i} style={{ display: "flex", alignItems: "baseline", gap: "0.5rem", padding: "0.375rem 0" }}>
+                  <span style={{ fontFamily: "var(--font-mono)", fontSize: "10px", color: "var(--ink-30)" }}>{String(i + 1).padStart(2, "0")}</span>
+                  <span style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", color: "var(--ink-70)", lineHeight: 1.5 }}>{task}</span>
                 </div>
-                <p style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", color: "var(--ink-50)", marginTop: "0.375rem", lineHeight: 1.6 }}>
-                  {s.reason}
-                </p>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ═══════════════════════════════════════════ */}
+        {/* DATABASE                                    */}
+        {/* ═══════════════════════════════════════════ */}
+
+        <section style={{ ...card, marginBottom: "2rem", padding: "2rem" }}>
+          {sectionLabel("Database")}
+          <p style={{ fontFamily: "var(--font-display)", fontSize: "var(--text-xl)", fontStyle: "italic", color: "var(--ink)", marginBottom: "1.25rem", lineHeight: 1.4 }}>
+            Ghost DB (Timescale Postgres) &mdash; 11 tables, auto-migration.
+          </p>
+          <div style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}>
+            {[
+              { table: "users", status: "working" as const, note: "Auth, tier, stripe_customer_id, onboarding status" },
+              { table: "signals", status: "working" as const, note: "Insider trading signals. User-scoped, deduped by edgar_filing_id" },
+              { table: "watchlist", status: "working" as const, note: "User ticker subscriptions" },
+              { table: "trades", status: "working" as const, note: "Executed trades. Unique per signal_id" },
+              { table: "portfolio", status: "working" as const, note: "User stock positions" },
+              { table: "user_settings", status: "working" as const, note: "Risk tolerance, notification preferences" },
+              { table: "alpaca_connections", status: "working" as const, note: "OAuth tokens for paper trading" },
+              { table: "alerts", status: "working" as const, note: "Phone call alerts triggered by signals" },
+              { table: "signal_outcomes", status: "broken" as const, note: "Never populated. Accuracy always 0%" },
+              { table: "notifications", status: "missing" as const, note: "Schema exists but never written to or delivered" },
+              { table: "agent_learnings", status: "missing" as const, note: "Schema exists but never written to" },
+            ].map((t) => (
+              <div key={t.table} style={{ display: "flex", alignItems: "baseline", gap: "0.75rem", padding: "0.375rem 0", borderBottom: "1px solid var(--ink-08)" }}>
+                <span style={{ fontFamily: "var(--font-mono)", fontSize: "var(--text-sm)", color: "var(--ink)", minWidth: "150px" }}>{t.table}</span>
+                {statusBadge(t.status)}
+                <span style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", color: "var(--ink-50)" }}>{t.note}</span>
               </div>
             ))}
           </div>
         </section>
 
-        {/* Bottom Line */}
+        {/* ═══════════════════════════════════════════ */}
+        {/* BOTTOM LINE                                */}
+        {/* ═══════════════════════════════════════════ */}
+
         <section style={{ ...card, borderLeft: "4px solid var(--orange)", padding: "2rem", marginBottom: "2rem" }}>
           <p style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--orange)", marginBottom: "0.75rem" }}>
             Bottom Line
           </p>
           <p style={{ fontFamily: "var(--font-display)", fontSize: "var(--text-2xl)", fontWeight: 500, fontStyle: "italic", color: "var(--ink)", lineHeight: 1.4 }}>
-            RCS via Twilio. Stripe for payments. The agent architecture is the product.
-            Ship the bot in Week 1, monetize in Week 2, scale in Week 3.
+            Telegram bot for alerts. Fix the website to show real data. SMS when registration clears.
+            The agent architecture exists &mdash; it just needs a scheduler and a delivery channel.
           </p>
         </section>
 
